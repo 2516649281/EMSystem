@@ -40,8 +40,8 @@ public interface UserMapper {
     /**
      * 根据用户ID批量删除用户信息
      *
-     * @param id 选择的用户ID
+     * @param ids 选择的用户ID
      * @return 影响行数
      */
-    Integer deleteUserById(@Param("id") Long[] ids);
+    Integer deleteUserById(@Param("id") String[] ids);
 }

@@ -18,5 +18,5 @@ public class SqlDateUtils {
     /**
      * 当前用户ID
      */
-    public static Integer currentUserId;
+    public static String currentUserId;
 }

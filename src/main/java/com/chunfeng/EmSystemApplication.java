@@ -17,7 +17,7 @@ import org.springframework.context.ApplicationContext;
  */
 @SpringBootApplication
 @Slf4j
-@MapperScan({"com.chunfeng.dao.mapper"})
+@MapperScan("com.chunfeng.dao.mapper")
 @EnableCaching
 @EnableConfigurationProperties
 public class EmSystemApplication {

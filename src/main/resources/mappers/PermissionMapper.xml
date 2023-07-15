@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chunfeng.dao.mapper.PermissionMapper">
+    <!--字段映射-->
+    <resultMap id="permissionMap" type="com.chunfeng.dao.entity.Permission">
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <!--条件查询权限-->
+    <select id="selectAllPermission" resultType="com.chunfeng.dao.entity.Permission"
+            parameterType="com.chunfeng.dao.entity.Permission"
+            resultMap="permissionMap">
+        select id, name, sign
+        from permission
+        <where>
+            <if test="id!='' and id!=null">
+                and id=#{id}
+            </if>
+            <if test="name!='' and name!=null">
+                and name=#{name}
+            </if>
+            <if test="sign!='' and sign!=null">
+                and sign=#{sign}
+            </if>
+        </where>
+    </select>
+    <!--插入一条权限数据-->
+    <insert id="insertPermission">
+        insert into permission (id, name, sign, create_user, create_time)
+        values (#{id}, #{name}, #{sign}, #{createPermission}, #{createTime});
+    </insert>
+    <!--根据权限ID修改一条权限数据-->
+    <update id="updatePermissionById">
+        update permission
+        <set>
+            <if test="name!='' and password!=null">
+                name=#{name}
+            </if>
+            <if test="password!='' and password!=null">
+                ,password=#{password}
+            </if>
+            <if test="sign!='' and sign!=null">
+                ,sign=#{sign}
+            </if>
+            <if test="updateUser!='' and updateUser!=null">
+                ,update_user=#{updateUser}
+            </if>
+            <if test="updateTime!='' and updateTime!=null">
+                ,update_time=#{updateTime}
+            </if>
+        </set>
+        where id=#{id};
+    </update>
+    <!--根据权限ID批量删除权限信息-->
+    <delete id="deletePermissionById">
+        delete
+        from permission
+        where
+        id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

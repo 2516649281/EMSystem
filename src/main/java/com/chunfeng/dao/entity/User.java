@@ -18,7 +18,7 @@ public class User implements Serializable {
     /**
      * 编号
      */
-    private Long id;
+    private String id;
     /**
      * 用户名
      */
@@ -27,6 +27,10 @@ public class User implements Serializable {
      * 密码
      */
     private String password;
+    /**
+     * 昵称
+     */
+    private String nickName;
     /**
      * 头像
      */
@@ -58,11 +62,11 @@ public class User implements Serializable {
     /**
      * 创建人
      */
-    private Long createUser;
+    private String createUser;
     /**
      * 更新人
      */
-    private Long updateUser;
+    private String updateUser;
     /**
      * 创建时间
      */

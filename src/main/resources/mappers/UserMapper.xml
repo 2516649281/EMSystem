@@ -6,6 +6,7 @@
     <!--字段映射-->
     <resultMap id="userMap" type="com.chunfeng.dao.entity.User">
         <result column="role.name" property="roleName"/>
+        <result column="user.nick_name" property="nickName"/>
         <result column="create_user" property="createUser"/>
         <result column="create_time" property="createTime"/>
         <result column="update_user" property="updateUser"/>
@@ -14,20 +15,28 @@
     <!--条件查询用户-->
     <select id="selectAllUser" resultType="com.chunfeng.dao.entity.User" parameterType="com.chunfeng.dao.entity.User"
             resultMap="userMap">
-        select user.id,
-        user.name,
+        select u.id,
+        u.name,
+        nick_name,
         avatar,
         sex,
-        role.name,
+        r.name,
         email,
         phone,
         status
-        from user,
-        role
+        from user u,
+        role r,permission p
+        left join r on u.role = r.id
+        left join p on r.auth = p.id
         <where>
-            role.id = user.role
-            <if test="name!='' and password!=null">
-                and name=#{name}
+            <if test="id!='' and id!=null">
+                user.id=#{id}
+            </if>
+            <if test="name!='' and name!=null">
+                and user.name=#{name}
+            </if>
+            <if test="nickName!='' and nickName!=null">
+                and nick_name=#{nickName}
             </if>
             <if test="password!='' and password!=null">
                 and password=#{password}
@@ -45,42 +54,45 @@
     </select>
     <!--插入一条用户数据-->
     <insert id="insertUser">
-        insert into user (name, password, create_user, create_time)
-        values (#{name}, #{password}, #{createUser}, #{createTime});
+        insert into user (id, name, password, create_user, create_time)
+        values (#{id}, #{name}, #{password}, #{createUser}, #{createTime});
     </insert>
     <!--根据用户ID修改一条用户数据-->
     <update id="updateUserById">
         update user
         <set>
             <if test="name!='' and password!=null">
-                name=#{name},
+                name=#{name}
             </if>
             <if test="password!='' and password!=null">
-                password=#{password},
+                ,password=#{password}
+            </if>
+            <if test="nickName!='' and nickName!=null">
+                ,nick_name=#{nickName}
             </if>
             <if test="sex!=null">
-                sex=#{sex},
+                ,sex=#{sex}
             </if>
             <if test="avatar!='' and avatar!=null">
-                avatar=#{avatar},
+                ,avatar=#{avatar}
             </if>
             <if test="role!=null">
-                role=#{role},
+                ,role=#{role}
             </if>
             <if test="email!='' and email!=null">
-                email=#{email},
+                ,email=#{email}
             </if>
             <if test="phone!='' and phone!=null">
-                phone=#{phone},
+                ,phone=#{phone}
             </if>
             <if test="status!=null">
-                status=#{status},
+                ,status=#{status}
             </if>
-            <if test="updateUser!=null">
-                update_user=#{updateUser},
+            <if test="updateUser!='' and updateUser!=null">
+                ,update_user=#{updateUser}
             </if>
-            <if test="updateTime!=null">
-                update_time=#{updateTime}
+            <if test="updateTime!='' and updateTime!=null">
+                ,update_time=#{updateTime}
             </if>
         </set>
         where id=#{id};

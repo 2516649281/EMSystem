@@ -73,4 +73,16 @@ public class JsonRequest<T> {
     public static <T> JsonRequest<T> error(RequestException e) {
         return new JsonRequest<>(e.getStatus(), e.getMessage(), false);
     }
+
+
+    /**
+     * 全局异常处理
+     *
+     * @param <T> 类型
+     * @param e   异常
+     * @return JSON
+     */
+    public static <T> JsonRequest<T> error(Exception e) {
+        return new JsonRequest<>(500, e.getLocalizedMessage(), false);
+    }
 }

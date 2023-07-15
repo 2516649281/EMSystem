@@ -18,8 +18,15 @@ configurations {
 repositories {
     mavenLocal()
     mavenCentral()
+    //阿里云仓库全家桶
+    maven { url 'https://maven.aliyun.com/repository/central' }
     maven { url 'https://maven.aliyun.com/repository/public' }
-    maven { url 'https://repo.spring.io/release' }
+    maven { url 'https://maven.aliyun.com/repository/google' }
+    maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+    maven { url 'https://maven.aliyun.com/repository/spring' }
+    maven { url 'https://maven.aliyun.com/repository/spring-plugin' }
+    maven { url 'https://maven.aliyun.com/mvn/guide' }
+    maven { url 'https://maven.aliyun.com/repository/apache-snapshots' }
 }
 
 ext {
@@ -31,15 +38,18 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+    implementation 'com.alibaba:fastjson:1.2.72'
+    implementation 'com.auth0:java-jwt:3.18.2'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
-    runtimeOnly 'com.taobao.arthas:arthas-spring-boot-starter:3.6.7'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'junit:junit:4.13'
 }
 
 tasks.named('test') {

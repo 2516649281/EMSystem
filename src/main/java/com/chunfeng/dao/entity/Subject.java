@@ -6,27 +6,23 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * 角色实体类
+ * 科目实体
  *
  * @author by 春风能解释
  * <p>
- * 2023/7/11
+ * 2023/7/14
  */
 @Data
 @NoArgsConstructor
-public class Role implements Serializable {
+public class Subject implements Serializable {
     /**
-     * 角色ID
+     * 主键
      */
     private String id;
     /**
-     * 角色名
+     * 科目名
      */
     private String name;
-    /**
-     * 角色权限
-     */
-    private String auth;
     /**
      * 创建人
      */

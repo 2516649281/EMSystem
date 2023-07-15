@@ -14,21 +14,29 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum RequestException {
     /**
-     * 权限不足
+     * 非法访问
      */
-    UNAUTHORIZED(401, "权限不足!"),
+    UNAUTHORIZED(401, "非法访问!"),
     /**
      * 登录失败
      */
     LOGIN_ERROR(402, "登录失败,请检查用户名或密码是否正确!"),
     /**
-     * 注册失败
+     * 非法授权
      */
-    REGISTER_ERROR(403, "注册失败,请检查数据是否符合规范!"),
+    FORBIDDEN(403, "非法授权!"),
     /**
      * 找不到资源
      */
     NOT_FOUND(404, "找不到资源!"),
+    /**
+     * 注册失败
+     */
+    REGISTER_ERROR(405, "注册失败,请检查数据是否符合规范!"),
+    /**
+     * 未知异常
+     */
+    UNKNOWN_EXCEPTION(500, "系统错误,请联系网站管理员!"),
     /**
      * 查询数据时遇到问题
      */
@@ -52,12 +60,15 @@ public enum RequestException {
     /**
      * 文件超出范围
      */
-    UPLOAD_FILE_BEYOND_MAX_SIZE(506, "文件超出范围!");
-
+    UPLOAD_FILE_BEYOND_MAX_SIZE(506, "文件超出范围!"),
+    /**
+     * token异常
+     */
+    TOKEN_ERROR(507, "非法token");
     /**
      * 错误代码
      */
-    private Integer status ;
+    private Integer status;
     /**
      * 消息
      */

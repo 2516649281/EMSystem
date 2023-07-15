@@ -1,5 +1,7 @@
 package com.chunfeng.utils;
 
+import com.chunfeng.result.RequestException;
+import com.chunfeng.result.exception.ServiceException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -10,8 +12,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * <h1>token生成/解析工具类</h1>
- * token令牌是前后端分离开发最重要的元素,所谓的Token,其实就是服务端生成的一串加密字符串、以作客户端进行请求的一个“令牌”,当用户第一次使用账号密码成功进行登录后,服务器便生成一个Token及Token失效时间并将此返回给客户端,若成功登陆,以后客户端只需在有效时间内带上这个Token前来请求数据即可,无需再次带上用户名和密码,拿实际过程举例,当你下载QQ或微信后第一次用账号和密码成功登录后,Token就为我们免去了每次打开应用都要输入账号跟密码的过程.
+ * token生成/解析工具类
  *
  * @author by 春风能解释
  * <p>
@@ -59,10 +60,10 @@ public class TokenUtils {
      * @param token token
      * @return object
      */
-    public static Object checkToken(String token) {
+    public static Claims checkToken(String token) {
         if (token.equals("")) {
             log.error("token为空!");
-            throw new RuntimeException("Token为空!");
+            throw new ServiceException(RequestException.TOKEN_ERROR);
         }
         Jws<Claims> claimsJws;
         //redis客户端
@@ -73,14 +74,14 @@ public class TokenUtils {
             if (claimsJws == null) {
                 redisClientsUtils.remove(token);
                 log.error("token解析失败!已删除key-{}", token);
-                throw new RuntimeException("解析失败!");
+                throw new ServiceException(RequestException.TOKEN_ERROR);
             }
         }//如果发生异常
         catch (Exception e) {
             redisClientsUtils.remove(token);
             log.error("token解析失败!已删除key-{}", token);
-            throw new RuntimeException("解析失败!");
+            throw new ServiceException(RequestException.TOKEN_ERROR);
         }
-        return claimsJws.getBody().get("user");
+        return claimsJws.getBody();
     }
 }

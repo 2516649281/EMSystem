@@ -8,8 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 
 /**
- * <h1>Redis执行工具类</h1>
- * Redis缓存的扩展方法,简化代码书写
+ * Redis执行工具类
  *
  * @author by 春风能解释
  * <p>

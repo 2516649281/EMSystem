@@ -6,27 +6,47 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * 角色实体类
+ * 题库实体
  *
  * @author by 春风能解释
  * <p>
- * 2023/7/11
+ * 2023/7/14
  */
 @Data
 @NoArgsConstructor
-public class Role implements Serializable {
+public class Problem implements Serializable {
     /**
-     * 角色ID
+     * 主键
      */
     private String id;
     /**
-     * 角色名
+     * 题干
      */
-    private String name;
+    private String main;
     /**
-     * 角色权限
+     * 选项
      */
-    private String auth;
+    private String options;
+    /**
+     * 类型(0客观题,1主观题)
+     */
+    private Integer type;
+    /**
+     * 答案
+     */
+    private String answer;
+    /**
+     * 解析
+     */
+    private String parse;
+    /**
+     * 得分
+     */
+    private Float score;
+    /**
+     * 科目
+     */
+    private Long subject;
     /**
      * 创建人
      */

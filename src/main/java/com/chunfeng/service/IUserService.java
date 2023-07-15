@@ -29,7 +29,7 @@ public interface IUserService {
      * @param password 密码
      * @return JSON
      */
-    JsonRequest<Long> login(String name, String password);
+    JsonRequest<String> login(String name, String password);
 
     /**
      * 注册逻辑
