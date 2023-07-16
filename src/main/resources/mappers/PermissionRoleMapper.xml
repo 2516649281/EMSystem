@@ -63,7 +63,7 @@
         where id=#{id};
     </update>
     <!--根据关系ID批量删除关系信息-->
-    <delete id="deletePermissionRoleById">
+    <delete id="deletePermissionRoleById" parameterType="list">
         delete
         from permission_role
         where

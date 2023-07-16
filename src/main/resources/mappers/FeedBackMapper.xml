@@ -37,7 +37,7 @@
         values (#{id}, #{message}, #{createTime});
     </insert>
     <!--根据反馈ID批量删除反馈信息-->
-    <delete id="deleteFeedBackById">
+    <delete id="deleteFeedBackById" parameterType="list">
         delete
         from feedBack
         where

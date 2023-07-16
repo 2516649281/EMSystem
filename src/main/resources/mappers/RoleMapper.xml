@@ -56,7 +56,7 @@
         where id=#{id};
     </update>
     <!--根据角色ID批量删除角色信息-->
-    <delete id="deleteRoleById">
+    <delete id="deleteRoleById" parameterType="list">
         delete
         from role
         where

@@ -93,7 +93,7 @@
         where id=#{id};
     </update>
     <!--根据题目ID批量删除题目信息-->
-    <delete id="deleteProblemById">
+    <delete id="deleteProblemById" parameterType="list">
         delete
         from problem
         where

@@ -64,7 +64,7 @@
         where id=#{id};
     </update>
     <!--根据试卷ID批量删除试卷信息-->
-    <delete id="deleteExamById">
+    <delete id="deleteExamById" parameterType="list">
         delete
         from exam
         where

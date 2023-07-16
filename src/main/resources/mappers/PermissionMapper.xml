@@ -65,7 +65,7 @@
         where id=#{id};
     </update>
     <!--根据权限ID批量删除权限信息-->
-    <delete id="deletePermissionById">
+    <delete id="deletePermissionById" parameterType="list">
         delete
         from permission
         where

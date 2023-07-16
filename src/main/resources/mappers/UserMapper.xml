@@ -119,7 +119,7 @@
         where id=#{id};
     </update>
     <!--根据用户ID批量删除用户信息-->
-    <delete id="deleteUserById">
+    <delete id="deleteUserById" parameterType="list">
         delete
         from user
         where

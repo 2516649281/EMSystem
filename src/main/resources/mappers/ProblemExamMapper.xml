@@ -63,7 +63,7 @@
         where id=#{id};
     </update>
     <!--根据关系ID批量删除关系信息-->
-    <delete id="deleteProblemExamById">
+    <delete id="deleteProblemExamById" parameterType="list">
         delete
         from problem_exam
         where
