@@ -41,6 +41,17 @@
             </if>
         </where>
     </select>
+    <!--根据ID查询题目-->
+    <select id="selectAllProblemById" resultType="list" resultMap="problemMap">
+        select id, main, options, type, answer, parse, score, subject
+        from problem
+        <where>
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+        ;
+    </select>
     <!--插入一条题目数据-->
     <insert id="insertProblem">
         insert into problem (id, main, options, type, answer, parse, score, subject, create_user, create_time)

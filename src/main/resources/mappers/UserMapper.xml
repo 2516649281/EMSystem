@@ -6,7 +6,7 @@
     <!--字段映射-->
     <resultMap id="userMap" type="com.chunfeng.dao.entity.User">
         <result column="role.name" property="roleName"/>
-        <result column="user.nick_name" property="nickName"/>
+        <result column="nick_name" property="nickName"/>
         <result column="create_user" property="createUser"/>
         <result column="create_time" property="createTime"/>
         <result column="update_user" property="updateUser"/>
@@ -15,25 +15,21 @@
     <!--条件查询用户-->
     <select id="selectAllUser" resultType="com.chunfeng.dao.entity.User" parameterType="com.chunfeng.dao.entity.User"
             resultMap="userMap">
-        select u.id,
-        u.name,
+        select id,
+        name,
         nick_name,
         avatar,
         sex,
-        r.name,
         email,
         phone,
         status
-        from user u,
-        role r,permission p
-        left join r on u.role = r.id
-        left join p on r.auth = p.id
+        from user
         <where>
             <if test="id!='' and id!=null">
-                user.id=#{id}
+                id=#{id}
             </if>
             <if test="name!='' and name!=null">
-                and user.name=#{name}
+                and name=#{name}
             </if>
             <if test="nickName!='' and nickName!=null">
                 and nick_name=#{nickName}
@@ -52,6 +48,31 @@
             </if>
         </where>
     </select>
+    <!--根据用户名和密码查询用户-->
+    <select id="selectAllByName" resultMap="userMap" resultType="com.chunfeng.dao.entity.User">
+        select id
+        from user
+        where name = #{name}
+        ;
+    </select>
+    <!--根据用户ID查询用户信息-->
+    <select id="selectAllByIds" resultType="list" resultMap="userMap">
+        select id,
+        name,
+        nick_name,
+        avatar,
+        sex,
+        email,
+        phone,
+        status
+        from user
+        <where>
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+        ;
+    </select>
     <!--插入一条用户数据-->
     <insert id="insertUser">
         insert into user (id, name, password, create_user, create_time)
@@ -61,7 +82,7 @@
     <update id="updateUserById">
         update user
         <set>
-            <if test="name!='' and password!=null">
+            <if test="name!='' and name!=null">
                 name=#{name}
             </if>
             <if test="password!='' and password!=null">

@@ -1,5 +1,6 @@
 package com.chunfeng.dao.mapper;
 
+import com.chunfeng.dao.entity.PermissionRole;
 import com.chunfeng.dao.entity.Problem;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,6 +21,15 @@ public interface ProblemMapper {
      * @return 符合条件的所有题目信息
      */
     List<Problem> selectAllProblem(Problem problem);
+
+
+    /**
+     * 根据ID查询题目
+     *
+     * @param ids 题目ID
+     * @return 题目列表
+     */
+    List<PermissionRole> selectAllProblemById(String[] ids);
 
     /**
      * 插入一条题目数据

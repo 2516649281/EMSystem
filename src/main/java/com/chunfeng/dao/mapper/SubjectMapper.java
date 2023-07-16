@@ -1,5 +1,6 @@
 package com.chunfeng.dao.mapper;
 
+import com.chunfeng.dao.entity.PermissionRole;
 import com.chunfeng.dao.entity.Subject;
 
 import java.util.List;
@@ -20,6 +21,14 @@ public interface SubjectMapper {
      * @return 科目列表
      */
     List<Subject> selectAllSubject(Subject subject);
+
+    /**
+     * 根据ID查询科目
+     *
+     * @param ids 科目ID
+     * @return 科目列表
+     */
+    List<PermissionRole> selectAllSubjectById(String[] ids);
 
     /**
      * 插入一条科目信息

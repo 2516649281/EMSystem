@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chunfeng.dao.mapper.FeedBackMapper">
+    <!--字段映射-->
+    <resultMap id="feedBackMap" type="com.chunfeng.dao.entity.FeedBack">
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    <!--条件查询反馈-->
+    <select id="selectAllFeedBack" resultType="com.chunfeng.dao.entity.FeedBack"
+            parameterType="com.chunfeng.dao.entity.FeedBack"
+            resultMap="feedBackMap">
+        select id, message
+        from feedBack
+        <where>
+            <if test="id!='' and id!=null">
+                id=#{id}
+            </if>
+            <if test="message!='' and message!=null">
+                and message like CONCAT('%',#{message},'%')
+            </if>
+        </where>
+    </select>
+    <!--根据反馈ID查询反馈信息-->
+    <select id="selectAllFeedBackById" resultType="list" resultMap="feedBackMap">
+        select id, message
+        from feedBack
+        <where>
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+        ;
+    </select>
+    <!--插入一条反馈数据-->
+    <insert id="insertFeedBack">
+        insert into feedBack (id, message, create_time)
+        values (#{id}, #{message}, #{createTime});
+    </insert>
+    <!--根据反馈ID批量删除反馈信息-->
+    <delete id="deleteFeedBackById">
+        delete
+        from feedBack
+        where
+        id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

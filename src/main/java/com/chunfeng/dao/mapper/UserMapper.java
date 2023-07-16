@@ -22,6 +22,22 @@ public interface UserMapper {
     List<User> selectAllUser(User user);
 
     /**
+     * 根据用户名查询用户
+     *
+     * @param name 用户名
+     * @return 用户信息
+     */
+    User selectAllByName(@Param("name") String name);
+
+    /**
+     * 根据用户ID查询用户信息
+     *
+     * @param ids 用户ID
+     * @return 用户信息
+     */
+    List<User> selectAllByIds(@Param("ids") String[] ids);
+
+    /**
      * 插入一条用户数据
      *
      * @param user 用户信息

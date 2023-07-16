@@ -11,7 +11,7 @@
     <!--条件查询试卷-->
     <select id="selectAllExam" resultType="com.chunfeng.dao.entity.Exam" parameterType="com.chunfeng.dao.entity.Exam"
             resultMap="examMap">
-        select id, name, time, score, pass, problems from
+        select id, name, time, score, pass from
         exam
         <where>
             <if test="id!='' and id!=null">
@@ -22,10 +22,21 @@
             </if>
         </where>
     </select>
+    <!--根据ID查询试卷-->
+    <select id="selectAllExamById" resultType="list" resultMap="examMap">
+        select id, name, time, score, pass
+        from exam
+        <where>
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+        ;
+    </select>
     <!--插入一条试卷数据-->
     <insert id="insertExam">
-        insert into exam (id, name, time, score, pass, problems, create_user, create_time)
-        values (#{id}, #{name}, #{time}, #{score}, #{pass}, #{problems}, #{createUser}, #{createTime});
+        insert into exam (id, name, time, score, pass, create_user, create_time)
+        values (#{id}, #{name}, #{time}, #{score}, #{pass}, #{createUser}, #{createTime});
     </insert>
     <!--根据试卷ID修改一条试卷数据-->
     <update id="updateExamById">
@@ -42,9 +53,6 @@
             </if>
             <if test="pass!='' and pass!=null">
                 ,pass=#{pass}
-            </if>
-            <if test="problems!='' and problems!=null">
-                ,problems=#{problems}
             </if>
             <if test="updateUser!='' and updateUser!=null">
                 ,update_user=#{updateUser}

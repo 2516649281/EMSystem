@@ -12,7 +12,6 @@ import java.util.List;
  * 2023/7/15
  */
 public interface RoleMapper {
-
     /**
      * 条件查询角色信息
      *
@@ -20,6 +19,14 @@ public interface RoleMapper {
      * @return 角色列表
      */
     List<Role> selectAllRole(Role role);
+
+    /**
+     * 根据ID查询角色
+     *
+     * @param ids 角色ID
+     * @return 角色列表
+     */
+    List<Role> selectAllRoleById(String[] ids);
 
     /**
      * 插入一条角色信息

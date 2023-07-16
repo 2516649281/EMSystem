@@ -10,7 +10,7 @@
     </resultMap>
     <!--条件查询角色信息-->
     <select id="selectAllRole" resultType="com.chunfeng.dao.entity.Role" resultMap="roleMap">
-        select id, name, auth
+        select id, name
         from role
         <where>
             <if test="id!='' and id!=null">
@@ -19,16 +19,25 @@
             <if test="name!='' and name!=null">
                 and name=#{name}
             </if>
-            <if test="auth!='' and auth!=null">
-                and auth=#{auth}
-            </if>
+
+        </where>
+        ;
+    </select>
+    <!--根据ID查询角色-->
+    <select id="selectAllRoleById" resultType="list" resultMap="roleMap">
+        select id, name
+        from role
+        <where>
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
         </where>
         ;
     </select>
     <!--插入一条角色信息-->
     <insert id="insertRole">
-        insert into role (id, name, auth, create_user, create_time)
-        values (#{id}, #{name}, #{auth}, #{createUser}, #{createTime});
+        insert into role (id, name, create_user, create_time)
+        values (#{id}, #{name}, #{createUser}, #{createTime});
     </insert>
     <!--修改一条角色信息-->
     <update id="updateRoleById">
@@ -36,9 +45,6 @@
         <set>
             <if test="name!='' and name!=null">
                 name=#{name}
-            </if>
-            <if test="auth!='' and auth!=null">
-                ,auth=#{auth}
             </if>
             <if test="updateUser!='' and updateUser!=null">
                 ,update_user=#{updateUser}

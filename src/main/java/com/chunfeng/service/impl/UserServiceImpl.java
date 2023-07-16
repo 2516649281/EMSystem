@@ -1,9 +1,11 @@
 package com.chunfeng.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.chunfeng.dao.domain.UserDetail;
 import com.chunfeng.dao.entity.User;
+import com.chunfeng.dao.mapper.PermissionMapper;
+import com.chunfeng.dao.mapper.RoleMapper;
 import com.chunfeng.dao.mapper.UserMapper;
+import com.chunfeng.dao.security.UserDetail;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.result.exception.ServiceException;
@@ -42,10 +44,22 @@ import java.util.Objects;
 public class UserServiceImpl implements IUserService, UserDetailsService {
 
     /**
-     * 数据层注入
+     * 用户数据层注入
      */
     @Autowired
     private UserMapper userMapper;
+
+    /**
+     * 角色用户层注入
+     */
+    @Autowired
+    private RoleMapper roleMapper;
+
+    /**
+     * 权限数据层注入
+     */
+    @Autowired
+    private PermissionMapper permissionMapper;
 
     /**
      * Redis工具类
@@ -67,14 +81,31 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     private AuthenticationManager authenticationManager;
 
     /**
-     * 查询逻辑
+     * 分类查询用户
      *
      * @param user 条件
      * @return JSON
      */
     @Override
     public JsonRequest<List<User>> selectUser(User user) {
-        return null;
+        List<User> users = userMapper.selectAllUser(user);
+        //判断是否为空
+        if (users.isEmpty()) {
+            log.warn("未查询到任何用户信息!");
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        log.info("已查询出{}条用户数据!", users.size());
+        return JsonRequest.success(users);
+    }
+
+    /**
+     * 查看所有用户
+     *
+     * @return JSON
+     */
+    @Override
+    public JsonRequest<List<User>> selectAllUser() {
+        return selectUser(new User());
     }
 
     /**
@@ -115,12 +146,12 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      */
     @Override
     public JsonRequest<Integer> register(User user) {
+        //根据用户名查询
         String name = user.getName();
-        User user1 = new User();
-        user1.setName(name);
-        List<User> users = userMapper.selectAllUser(user1);
-        if (users.size() > 0) {
-            log.warn("名为{}的用户一再数据库中存在!", name);
+        User userData = userMapper.selectAllByName(name);
+        //判断用户唯一性
+        if (Objects.nonNull(userData)) {
+            log.warn("名为{}的用户以在l数据库中存在!", name);
             return JsonRequest.error(RequestException.REGISTER_ERROR);
         }
         user.setPassword(
@@ -148,18 +179,42 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      */
     @Override
     public JsonRequest<Integer> updateOneUser(User user) {
-        return null;
+        //判断数据库中是否存在该用户
+        List<User> users = userMapper.selectAllUser(user);
+        if (users.isEmpty()) {
+            log.error("ID为{}的用户不存在!", user.getId());
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        Integer column = userMapper.updateUserById(user);
+        //判断是否成功
+        if (column < 1) {
+            log.error("ID为{}的用户修改失败!", user.getId());
+            return JsonRequest.error(RequestException.UPDATE_ERROR);
+        }
+        return JsonRequest.success(column);
     }
 
     /**
      * 批量删除用户信息
      *
-     * @param longs 用户ID
+     * @param ids 用户ID
      * @return JSON
      */
     @Override
-    public JsonRequest<Integer> deleteUser(Long[] longs) {
-        return null;
+    public JsonRequest<Integer> deleteUser(String[] ids) {
+        //判断数据库中是否存在该用户
+        List<User> users = userMapper.selectAllByIds(ids);
+        if (ids.length != users.size()) {
+            log.error("删除用户数与数据库中的用户数不一致!待删除:{},数据库:{}", ids.length, users.size());
+            return JsonRequest.error(RequestException.DELETE_ERROR);
+        }
+        Integer column = userMapper.deleteUserById(ids);
+        //判断是否成功
+        if (column < 1) {
+            log.error("删除用户失败!");
+            return JsonRequest.error(RequestException.DELETE_ERROR);
+        }
+        return JsonRequest.success(column);
     }
 
     /**
@@ -172,18 +227,14 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //根据用户名查询用户信息是否存在
-        User user = new User();
-        user.setName(username);
-        List<User> users = userMapper.selectAllUser(user);
+        User user = userMapper.selectAllByName(username);
         //如果结果为空
-        if (users == null || users.isEmpty()) {
+        if (Objects.isNull(user)) {
             log.error("用户名为{}的用户登陆失败!原因:用户名或密码错误!", username);
             throw new ServiceException(RequestException.LOGIN_ERROR);
         }
-        //包装
-        User user1 = users.get(0);
         UserDetail userDetail = new UserDetail();
-        userDetail.setUser(user1);
+        userDetail.setUser(user);
         List<String> permission = new ArrayList<>(Arrays.asList("admin", "test"));
         //封装权限信息
         userDetail.setPermission(permission);

@@ -36,10 +36,6 @@ public class Exam implements Serializable {
      */
     private Float pass;
     /**
-     * 题库
-     */
-    private String problems;
-    /**
      * 创建人
      */
     private String createUser;

@@ -24,16 +24,26 @@ CREATE TABLE `role`
 (
     `id`          VARCHAR(48) PRIMARY KEY COMMENT '主键',
     `name`        VARCHAR(32) NOT NULL COMMENT '角色名',
-    `auth`        VARCHAR(64) COMMENT '权限',
     `create_user` VARCHAR(48) NOT NULL COMMENT '创建用户',
     `update_user` VARCHAR(48) COMMENT '修改用户',
     `create_time` DATETIME    NOT NULL COMMENT '创建时间',
     `update_time` DATETIME COMMENT '修改时间'
 ) COMMENT '角色表';
 
+CREATE TABLE `permission_role`
+(
+    `id`            VARCHAR(48) PRIMARY KEY COMMENT '主键',
+    `permission_id` VARCHAR(48) NOT NULL COMMENT '权限ID',
+    `role_id`       VARCHAR(48) NOT NULL COMMENT '角色ID',
+    `create_user`   VARCHAR(48) NOT NULL COMMENT '创建用户',
+    `update_user`   VARCHAR(48) COMMENT '修改用户',
+    `create_time`   DATETIME    NOT NULL COMMENT '创建时间',
+    `update_time`   DATETIME COMMENT '修改时间'
+) COMMENT '权限-角色绑定表';
+
 CREATE TABLE `problem`
 (
-    `id`          VARCHAR(8) PRIMARY KEY COMMENT '主键',
+    `id`          VARCHAR(48) PRIMARY KEY COMMENT '主键',
     `main`        VARCHAR(64) NOT NULL COMMENT '题干',
     `options`     VARCHAR(64) COMMENT '选项',
     `type`        INT         NOT NULL DEFAULT 1 COMMENT '类型(0客观题,1主观题)',
@@ -46,6 +56,28 @@ CREATE TABLE `problem`
     `create_time` DATETIME    NOT NULL COMMENT '创建时间',
     `update_time` DATETIME COMMENT '修改时间'
 ) COMMENT '题库';
+
+CREATE TABLE `permission`
+(
+    `id`          VARCHAR(8) PRIMARY KEY COMMENT '主键',
+    `name`        VARCHAR(32) NOT NULL COMMENT '权限名',
+    `sign`        VARCHAR(32) NOT NULL COMMENT '标识符',
+    `create_user` VARCHAR(48) NOT NULL COMMENT '创建用户',
+    `update_user` VARCHAR(48) COMMENT '修改用户',
+    `create_time` DATETIME    NOT NULL COMMENT '创建时间',
+    `update_time` DATETIME COMMENT '修改时间'
+) COMMENT '权限列表';
+
+CREATE TABLE `problem_exam`
+(
+    `id`          VARCHAR(48) PRIMARY KEY COMMENT '主键',
+    `exam_id`     VARCHAR(48) NOT NULL COMMENT '试卷ID',
+    `permission`  VARCHAR(48) NOT NULL COMMENT '题库ID',
+    `create_user` VARCHAR(48) NOT NULL COMMENT '创建用户',
+    `update_user` VARCHAR(48) COMMENT '修改用户',
+    `create_time` DATETIME    NOT NULL COMMENT '创建时间',
+    `update_time` DATETIME COMMENT '修改时间'
+) comment '题库-试卷绑定表';
 
 CREATE TABLE `subject`
 (
@@ -60,14 +92,13 @@ CREATE TABLE `subject`
 CREATE TABLE `exam`
 (
     `id`          VARCHAR(48) PRIMARY KEY COMMENT '主键',
-    `name`        VARCHAR(32)  NOT NULL COMMENT '试卷名',
-    `time`        VARCHAR(32)  NOT NULL COMMENT '考试时间',
-    `score`       FLOAT        NOT NULL COMMENT '总分',
-    `pass`        FLOAT        NOT NULL COMMENT '合格分数',
-    `problems`    VARCHAR(128) NOT NULL COMMENT '题库',
-    `create_user` VARCHAR(48)  NOT NULL COMMENT '创建用户',
+    `name`        VARCHAR(32) NOT NULL COMMENT '试卷名',
+    `time`        VARCHAR(32) NOT NULL COMMENT '考试时间',
+    `score`       FLOAT       NOT NULL COMMENT '总分',
+    `pass`        FLOAT       NOT NULL COMMENT '合格分数',
+    `create_user` VARCHAR(48) NOT NULL COMMENT '创建用户',
     `update_user` VARCHAR(48) COMMENT '修改用户',
-    `create_time` DATETIME     NOT NULL COMMENT '创建时间',
+    `create_time` DATETIME    NOT NULL COMMENT '创建时间',
     `update_time` DATETIME COMMENT '修改时间'
 ) COMMENT '试卷表';
 
@@ -77,14 +108,3 @@ CREATE TABLE `feedback`
     `message`     VARCHAR(256) NOT NULL COMMENT '反馈消息',
     `create_time` DATETIME     NOT NULL COMMENT '创建时间'
 ) COMMENT '反馈表';
-
-CREATE TABLE `permission`
-(
-    `id`          VARCHAR(8) PRIMARY KEY COMMENT '主键',
-    `name`        VARCHAR(32) NOT NULL COMMENT '权限名',
-    `sign`        VARCHAR(32) NOT NULL COMMENT '标识符',
-    `create_user` VARCHAR(48) NOT NULL COMMENT '创建用户',
-    `update_user` VARCHAR(48) COMMENT '修改用户',
-    `create_time` DATETIME    NOT NULL COMMENT '创建时间',
-    `update_time` DATETIME COMMENT '修改时间'
-) COMMENT '权限列表';

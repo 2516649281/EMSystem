@@ -24,6 +24,17 @@
             </if>
         </where>
     </select>
+    <!--根据ID查询科目-->
+    <select id="selectAllSubjectById" resultType="list" resultMap="subjectMap">
+        select id, name
+        from subject
+        <where>
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+        ;
+    </select>
     <!--插入一条科目数据-->
     <insert id="insertSubject">
         insert into subject (id, name, create_user, create_time)
@@ -46,7 +57,7 @@
         where id=#{id};
     </update>
     <!--根据科目ID批量删除科目信息-->
-    <delete id="deleteSubjectById">
+    <delete id="deleteSubjectById" parameterType="list">
         delete
         from subject
         where

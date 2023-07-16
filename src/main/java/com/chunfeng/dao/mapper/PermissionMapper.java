@@ -1,6 +1,7 @@
 package com.chunfeng.dao.mapper;
 
 import com.chunfeng.dao.entity.Permission;
+import com.chunfeng.dao.entity.PermissionRole;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -20,6 +21,14 @@ public interface PermissionMapper {
      * @return 符合条件的所有权限信息
      */
     List<Permission> selectAllPermission(Permission permission);
+
+    /**
+     * 根据ID查询权限
+     *
+     * @param ids 权限ID
+     * @return 权限列表
+     */
+    List<PermissionRole> selectAllPermissionById(String[] ids);
 
     /**
      * 插入一条权限数据

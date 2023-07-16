@@ -15,12 +15,19 @@ import java.util.List;
 public interface IUserService {
 
     /**
-     * 查询逻辑
+     * 分类查询用户
      *
      * @param user 条件
      * @return JSON
      */
     JsonRequest<List<User>> selectUser(User user);
+
+    /**
+     * 查看所有用户
+     *
+     * @return JSON
+     */
+    JsonRequest<List<User>> selectAllUser();
 
     /**
      * 登录逻辑
@@ -50,8 +57,8 @@ public interface IUserService {
     /**
      * 批量删除用户信息
      *
-     * @param longs 用户ID
+     * @param ids 用户ID
      * @return JSON
      */
-    JsonRequest<Integer> deleteUser(Long[] longs);
+    JsonRequest<Integer> deleteUser(String[] ids);
 }

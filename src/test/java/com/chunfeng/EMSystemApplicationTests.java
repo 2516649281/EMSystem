@@ -20,4 +20,7 @@ class EMSystemApplicationTests {
         System.out.println(userService.login("root", "12345678"));
     }
 
+    @Test
+    void testUser() {
+    }
 }

@@ -1,4 +1,4 @@
-package com.chunfeng.dao.domain;
+package com.chunfeng.dao.security;
 
 import com.chunfeng.dao.entity.User;
 import lombok.Data;
