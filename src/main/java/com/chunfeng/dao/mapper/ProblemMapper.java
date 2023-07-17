@@ -29,7 +29,7 @@ public interface ProblemMapper {
      * @param ids 题目ID
      * @return 题目列表
      */
-    List<PermissionRole> selectAllProblemById(String[] ids);
+    List<Problem> selectAllProblemById(String[] ids);
 
     /**
      * 插入一条题目数据

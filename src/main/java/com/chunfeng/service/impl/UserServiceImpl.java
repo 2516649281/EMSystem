@@ -1,8 +1,12 @@
 package com.chunfeng.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.chunfeng.dao.entity.Permission;
+import com.chunfeng.dao.entity.PermissionRole;
+import com.chunfeng.dao.entity.Role;
 import com.chunfeng.dao.entity.User;
 import com.chunfeng.dao.mapper.PermissionMapper;
+import com.chunfeng.dao.mapper.PermissionRoleMapper;
 import com.chunfeng.dao.mapper.RoleMapper;
 import com.chunfeng.dao.mapper.UserMapper;
 import com.chunfeng.dao.security.UserDetail;
@@ -16,6 +20,8 @@ import com.chunfeng.utils.TokenUtils;
 import com.chunfeng.utils.UIDCreateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,13 +32,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
- * 用户的业务层实现类
+ * 用户的业务层实现
  *
  * @author by 春风能解释
  * <p>
@@ -42,38 +47,36 @@ import java.util.Objects;
 @Slf4j
 @Transactional
 public class UserServiceImpl implements IUserService, UserDetailsService {
-
     /**
      * 用户数据层注入
      */
     @Autowired
     private UserMapper userMapper;
-
     /**
      * 角色用户层注入
      */
     @Autowired
     private RoleMapper roleMapper;
-
     /**
      * 权限数据层注入
      */
     @Autowired
     private PermissionMapper permissionMapper;
-
+    /**
+     * 关系数据层注入
+     */
+    @Autowired
+    private PermissionRoleMapper permissionRoleMapper;
     /**
      * Redis工具类
      */
     @Autowired
     private RedisClientsUtils redisClientsUtils;
-
     /**
      * 密码加密器
      */
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-
-
     /**
      * 身份验证对象
      */
@@ -87,7 +90,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @return JSON
      */
     @Override
-    public JsonRequest<List<User>> selectUser(User user) {
+    @Cacheable(value = "select_user", key = "#user.hashCode()")
+    public JsonRequest<List<User>> lookUser(User user) {
         List<User> users = userMapper.selectAllUser(user);
         //判断是否为空
         if (users.isEmpty()) {
@@ -104,8 +108,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @return JSON
      */
     @Override
-    public JsonRequest<List<User>> selectAllUser() {
-        return selectUser(new User());
+    public JsonRequest<List<User>> lookAllUser() {
+        return lookUser(new User());
     }
 
     /**
@@ -145,6 +149,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @return JSON
      */
     @Override
+    @CacheEvict(value = {"select_user", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> register(User user) {
         //根据用户名查询
         String name = user.getName();
@@ -178,6 +183,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @return JSON
      */
     @Override
+    @CacheEvict(value = {"select_user", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> updateOneUser(User user) {
         //判断数据库中是否存在该用户
         List<User> users = userMapper.selectAllUser(user);
@@ -201,11 +207,12 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @return JSON
      */
     @Override
+    @CacheEvict(value = {"select_user", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> deleteUser(String[] ids) {
         //判断数据库中是否存在该用户
         List<User> users = userMapper.selectAllByIds(ids);
         if (ids.length != users.size()) {
-            log.error("删除用户数与数据库中的用户数不一致!待删除:{},数据库:{}", ids.length, users.size());
+            log.error("删除角色信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", users.size(), ids.length);
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         Integer column = userMapper.deleteUserById(ids);
@@ -225,6 +232,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @throws UsernameNotFoundException 如果用户名未使用或错误则抛出此异常
      */
     @Override
+    @Cacheable(value = "security_userDetail", key = "#username")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //根据用户名查询用户信息是否存在
         User user = userMapper.selectAllByName(username);
@@ -235,9 +243,28 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         }
         UserDetail userDetail = new UserDetail();
         userDetail.setUser(user);
-        List<String> permission = new ArrayList<>(Arrays.asList("admin", "test"));
+        //查询该用户的角色信息
+        List<Role> roles = roleMapper.selectAllRoleById(new String[]{user.getId()});
+        //通过角色ID查询对应的权限ID
+        List<PermissionRole> permissionRoles = permissionRoleMapper.selectAllPermissionRoleById(
+                (String[]) roles
+                        .stream()
+                        .map(Role::getId)//取出ID值
+                        .toArray() //转换为数组
+        );
+        //获取权限ID
+        String[] permissionIds =
+                (String[]) permissionRoles
+                        .stream()
+                        .map(PermissionRole::getPermissionId)//取出权限ID
+                        .toArray();//转换为数组
+        //获取权限列表
+        List<Permission> permissions = permissionMapper.selectAllPermissionById(permissionIds);
         //封装权限信息
-        userDetail.setPermission(permission);
+        userDetail.setPermission(
+                permissions.stream()
+                        .map(Permission::getSign)//取出标识符
+                        .collect(Collectors.toList()));//转换为List集合
         return userDetail;
     }
 }

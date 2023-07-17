@@ -1,7 +1,6 @@
 package com.chunfeng.dao.mapper;
 
 import com.chunfeng.dao.entity.Exam;
-import com.chunfeng.dao.entity.PermissionRole;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public interface ExamMapper {
      * @param ids 试卷ID
      * @return 试卷列表
      */
-    List<PermissionRole> selectAllExamById(String[] ids);
+    List<Exam> selectAllExamById(String[] ids);
 
     /**
      * 插入一条试卷数据

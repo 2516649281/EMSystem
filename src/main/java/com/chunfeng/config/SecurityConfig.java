@@ -3,6 +3,7 @@ package com.chunfeng.config;
 import com.chunfeng.handler.AccessDeniedException;
 import com.chunfeng.handler.AuthenticationException;
 import com.chunfeng.handler.TokenFilter;
+import com.chunfeng.properties.ExcludeUrlProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +43,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private TokenFilter tokenFilter;
 
     /**
+     * 排除路径
+     */
+    @Autowired
+    private ExcludeUrlProperties excludeUrlProperties;
+
+    /**
      * http核心配置
      *
      * @param http http对象
@@ -57,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
-                .antMatchers("/user/login", "/user/register").anonymous()
+                .antMatchers(excludeUrlProperties.getExcludeUrl()).anonymous()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated();
         //拦截器配置

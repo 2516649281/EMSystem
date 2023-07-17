@@ -18,6 +18,7 @@ import org.springframework.context.ApplicationContext;
 @SpringBootApplication
 @Slf4j
 @MapperScan("com.chunfeng.dao.mapper")
+// 开启缓存
 @EnableCaching
 @EnableConfigurationProperties
 public class EmSystemApplication {

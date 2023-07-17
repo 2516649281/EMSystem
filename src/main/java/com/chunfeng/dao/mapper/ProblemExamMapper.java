@@ -1,6 +1,5 @@
 package com.chunfeng.dao.mapper;
 
-import com.chunfeng.dao.entity.PermissionRole;
 import com.chunfeng.dao.entity.ProblemExam;
 
 import java.util.List;
@@ -41,10 +40,10 @@ public interface ProblemExamMapper {
     /**
      * 根据关系ID修改一条关系数据
      *
-     * @param permissionRole 关系数据
+     * @param problemExam 关系数据
      * @return 影响行数
      */
-    Integer updateProblemExamById(PermissionRole permissionRole);
+    Integer updateProblemExamById(ProblemExam problemExam);
 
     /**
      * 根据关系ID批量删除关系信息

@@ -2,6 +2,7 @@ package com.chunfeng.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.chunfeng.dao.entity.User;
+import com.chunfeng.properties.ExcludeUrlProperties;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.result.exception.ServiceException;
 import com.chunfeng.utils.RedisClientsUtils;
@@ -40,10 +41,8 @@ public class TokenFilter extends OncePerRequestFilter {
     /**
      * 拦截器排除路径
      */
-    private String[] excludedUri = {
-            "/user/login",
-            "/user/register"
-    };
+    @Autowired
+    private ExcludeUrlProperties excludeUrlProperties;
 
 
     /**
@@ -87,6 +86,6 @@ public class TokenFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
         AntPathMatcher pathMatcher = new AntPathMatcher();
         //遍历并判断是否包含排除路径
-        return Stream.of(excludedUri).anyMatch(x -> pathMatcher.match(x, uri));
+        return Stream.of(excludeUrlProperties.getExcludeUrl()).anyMatch(x -> pathMatcher.match(x, uri));
     }
 }

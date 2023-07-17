@@ -24,6 +24,10 @@ public class Role implements Serializable {
      */
     private String name;
     /**
+     * 权限ID
+     */
+    private String[] permissionIds;
+    /**
      * 创建人
      */
     private String createUser;

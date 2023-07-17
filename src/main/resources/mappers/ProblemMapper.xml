@@ -19,22 +19,22 @@
                 and id=#{id}
             </if>
             <if test="name!='' and name!=null">
-                and main=#{main}
+                and main like CONCAT('%', #{main}, '%')
             </if>
             <if test="options!='' and options!=null">
-                and options=#{options}
+                and options like CONCAT('%', #{options}, '%')
             </if>
             <if test="type!=null">
-                and type=#{type}
+                and type like #{type}
             </if>
             <if test="answer!='' and answer!=null">
-                and answer=#{answer}
+                and answer like CONCAT('%', #{answer}, '%')
             </if>
             <if test="parse!='' and parse!=null">
-                and parse=#{parse}
+                and parse like CONCAT('%', #{parse}, '%')
             </if>
             <if test="score!=null">
-                and score=#{score}
+                and score like #{score}
             </if>
             <if test="subject!='' and subject!=null">
                 and subject=#{subject}

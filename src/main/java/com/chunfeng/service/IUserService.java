@@ -2,6 +2,7 @@ package com.chunfeng.service;
 
 import com.chunfeng.dao.entity.User;
 import com.chunfeng.result.JsonRequest;
+import springfox.documentation.spring.web.json.Json;
 
 import java.util.List;
 
@@ -20,14 +21,14 @@ public interface IUserService {
      * @param user 条件
      * @return JSON
      */
-    JsonRequest<List<User>> selectUser(User user);
+    JsonRequest<List<User>> lookUser(User user);
 
     /**
      * 查看所有用户
      *
      * @return JSON
      */
-    JsonRequest<List<User>> selectAllUser();
+    JsonRequest<List<User>> lookAllUser();
 
     /**
      * 登录逻辑

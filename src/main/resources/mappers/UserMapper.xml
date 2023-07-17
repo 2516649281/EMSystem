@@ -29,13 +29,10 @@
                 id=#{id}
             </if>
             <if test="name!='' and name!=null">
-                and name=#{name}
+                and name like CONCAT('%', #{name}, '%')
             </if>
             <if test="nickName!='' and nickName!=null">
-                and nick_name=#{nickName}
-            </if>
-            <if test="password!='' and password!=null">
-                and password=#{password}
+                and nick_name like CONCAT('%', #{nickName}, '%')
             </if>
             <if test="sex!=null">
                 and sex=#{sex}

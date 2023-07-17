@@ -28,7 +28,7 @@ public interface SubjectMapper {
      * @param ids 科目ID
      * @return 科目列表
      */
-    List<PermissionRole> selectAllSubjectById(String[] ids);
+    List<Subject> selectAllSubjectById(String[] ids);
 
     /**
      * 插入一条科目信息

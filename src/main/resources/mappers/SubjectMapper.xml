@@ -20,7 +20,7 @@
                 and id=#{id}
             </if>
             <if test="name!='' and name!=null">
-                and name=#{name}
+                and name like CONCAT('%', #{name}, '%')
             </if>
         </where>
     </select>
