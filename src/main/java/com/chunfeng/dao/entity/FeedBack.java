@@ -16,6 +16,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class FeedBack implements Serializable {
     /**
+     * 序列化字段
+     */
+    private static final long serialVersionUID = 2871184560686085653L;
+    /**
      * 主键
      */
     private String id;

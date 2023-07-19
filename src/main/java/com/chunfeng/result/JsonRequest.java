@@ -3,6 +3,8 @@ package com.chunfeng.result;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * JSON返回类
  *
@@ -12,7 +14,11 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class JsonRequest<T> {
+public class JsonRequest<T> implements Serializable {
+    /**
+     * 序列化字段
+     */
+    private static final long serialVersionUID = -5408366163757792606L;
     /**
      * 错误代码
      */

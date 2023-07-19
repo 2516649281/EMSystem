@@ -16,6 +16,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class PermissionRole implements Serializable {
     /**
+     * 序列化字段
+     */
+    private static final long serialVersionUID = 8396482295376909486L;
+    /**
      * 主键
      */
     private String id;

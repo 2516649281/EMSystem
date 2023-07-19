@@ -16,6 +16,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Role implements Serializable {
     /**
+     * 序列化字段
+     */
+    private static final long serialVersionUID = 2474682772541255777L;
+    /**
      * 角色ID
      */
     private String id;

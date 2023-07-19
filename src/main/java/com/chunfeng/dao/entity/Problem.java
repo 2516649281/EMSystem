@@ -16,6 +16,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Problem implements Serializable {
     /**
+     * 序列化字段
+     */
+    private static final long serialVersionUID = 1148590732880150189L;
+    /**
      * 主键
      */
     private String id;

@@ -16,6 +16,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Exam implements Serializable {
     /**
+     * 序列化字段
+     */
+    private static final long serialVersionUID = -7667577547970564789L;
+    /**
      * 主键
      */
     private String id;
