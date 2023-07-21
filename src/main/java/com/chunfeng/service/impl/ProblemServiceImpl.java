@@ -7,6 +7,7 @@ import com.chunfeng.result.RequestException;
 import com.chunfeng.service.IProblemService;
 import com.chunfeng.utils.FileMangerUtils;
 import com.chunfeng.utils.SqlDateUtils;
+import com.chunfeng.utils.UIDCreateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -88,6 +89,7 @@ public class ProblemServiceImpl implements IProblemService {
     @Override
     @CacheEvict(value = "problem_select", allEntries = true)
     public JsonRequest<Integer> addOneProblem(Problem problem) {
+        problem.setId(UIDCreateUtil.getUUId());
         //将数据写入文件
         String path = fileMangerUtils.fileWriter(problem.getId() + ".txt", problem);
         //日志信息

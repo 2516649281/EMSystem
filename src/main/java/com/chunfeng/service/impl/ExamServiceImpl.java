@@ -7,6 +7,7 @@ import com.chunfeng.result.RequestException;
 import com.chunfeng.service.IExamService;
 import com.chunfeng.utils.FileMangerUtils;
 import com.chunfeng.utils.SqlDateUtils;
+import com.chunfeng.utils.UIDCreateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -88,6 +89,7 @@ public class ExamServiceImpl implements IExamService {
     @Override
     @CacheEvict(value = "exam_select", allEntries = true)
     public JsonRequest<Integer> addOneExam(Exam exam) {
+        exam.setId(UIDCreateUtil.getUUId());
         //将数据写入文件
         String path = fileMangerUtils.fileWriter(exam.getId() + ".txt", exam);
         //日志信息

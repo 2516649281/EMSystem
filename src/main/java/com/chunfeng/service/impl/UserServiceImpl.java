@@ -1,9 +1,6 @@
 package com.chunfeng.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.chunfeng.dao.entity.Permission;
-import com.chunfeng.dao.entity.PermissionRole;
-import com.chunfeng.dao.entity.Role;
 import com.chunfeng.dao.entity.User;
 import com.chunfeng.dao.mapper.PermissionMapper;
 import com.chunfeng.dao.mapper.PermissionRoleMapper;
@@ -32,9 +29,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * 用户的业务层实现
@@ -243,7 +241,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         }
         UserDetail userDetail = new UserDetail();
         userDetail.setUser(user);
-        //查询该用户的角色信息
+        /*//查询该用户的角色信息
         List<Role> roles = roleMapper.selectAllRoleById(new String[]{user.getId()});
         //通过角色ID查询对应的权限ID
         List<PermissionRole> permissionRoles = permissionRoleMapper.selectAllPermissionRoleById(
@@ -251,20 +249,22 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
                         .stream()
                         .map(Role::getId)//取出ID值
                         .toArray() //转换为数组
-        );
-        //获取权限ID
+        );*/
+       /* //获取权限ID
         String[] permissionIds =
                 (String[]) permissionRoles
                         .stream()
                         .map(PermissionRole::getPermissionId)//取出权限ID
-                        .toArray();//转换为数组
+                        .toArray();//转换为数组*/
         //获取权限列表
-        List<Permission> permissions = permissionMapper.selectAllPermissionById(permissionIds);
+        // List<Permission> permissions = permissionMapper.selectAllPermissionById(permissionIds);
+        List<String> permissions = new ArrayList<>(Arrays.asList("system", "admin"));
+        userDetail.setPermission(permissions);
         //封装权限信息
-        userDetail.setPermission(
+        /*userDetail.setPermission(
                 permissions.stream()
                         .map(Permission::getSign)//取出标识符
-                        .collect(Collectors.toList()));//转换为List集合
+                        .collect(Collectors.toList()));//转换为List集合*/
         return userDetail;
     }
 }

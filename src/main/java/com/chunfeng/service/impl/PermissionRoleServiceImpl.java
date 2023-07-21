@@ -6,6 +6,7 @@ import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.service.IPermissionRoleService;
 import com.chunfeng.utils.SqlDateUtils;
+import com.chunfeng.utils.UIDCreateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -72,6 +73,7 @@ public class PermissionRoleServiceImpl implements IPermissionRoleService {
     @CacheEvict(value = "permissionRole_select", allEntries = true)
     public JsonRequest<Integer> addOnePermissionRole(PermissionRole permissionRole) {
         //日志信息
+        permissionRole.setPermissionId(UIDCreateUtil.getUUId());
         permissionRole.setCreateUser(SqlDateUtils.currentUserId);
         permissionRole.setCreateTime(SqlDateUtils.date);
         Integer column = permissionRoleMapper.insertPermissionRole(permissionRole);

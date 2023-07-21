@@ -6,6 +6,7 @@ import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.service.IProblemExamService;
 import com.chunfeng.utils.SqlDateUtils;
+import com.chunfeng.utils.UIDCreateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -72,6 +73,7 @@ public class ProblemExamServiceImpl implements IProblemExamService {
     @CacheEvict(value = "problemExam_select", allEntries = true)
     public JsonRequest<Integer> addOneProblemExam(ProblemExam problemExam) {
         //日志信息
+        problemExam.setExamId(UIDCreateUtil.getUUId());
         problemExam.setCreateUser(SqlDateUtils.currentUserId);
         problemExam.setCreateTime(SqlDateUtils.date);
         Integer column = problemExamMapper.insertProblemExam(problemExam);

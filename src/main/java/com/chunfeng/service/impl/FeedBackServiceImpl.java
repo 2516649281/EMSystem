@@ -6,6 +6,7 @@ import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.service.IFeedBackService;
 import com.chunfeng.utils.SqlDateUtils;
+import com.chunfeng.utils.UIDCreateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -72,6 +73,7 @@ public class FeedBackServiceImpl implements IFeedBackService {
     @CacheEvict(value = "feedBack_select", allEntries = true)
     public JsonRequest<Integer> addOneFeedBack(FeedBack feedBack) {
         //日志信息
+        feedBack.setId(UIDCreateUtil.getUUId());
         feedBack.setCreateTime(SqlDateUtils.date);
         Integer column = feedBackMapper.insertFeedBack(feedBack);
         //判断添加是否成功

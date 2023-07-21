@@ -6,6 +6,7 @@ import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.service.ISubjectService;
 import com.chunfeng.utils.SqlDateUtils;
+import com.chunfeng.utils.UIDCreateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -72,6 +73,7 @@ public class SubjectServiceImpl implements ISubjectService {
     @CacheEvict(value = "subject_select", allEntries = true)
     public JsonRequest<Integer> addOneSubject(Subject subject) {
         //日志信息
+        subject.setId(UIDCreateUtil.getUUId());
         subject.setCreateUser(SqlDateUtils.currentUserId);
         subject.setCreateTime(SqlDateUtils.date);
         Integer column = subjectMapper.insertSubject(subject);

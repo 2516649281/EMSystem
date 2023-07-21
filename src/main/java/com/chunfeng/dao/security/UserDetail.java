@@ -28,7 +28,6 @@ public class UserDetail implements UserDetails, Serializable {
      * 用户对象
      */
     private User user;
-
     /**
      * 存入Redis的权限列表
      */

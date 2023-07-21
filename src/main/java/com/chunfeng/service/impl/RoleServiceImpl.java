@@ -6,6 +6,7 @@ import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.service.IRoleService;
 import com.chunfeng.utils.SqlDateUtils;
+import com.chunfeng.utils.UIDCreateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -72,6 +73,7 @@ public class RoleServiceImpl implements IRoleService {
     @CacheEvict(value = "role_select", allEntries = true)
     public JsonRequest<Integer> addOneRole(Role role) {
         //日志信息
+        role.setId(UIDCreateUtil.getUUId());
         role.setCreateUser(SqlDateUtils.currentUserId);
         role.setCreateTime(SqlDateUtils.date);
         Integer column = roleMapper.insertRole(role);

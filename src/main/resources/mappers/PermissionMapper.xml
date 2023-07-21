@@ -8,7 +8,7 @@
         from permission
         <where>
             <if test="id!='' and id!=null">
-                and id=#{id}
+                id=#{id}
             </if>
             <if test="name!='' and name!=null">
                 and name like CONCAT('%', #{name}, '%')
@@ -19,7 +19,7 @@
         </where>
     </select>
     <!-- 根据ID查询权限-->
-    <select id="selectAllPermissionById" resultType="list">
+    <select id="selectAllPermissionById" parameterType="list" resultType="com.chunfeng.dao.entity.Permission">
         select id, name, sign
         from permission
         <where>
@@ -32,7 +32,7 @@
     <!--插入一条权限数据-->
     <insert id="insertPermission">
         insert into permission (id, name, sign, create_user, create_time)
-        values (#{id}, #{name}, #{sign}, #{createPermission}, #{createTime});
+        values (#{id}, #{name}, #{sign}, #{createUser}, #{createTime});
     </insert>
     <!--根据权限ID修改一条权限数据-->
     <update id="updatePermissionById">

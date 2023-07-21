@@ -42,7 +42,10 @@
     </select>
     <!--根据用户名和密码查询用户-->
     <select id="selectAllByName" resultMap="userMap" resultType="com.chunfeng.dao.entity.User">
-        select id
+        select id,
+               name,
+               password,
+               status
         from user
         where name = #{name}
         ;
