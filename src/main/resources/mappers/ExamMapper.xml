@@ -3,28 +3,22 @@
 <mapper namespace="com.chunfeng.dao.mapper.ExamMapper">
     <!--字段映射-->
     <resultMap id="examMap" type="com.chunfeng.dao.entity.Exam">
-        <result column="create_user" property="createUser"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_user" property="updateUser"/>
-        <result column="update_time" property="updateTime"/>
+        <result column="file_path" property="filePath"/>
     </resultMap>
     <!--条件查询试卷-->
     <select id="selectAllExam" resultType="com.chunfeng.dao.entity.Exam" parameterType="com.chunfeng.dao.entity.Exam"
             resultMap="examMap">
-        select id, name, time, score, pass from
+        select id, file_path from
         exam
         <where>
             <if test="id!='' and id!=null">
-                and id=#{id}
-            </if>
-            <if test="name!='' and name!=null">
-                and name like CONCAT('%', #{name}, '%')
+                id=#{id}
             </if>
         </where>
     </select>
     <!--根据ID查询试卷-->
     <select id="selectAllExamById" resultType="list" resultMap="examMap">
-        select id, name, time, score, pass
+        select id, file_path
         from exam
         <where>
             <foreach collection="ids" item="id" open="(" separator="," close=")">
@@ -35,24 +29,15 @@
     </select>
     <!--插入一条试卷数据-->
     <insert id="insertExam">
-        insert into exam (id, name, time, score, pass, create_user, create_time)
-        values (#{id}, #{name}, #{time}, #{score}, #{pass}, #{createUser}, #{createTime});
+        insert into exam (id, file_path, create_user, create_time)
+        values (#{id}, #{filePath}, #{createUser}, #{createTime});
     </insert>
     <!--根据试卷ID修改一条试卷数据-->
     <update id="updateExamById">
         update exam
         <set>
-            <if test="name!='' and password!=null">
-                name=#{name}
-            </if>
-            <if test="time!='' and time!=null">
-                ,time=#{time}
-            </if>
-            <if test="score!='' and score!=null">
-                ,score=#{score}
-            </if>
-            <if test="pass!='' and pass!=null">
-                ,pass=#{pass}
+            <if test="filePath!='' and filePath!=null">
+                file_path=#{filePath}
             </if>
             <if test="updateUser!='' and updateUser!=null">
                 ,update_user=#{updateUser}

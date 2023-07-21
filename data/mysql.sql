@@ -44,13 +44,9 @@ CREATE TABLE `permission_role`
 CREATE TABLE `problem`
 (
     `id`          VARCHAR(48) PRIMARY KEY COMMENT '主键',
-    `main`        VARCHAR(64) NOT NULL COMMENT '题干',
-    `options`     VARCHAR(64) COMMENT '选项',
     `type`        INT         NOT NULL DEFAULT 1 COMMENT '类型(0客观题,1主观题)',
-    `answer`      VARCHAR(64) NOT NULL COMMENT '答案',
-    `parse`       VARCHAR(64) NOT NULL COMMENT '解析',
-    `score`       FLOAT       NOT NULL COMMENT '得分',
     `subject`     VARCHAR(48) NOT NULL COMMENT '科目',
+    `file_path`   VARCHAR(64) NOT NULL COMMENT '存放路径',
     `create_user` VARCHAR(48) NOT NULL COMMENT '创建用户',
     `update_user` VARCHAR(48) COMMENT '修改用户',
     `create_time` DATETIME    NOT NULL COMMENT '创建时间',
@@ -92,10 +88,7 @@ CREATE TABLE `subject`
 CREATE TABLE `exam`
 (
     `id`          VARCHAR(48) PRIMARY KEY COMMENT '主键',
-    `name`        VARCHAR(32) NOT NULL COMMENT '试卷名',
-    `time`        VARCHAR(32) NOT NULL COMMENT '考试时间',
-    `score`       FLOAT       NOT NULL COMMENT '总分',
-    `pass`        FLOAT       NOT NULL COMMENT '合格分数',
+    `file_path`   VARCHAR(64) NOT NULL COMMENT '存放路径',
     `create_user` VARCHAR(48) NOT NULL COMMENT '创建用户',
     `update_user` VARCHAR(48) COMMENT '修改用户',
     `create_time` DATETIME    NOT NULL COMMENT '创建时间',
@@ -105,6 +98,6 @@ CREATE TABLE `exam`
 CREATE TABLE `feedback`
 (
     `id`          VARCHAR(48) PRIMARY KEY COMMENT '主键',
-    `message`     VARCHAR(256) NOT NULL COMMENT '反馈消息',
-    `create_time` DATETIME     NOT NULL COMMENT '创建时间'
+    `file_path`   VARCHAR(48) NOT NULL COMMENT '文件路径',
+    `create_time` DATETIME    NOT NULL COMMENT '创建时间'
 ) COMMENT '反馈表';

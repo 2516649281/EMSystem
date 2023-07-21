@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.chunfeng.dao.mapper.RoleMapper">
-    <!--角色表字段映射-->
-    <resultMap id="roleMap" type="com.chunfeng.dao.entity.Role">
-        <result column="create_user" property="createUser"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_user" property="updateUser"/>
-        <result column="update_time" property="updateTime"/>
-    </resultMap>
     <!--条件查询角色信息-->
-    <select id="selectAllRole" resultType="com.chunfeng.dao.entity.Role" resultMap="roleMap">
+    <select id="selectAllRole" resultType="com.chunfeng.dao.entity.Role">
         select id, name
         from role
         <where>
@@ -24,7 +17,7 @@
         ;
     </select>
     <!--根据ID查询角色-->
-    <select id="selectAllRoleById" resultType="list" resultMap="roleMap">
+    <select id="selectAllRoleById" resultType="list">
         select id, name
         from role
         <where>

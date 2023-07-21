@@ -5,12 +5,7 @@
 <mapper namespace="com.chunfeng.dao.mapper.UserMapper">
     <!--字段映射-->
     <resultMap id="userMap" type="com.chunfeng.dao.entity.User">
-        <result column="role.name" property="roleName"/>
         <result column="nick_name" property="nickName"/>
-        <result column="create_user" property="createUser"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_user" property="updateUser"/>
-        <result column="update_time" property="updateTime"/>
     </resultMap>
     <!--条件查询用户-->
     <select id="selectAllUser" resultType="com.chunfeng.dao.entity.User" parameterType="com.chunfeng.dao.entity.User"

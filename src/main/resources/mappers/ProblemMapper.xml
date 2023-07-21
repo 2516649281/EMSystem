@@ -3,38 +3,20 @@
 <mapper namespace="com.chunfeng.dao.mapper.ProblemMapper">
     <!--字段映射-->
     <resultMap id="problemMap" type="com.chunfeng.dao.entity.Problem">
-        <result column="create_user" property="createUser"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_user" property="updateUser"/>
-        <result column="update_time" property="updateTime"/>
+        <result column="file_path" property="filePath"/>
     </resultMap>
     <!--条件查询题目-->
     <select id="selectAllProblem" resultType="com.chunfeng.dao.entity.Problem"
             parameterType="com.chunfeng.dao.entity.Problem"
             resultMap="problemMap">
-        select id, main, options, type, answer, parse, score, subject
+        select id, type, subject,file_path
         from problem
         <where>
             <if test="id!='' and id!=null">
-                and id=#{id}
-            </if>
-            <if test="name!='' and name!=null">
-                and main like CONCAT('%', #{main}, '%')
-            </if>
-            <if test="options!='' and options!=null">
-                and options like CONCAT('%', #{options}, '%')
+                id=#{id}
             </if>
             <if test="type!=null">
                 and type like #{type}
-            </if>
-            <if test="answer!='' and answer!=null">
-                and answer like CONCAT('%', #{answer}, '%')
-            </if>
-            <if test="parse!='' and parse!=null">
-                and parse like CONCAT('%', #{parse}, '%')
-            </if>
-            <if test="score!=null">
-                and score like #{score}
             </if>
             <if test="subject!='' and subject!=null">
                 and subject=#{subject}
@@ -43,7 +25,7 @@
     </select>
     <!--根据ID查询题目-->
     <select id="selectAllProblemById" resultType="list" resultMap="problemMap">
-        select id, main, options, type, answer, parse, score, subject
+        select id, type, subject,file_path
         from problem
         <where>
             <foreach collection="ids" item="id" open="(" separator="," close=")">
@@ -54,34 +36,21 @@
     </select>
     <!--插入一条题目数据-->
     <insert id="insertProblem">
-        insert into problem (id, main, options, type, answer, parse, score, subject, create_user, create_time)
-        values (#{id}, #{name}, #{options}, #{type}, #{answer}, #{parse}, #{score}, #{subject}, #{createUser},
-                #{createTime});
+        insert into problem (id, type, subject, file_path, create_user, create_time)
+        values (#{id}, #{type}, #{subject}, #{filePath}, #{createUser}, #{createTime});
     </insert>
     <!--根据题目ID修改一条题目数据-->
     <update id="updateProblemById">
         update problem
         <set>
-            <if test="name!='' and name!=null">
-                main=#{main}
-            </if>
-            <if test="options!='' and options!=null">
-                ,options=#{options}
-            </if>
             <if test="type!=null">
-                ,type=#{type}
-            </if>
-            <if test="answer!='' and answer!=null">
-                ,answer=#{answer}
-            </if>
-            <if test="parse!='' and parse!=null">
-                ,parse=#{parse}
-            </if>
-            <if test="score!=null">
-                ,score=#{score}
+                type=#{type}
             </if>
             <if test="subject!='' and subject!=null">
                 ,subject=#{subject}
+            </if>
+            <if test="filePath!=null and filePath!=''">
+                ,file_path=#{filePath}
             </if>
             <if test="updateUser!='' and updateUser!=null">
                 ,update_user=#{updateUser}

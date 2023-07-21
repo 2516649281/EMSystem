@@ -1,7 +1,8 @@
 package com.chunfeng.config;
 
+import com.chunfeng.properties.SwaggerProperties;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,10 +20,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @ConditionalOnClass(Docket.class)
 public class SwaggerConfig {
 
-    private static final String VERSION = "1.0";
-
-    @Value("${springfox.swagger2.enabled}")
-    private Boolean swaggerEnabled;
+    /**
+     * swagger配置键
+     */
+    @Autowired
+    private SwaggerProperties swaggerProperties;
 
     /**
      * API接口核心配置
@@ -32,8 +34,8 @@ public class SwaggerConfig {
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .enable(swaggerEnabled)
-                .groupName("ems")
+                .enable(swaggerProperties.getEnabled())//是否启用
+                .groupName(swaggerProperties.getGroupName())
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
@@ -46,10 +48,10 @@ public class SwaggerConfig {
      */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("考试管理系统")
-                .contact(new Contact("春风能解释", "", "2516649281@qq.com"))
-                .description("Swagger接口文档")
-                .version(VERSION)
+                .title(swaggerProperties.getTitle())
+                .contact(new Contact(swaggerProperties.getAuthor(), swaggerProperties.getUrl(), swaggerProperties.getEmail()))
+                .description(swaggerProperties.getDescription())
+                .version(swaggerProperties.getVersion())
                 .build();
     }
 

@@ -12,18 +12,22 @@ import lombok.Setter;
  * <p>
  * 2023/7/14
  */
-@NoArgsConstructor
 @Setter
 @Getter
+@NoArgsConstructor
 public class ServiceException extends RuntimeException {
+    /**
+     * 序列化字段
+     */
+    private static final long serialVersionUID = 456372299927265329L;
     /**
      * 错误代码
      */
-    private Integer status;
+    private Integer status = 500;
     /**
      * 消息
      */
-    private String message;
+    private String message = "未知异常!";
 
     /**
      * 使用原有枚举类异常

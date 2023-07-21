@@ -46,7 +46,7 @@ public interface ProblemExamMapper {
     Integer updateProblemExamById(ProblemExam problemExam);
 
     /**
-     * 根据关系ID批量删除关系信息
+     * 根据关系ID批量解绑关系信息
      *
      * @param ids 选择的关系ID
      * @return 影响行数

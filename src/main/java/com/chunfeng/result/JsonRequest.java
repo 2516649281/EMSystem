@@ -1,5 +1,7 @@
 package com.chunfeng.result;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,26 +16,32 @@ import java.io.Serializable;
  */
 @Data
 @NoArgsConstructor
+@ApiModel(value = "统一响应类", description = "用于传给前端的统一JSON格式")
 public class JsonRequest<T> implements Serializable {
     /**
      * 序列化字段
      */
+    @ApiModelProperty(value = "序列化字段", hidden = true)
     private static final long serialVersionUID = -5408366163757792606L;
     /**
      * 错误代码
      */
+    @ApiModelProperty(value = "错误代码")
     private Integer status = 200;
     /**
      * 消息
      */
+    @ApiModelProperty(value = "消息")
     private String message = "请求已成功!";
     /**
      * 是否正常
      */
+    @ApiModelProperty(value = "是否正常")
     private Boolean success = true;
     /**
      * 数据
      */
+    @ApiModelProperty(value = "数据", allowEmptyValue = true)
     private T data = null;
 
     /**

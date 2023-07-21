@@ -80,6 +80,20 @@ file:
     url: 'D:/Test/'
     #以MB为单位
     file-max-size: 5
+#swagger配置
 springfox:
   swagger2:
+    # 是否启用
     enabled: true
+    # 组名
+    group-name: ems
+    #作者
+    author: '春风能解释'
+    #电子邮箱
+    email: 2516649281@qq.com
+    #标题
+    title: '考试管理系统'
+    #描述
+    description: '考试管理系统API接口文档'
+    #版本
+    version: 1.0

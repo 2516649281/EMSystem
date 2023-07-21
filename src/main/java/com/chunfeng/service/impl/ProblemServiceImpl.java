@@ -5,6 +5,7 @@ import com.chunfeng.dao.mapper.ProblemMapper;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.service.IProblemService;
+import com.chunfeng.utils.FileMangerUtils;
 import com.chunfeng.utils.SqlDateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 题库业务层实现
@@ -34,6 +37,12 @@ public class ProblemServiceImpl implements IProblemService {
     private ProblemMapper problemMapper;
 
     /**
+     * 文件工具类
+     */
+    @Autowired
+    private FileMangerUtils<Problem> fileMangerUtils;
+
+    /**
      * 分类筛选题库信息
      *
      * @param problem 条件
@@ -48,8 +57,16 @@ public class ProblemServiceImpl implements IProblemService {
             log.warn("未找到任何题目信息!");
             return JsonRequest.error(RequestException.NOT_FOUND);
         }
+        //提取ID值
+        List<String> ids = problems.stream()
+                .map(Problem::getId)//获取ID值
+                .collect(Collectors.toList());//转换为list集合
+        //查询结果
+        List<Problem> problemList = ids.stream()
+                .map(id -> fileMangerUtils.fileLook(id + ".txt"))//遍历获取结果
+                .collect(Collectors.toList());//收集查询结果
         log.info("已找到{}条题目信息", problems.size());
-        return JsonRequest.success(problems);
+        return JsonRequest.success(problemList);
     }
 
     /**
@@ -71,9 +88,13 @@ public class ProblemServiceImpl implements IProblemService {
     @Override
     @CacheEvict(value = "problem_select", allEntries = true)
     public JsonRequest<Integer> addOneProblem(Problem problem) {
+        //将数据写入文件
+        String path = fileMangerUtils.fileWriter(problem.getId() + ".txt", problem);
         //日志信息
         problem.setCreateUser(SqlDateUtils.currentUserId);
         problem.setCreateTime(SqlDateUtils.date);
+        //保存文件路径
+        problem.setFilePath(path);
         Integer column = problemMapper.insertProblem(problem);
         //判断添加是否成功
         if (column < 1) {
@@ -99,6 +120,8 @@ public class ProblemServiceImpl implements IProblemService {
             log.warn("数据库中不存在ID为{}的题库信息!", problem.getId());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
+        //修改文件内容
+        fileMangerUtils.fileUpdate(problem.getId(), problem);
         //日志信息
         problem.setUpdateUser(SqlDateUtils.currentUserId);
         problem.setUpdateTime(SqlDateUtils.date);
@@ -125,6 +148,10 @@ public class ProblemServiceImpl implements IProblemService {
             log.error("删除题库信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", problems.size(), ids.length);
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
+        //删除文件内容
+        Arrays.stream(ids)
+                .forEach(id -> fileMangerUtils.fileDelete(id + ".txt"));
+        //删除数据库内容
         Integer column = problemMapper.deleteProblemById(ids);
         if (column < 1) {
             log.error("删除题库失败!");

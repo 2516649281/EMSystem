@@ -56,11 +56,11 @@ public enum RequestException {
     /**
      * 文件上传失败
      */
-    UPLOAD_FILE_ERROR(505, "文件上传失败!"),
+    FILE_ERROR(505, "文件上传失败!"),
     /**
      * 文件超出范围
      */
-    UPLOAD_FILE_BEYOND_MAX_SIZE(506, "文件超出范围!"),
+    FILE_BEYOND_MAX_SIZE(506, "文件超出范围!"),
     /**
      * token异常
      */

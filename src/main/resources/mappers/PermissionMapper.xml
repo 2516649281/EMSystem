@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.chunfeng.dao.mapper.PermissionMapper">
-    <!--字段映射-->
-    <resultMap id="permissionMap" type="com.chunfeng.dao.entity.Permission">
-        <result column="create_user" property="createUser"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_user" property="updateUser"/>
-        <result column="update_time" property="updateTime"/>
-    </resultMap>
     <!--条件查询权限-->
     <select id="selectAllPermission" resultType="com.chunfeng.dao.entity.Permission"
-            parameterType="com.chunfeng.dao.entity.Permission"
-            resultMap="permissionMap">
+            parameterType="com.chunfeng.dao.entity.Permission">
         select id, name, sign
         from permission
         <where>
@@ -27,7 +19,7 @@
         </where>
     </select>
     <!-- 根据ID查询权限-->
-    <select id="selectAllPermissionById" resultType="list" resultMap="permissionMap">
+    <select id="selectAllPermissionById" resultType="list">
         select id, name, sign
         from permission
         <where>

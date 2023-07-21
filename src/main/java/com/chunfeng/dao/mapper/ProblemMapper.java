@@ -1,6 +1,5 @@
 package com.chunfeng.dao.mapper;
 
-import com.chunfeng.dao.entity.PermissionRole;
 import com.chunfeng.dao.entity.Problem;
 import org.apache.ibatis.annotations.Param;
 

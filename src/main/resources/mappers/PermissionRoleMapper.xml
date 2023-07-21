@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.chunfeng.dao.mapper.PermissionRoleMapper">
-    <!--字段映射-->
-    <resultMap id="permissionRoleMap" type="com.chunfeng.dao.entity.PermissionRole">
-        <result column="create_user" property="createUser"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_user" property="updateUser"/>
-        <result column="update_time" property="updateTime"/>
-    </resultMap>
     <!--条件查询关系-->
     <select id="selectAllPermissionRole" resultType="com.chunfeng.dao.entity.PermissionRole"
-            parameterType="com.chunfeng.dao.entity.PermissionRole"
-            resultMap="permissionRoleMap">
+            parameterType="com.chunfeng.dao.entity.PermissionRole">
         select id, permission_id, role_id
         from permission_role
         <where>
@@ -27,8 +19,7 @@
         </where>
     </select>
     <!--根据关系ID查询关系信息-->
-    <select id="selectAllPermissionRoleById" resultType="list"
-            resultMap="permissionRoleMap">
+    <select id="selectAllPermissionRoleById" resultType="list">
         select id, permission_id, role_id
         from permission_role
         <where>
@@ -62,7 +53,7 @@
         </set>
         where id=#{id};
     </update>
-    <!--根据关系ID批量删除关系信息-->
+    <!--根据关系ID批量解绑关系信息-->
     <delete id="deletePermissionRoleById" parameterType="list">
         delete
         from permission_role

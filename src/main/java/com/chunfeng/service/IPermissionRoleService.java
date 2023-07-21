@@ -30,7 +30,7 @@ public interface IPermissionRoleService {
     JsonRequest<List<PermissionRole>> lookAllPermissionRole();
 
     /**
-     * 新增一条关系信息
+     * 绑定一条关系信息
      *
      * @param permissionRole 关系信息
      * @return JSON
@@ -46,7 +46,7 @@ public interface IPermissionRoleService {
     JsonRequest<Integer> updateOnePermissionRole(PermissionRole permissionRole);
 
     /**
-     * 批量删除关系信息
+     * 批量解绑关系信息
      *
      * @param ids 关系ID
      * @return JSON

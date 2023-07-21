@@ -5,6 +5,7 @@ import com.chunfeng.dao.mapper.ExamMapper;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.service.IExamService;
+import com.chunfeng.utils.FileMangerUtils;
 import com.chunfeng.utils.SqlDateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 试卷业务层实现
@@ -34,6 +37,12 @@ public class ExamServiceImpl implements IExamService {
     private ExamMapper examMapper;
 
     /**
+     * 文件工具类
+     */
+    @Autowired
+    private FileMangerUtils<Exam> fileMangerUtils;
+
+    /**
      * 分类筛选试卷信息
      *
      * @param exam 条件
@@ -48,8 +57,16 @@ public class ExamServiceImpl implements IExamService {
             log.warn("未找到任何试卷信息!");
             return JsonRequest.error(RequestException.NOT_FOUND);
         }
+        //提取ID值
+        List<String> ids = exams.stream()
+                .map(Exam::getId)//获取ID值
+                .collect(Collectors.toList());//转换为list集合
+        //查询结果
+        List<Exam> examList = ids.stream()
+                .map(id -> fileMangerUtils.fileLook(id + ".txt"))//遍历获取结果
+                .collect(Collectors.toList());//收集查询结果
         log.info("已找到{}条试卷信息", exams.size());
-        return JsonRequest.success(exams);
+        return JsonRequest.success(examList);
     }
 
     /**
@@ -71,9 +88,13 @@ public class ExamServiceImpl implements IExamService {
     @Override
     @CacheEvict(value = "exam_select", allEntries = true)
     public JsonRequest<Integer> addOneExam(Exam exam) {
+        //将数据写入文件
+        String path = fileMangerUtils.fileWriter(exam.getId() + ".txt", exam);
         //日志信息
         exam.setCreateUser(SqlDateUtils.currentUserId);
         exam.setCreateTime(SqlDateUtils.date);
+        //保存文件路径
+        exam.setFilePath(path);
         Integer column = examMapper.insertExam(exam);
         //判断添加是否成功
         if (column < 1) {
@@ -99,6 +120,8 @@ public class ExamServiceImpl implements IExamService {
             log.warn("数据库中不存在ID为{}的试卷信息!", exam.getId());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
+        //修改文件内容
+        fileMangerUtils.fileUpdate(exam.getId(), exam);
         //日志信息
         exam.setUpdateUser(SqlDateUtils.currentUserId);
         exam.setUpdateTime(SqlDateUtils.date);
@@ -125,6 +148,10 @@ public class ExamServiceImpl implements IExamService {
             log.error("删除试卷信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", exams.size(), ids.length);
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
+        //删除文件内容
+        Arrays.stream(ids)
+                .forEach(id -> fileMangerUtils.fileDelete(id + ".txt"));
+        //删除数据库内容
         Integer column = examMapper.deleteExamById(ids);
         if (column < 1) {
             log.error("删除试卷失败!");

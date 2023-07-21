@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.chunfeng.dao.mapper.ProblemExamMapper">
-    <!--字段映射-->
-    <resultMap id="problemExamMap" type="com.chunfeng.dao.entity.ProblemExam">
-        <result column="create_user" property="createUser"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_user" property="updateUser"/>
-        <result column="update_time" property="updateTime"/>
-    </resultMap>
     <!--条件查询关系-->
     <select id="selectAllProblemExam" resultType="com.chunfeng.dao.entity.ProblemExam"
-            parameterType="com.chunfeng.dao.entity.ProblemExam"
-            resultMap="problemExamMap">
+            parameterType="com.chunfeng.dao.entity.ProblemExam">
         select id, exam_id, permission
         from problem_exam
         <where>
@@ -27,8 +19,7 @@
         </where>
     </select>
     <!--根据关系ID查询关系信息-->
-    <select id="selectAllProblemExamById" resultType="list"
-            resultMap="problemExamMap">
+    <select id="selectAllProblemExamById" resultType="list">
         select id, exam_id, permission
         from problem_exam
         <where>
@@ -62,7 +53,7 @@
         </set>
         where id=#{id};
     </update>
-    <!--根据关系ID批量删除关系信息-->
+    <!--根据关系ID批量解绑关系信息-->
     <delete id="deleteProblemExamById" parameterType="list">
         delete
         from problem_exam

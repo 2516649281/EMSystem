@@ -2,7 +2,6 @@ package com.chunfeng.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.chunfeng.result.JsonRequest;
-import com.chunfeng.result.RequestException;
 import com.chunfeng.result.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,7 +34,7 @@ public class ResponsePrinter {
             response.getWriter().print(JSON.toJSONString(json));
         } catch (IOException e) {
             log.error("JSON渲染错误!");
-            throw new ServiceException(RequestException.UNKNOWN_EXCEPTION);
+            throw new ServiceException();
         }
     }
 }

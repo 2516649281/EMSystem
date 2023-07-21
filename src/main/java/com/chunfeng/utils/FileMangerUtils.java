@@ -1,0 +1,177 @@
+package com.chunfeng.utils;
+
+import com.chunfeng.properties.FileConfigProperties;
+import com.chunfeng.result.RequestException;
+import com.chunfeng.result.exception.ServiceException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.*;
+
+/**
+ * 全局文件操作类
+ *
+ * @author by 春风能解释
+ * <p>
+ * 2023/7/20
+ */
+@Slf4j
+public class FileMangerUtils<T> {
+
+    /**
+     * 文件配置
+     */
+    @Autowired
+    private FileConfigProperties fileConfigProperties;
+
+    /**
+     * 写入文件操作
+     *
+     * @param fileName 文件名
+     * @param obj      待序列化的对象
+     * @return 文件路径
+     */
+    public String fileWriter(String fileName, T obj) {
+        ObjectOutputStream ois = null;
+        try {
+            //初始化序列化对象
+            ois = new ObjectOutputStream(
+                    new FileOutputStream(fileConfigProperties.getUrl() + fileName)
+            );
+            //写入文件
+            ois.writeObject(obj);
+        } catch (Exception e) {
+            log.error("写入文件{}失败!", fileName);
+            e.printStackTrace();
+        }
+        //释放资源
+        close(null, ois);
+        log.info("已创建文件{}", fileName);
+        return fileConfigProperties.getUrl() + fileName;
+    }
+
+    /**
+     * 文件修改操作
+     *
+     * @param fileName 文件名
+     * @param obj      待序列化的对象
+     */
+    public void fileUpdate(String fileName, T obj) {
+        File file = new File(fileConfigProperties.getUrl() + fileName);
+        //如果文件存在则执行
+        if (file.exists()) {
+            String path = fileWriter(fileName, obj);
+            log.info("文件{}修改完成!", path);
+        }
+        log.warn("文件{}不存在!", fileName);
+    }
+
+    /**
+     * 文件查看操作
+     *
+     * @param fileName 待查看的文件名
+     * @return T 返回反序后的对象
+     */
+    public T fileLook(String fileName) {
+        //读文件
+        ObjectInputStream ois = null;
+        T obj = null;
+        try {
+            ois = new ObjectInputStream(
+                    new FileInputStream(fileConfigProperties.getUrl() + fileName));
+            //转换为指定对象
+            obj = (T) ois.readObject();
+        } catch (Exception exception) {
+            log.error("文件{}读取失败!", fileName);
+            exception.printStackTrace();
+        }
+        log.info("文件{}已成功读取!", fileName);
+        //释放资源
+        close(ois, null);
+        return obj;
+    }
+
+    /**
+     * 删除文件
+     *
+     * @param fileName 待删除的文件名
+     */
+    public void fileDelete(String fileName) {
+        File file = new File(fileConfigProperties.getUrl() + fileName);
+        if (file.exists()) {
+            log.info("文件{}已被删除!", fileName);
+            file.delete();
+        }
+        log.warn("文件{}不存在!", fileName);
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param fileName 文件名
+     * @return 字节流
+     */
+    public ResponseEntity<?> avatarDownload(String fileName) {
+        File file = new File(fileConfigProperties.getUrl() + fileName);
+        //文件不存在
+        if (!file.exists()) {
+            log.warn("找不到图片{}", fileName);
+            return ResponseEntity.notFound().build();
+        }
+        ResourceLoader loader = new DefaultResourceLoader();
+        log.info("已找到{}", fileName);
+        //获取当前文件
+        return ResponseEntity.ok(loader.getResource("file:" + fileConfigProperties.getUrl() + fileName));
+    }
+
+    /**
+     * 文件上传
+     *
+     * @param file     待上传文件
+     * @param fileName 文件名
+     * @return 是否成功
+     */
+    public Boolean avatarUpload(MultipartFile file, String fileName) throws IOException {
+        if (!file.isEmpty()) {
+            log.error("待上传的文件为空!");
+            throw new ServiceException(RequestException.FILE_ERROR);
+        }
+        long size = file.getSize();
+        // 判断文件大小
+        if (size > fileConfigProperties.getFileMaxSize() * 1024 * 1024) {
+            log.warn("文件大小超出限制!实际大小:{}", size);
+            throw new ServiceException(RequestException.FILE_BEYOND_MAX_SIZE);
+        }
+        //上传文件
+        file.transferTo(new File(fileConfigProperties.getUrl() + fileName));
+        log.info("文件{}上传成功!", fileName);
+        return true;
+    }
+
+    /**
+     * 释放资源
+     *
+     * @param ois 输入流对象
+     * @param ops 输出流对象
+     */
+    public void close(InputStream ois, OutputStream ops) {
+        try {
+            //释放资源
+            if (ois != null) {
+                log.info("已释放InputStream");
+                ois.close();
+            }
+            if (ops != null) {
+                log.info("已释放OutputStream");
+                ops.close();
+            }
+        } catch (IOException ioException) {
+            log.error("释放资源失败!");
+            ioException.printStackTrace();
+        }
+    }
+}
