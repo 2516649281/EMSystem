@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.chunfeng.dao.mapper.ProblemExamMapper">
+    <!--字段映射-->
+    <resultMap id="permissionRoleMap" type="com.chunfeng.dao.entity.PermissionRole">
+        <result column="exam_id" property="permissionId"/>
+        <result column="permission_id" property="permissionId"/>
+    </resultMap>
     <!--条件查询关系-->
     <select id="selectAllProblemExam" resultType="com.chunfeng.dao.entity.ProblemExam"
             parameterType="com.chunfeng.dao.entity.ProblemExam">
-        select id, exam_id, permission
+        select id, exam_id, permission_id
         from problem_exam
         <where>
             <if test="id!='' and id!=null">
@@ -19,10 +24,11 @@
         </where>
     </select>
     <!--根据关系ID查询关系信息-->
-    <select id="selectAllProblemExamById" resultType="list">
-        select id, exam_id, permission
+    <select id="selectAllProblemExamById" resultType="com.chunfeng.dao.entity.ProblemExam">
+        select id, exam_id, permission_id
         from problem_exam
         <where>
+            id in
             <foreach collection="ids" item="id" open="(" separator="," close=")">
                 #{id}
             </foreach>
@@ -31,7 +37,7 @@
     </select>
     <!--插入一条关系数据-->
     <insert id="insertProblemExam">
-        insert into problem_exam (id, exam_id, permission, create_user, create_time)
+        insert into problem_exam (id, exam_id, permission_id, create_user, create_time)
         values (#{id}, #{examId}, #{permissionId}, #{createUser}, #{createTime});
     </insert>
     <!--根据关系ID修改一条关系数据-->

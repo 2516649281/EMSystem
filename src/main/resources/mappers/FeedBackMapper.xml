@@ -17,10 +17,11 @@
         </where>
     </select>
     <!--根据反馈ID查询反馈信息-->
-    <select id="selectAllFeedBackById" resultType="list">
+    <select id="selectAllFeedBackById" resultType="com.chunfeng.dao.entity.FeedBack">
         select id, file_path
         from feedBack
         <where>
+            id in
             <foreach collection="ids" item="id" open="(" separator="," close=")">
                 #{id}
             </foreach>

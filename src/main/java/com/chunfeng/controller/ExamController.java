@@ -5,6 +5,7 @@ import com.chunfeng.result.JsonRequest;
 import com.chunfeng.service.IExamService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class ExamController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
+    @PreAuthorize("hasAnyAuthority('op:exam:select','user:pro:select')")
     public JsonRequest<List<Exam>> lookExam(
             @ApiParam(value = "条件", required = true)
             @RequestParam Exam exam) {
@@ -56,6 +58,7 @@ public class ExamController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
+    @PreAuthorize("hasAnyAuthority('op:exam:select','user:pro:select')")
     public JsonRequest<List<Exam>> lookAllExam() {
         return examService.lookAllExam();
     }
@@ -72,6 +75,7 @@ public class ExamController {
             @ApiResponse(code = 502, message = "添加失败!"),
             @ApiResponse(code = 200, message = "添加成功!")
     })
+    @PreAuthorize("hasAuthority('op:exam:insert')")
     public JsonRequest<Integer> addOneExam(
             @ApiParam(value = "待添加的试卷信息", required = true)
             @RequestBody Exam exam) {
@@ -90,6 +94,7 @@ public class ExamController {
             @ApiResponse(code = 503, message = "修改失败!"),
             @ApiResponse(code = 200, message = "修改成功!")
     })
+    @PreAuthorize("hasAuthority('op:exam:update')")
     public JsonRequest<Integer> updateOneExam(
             @ApiParam(value = "待修改的试卷信息", required = true)
             @RequestBody Exam exam) {
@@ -108,6 +113,7 @@ public class ExamController {
             @ApiResponse(code = 504, message = "删除失败!"),
             @ApiResponse(code = 200, message = "删除成功!")
     })
+    @PreAuthorize("hasAuthority('op:exam:delete')")
     public JsonRequest<Integer> deleteExam(
             @ApiParam(value = "待修改的试卷ID", required = true)
             @RequestBody String[] ids) {

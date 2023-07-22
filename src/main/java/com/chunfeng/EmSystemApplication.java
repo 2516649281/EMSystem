@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 /**
  * 主启动类
@@ -18,9 +19,6 @@ import org.springframework.context.ApplicationContext;
 @SpringBootApplication
 @Slf4j
 @MapperScan("com.chunfeng.dao.mapper")
-// 开启缓存
-@EnableCaching
-@EnableConfigurationProperties
 public class EmSystemApplication {
     /**
      * 项目启动入口

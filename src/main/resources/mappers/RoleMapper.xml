@@ -7,7 +7,7 @@
         from role
         <where>
             <if test="id!='' and id!=null">
-                and id=#{id}
+                id=#{id}
             </if>
             <if test="name!='' and name!=null">
                 and name like CONCAT('%', #{name}, '%')
@@ -17,10 +17,11 @@
         ;
     </select>
     <!--根据ID查询角色-->
-    <select id="selectAllRoleById" resultType="list">
+    <select id="selectAllRoleById" resultType="com.chunfeng.dao.entity.Role">
         select id, name
         from role
         <where>
+            id in
             <foreach collection="ids" item="id" open="(" separator="," close=")">
                 #{id}
             </foreach>

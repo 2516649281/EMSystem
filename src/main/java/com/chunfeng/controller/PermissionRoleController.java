@@ -5,6 +5,7 @@ import com.chunfeng.result.JsonRequest;
 import com.chunfeng.service.IPermissionRoleService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class PermissionRoleController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
+    @PreAuthorize("hasAnyAuthority('sys:role:select','sys:per:select')")
     public JsonRequest<List<PermissionRole>> lookPermissionRole(
             @ApiParam(value = "条件", required = true)
             @RequestParam PermissionRole permissionRole) {
@@ -56,6 +58,7 @@ public class PermissionRoleController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
+    @PreAuthorize("hasAnyAuthority('sys:role:select','sys:per:select')")
     public JsonRequest<List<PermissionRole>> lookAllPermissionRole() {
         return permissionRoleService.lookAllPermissionRole();
     }
@@ -72,6 +75,7 @@ public class PermissionRoleController {
             @ApiResponse(code = 502, message = "添加失败!"),
             @ApiResponse(code = 200, message = "添加成功!")
     })
+    @PreAuthorize("hasAnyAuthority('sys:role:insert','sys:per:insert')")
     public JsonRequest<Integer> addOnePermissionRole(
             @ApiParam(value = "待绑定的关系信息", required = true)
             @RequestBody PermissionRole permissionRole) {
@@ -90,6 +94,7 @@ public class PermissionRoleController {
             @ApiResponse(code = 503, message = "修改失败!"),
             @ApiResponse(code = 200, message = "修改成功!")
     })
+    @PreAuthorize("hasAnyAuthority('sys:role:update','sys:per:update')")
     public JsonRequest<Integer> updateOnePermissionRole(
             @ApiParam(value = "待修改的关系信息", required = true)
             @RequestBody PermissionRole permissionRole) {
@@ -108,6 +113,7 @@ public class PermissionRoleController {
             @ApiResponse(code = 504, message = "删除失败!"),
             @ApiResponse(code = 200, message = "删除成功!")
     })
+    @PreAuthorize("hasAnyAuthority('sys:role:delete','sys:per:delete')")
     public JsonRequest<Integer> deletePermissionRole(
             @ApiParam(value = "待解绑的关系ID", required = true)
             @RequestBody String[] ids) {

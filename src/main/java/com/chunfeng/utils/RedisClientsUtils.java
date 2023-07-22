@@ -22,7 +22,7 @@ public class RedisClientsUtils {
      * Redis客户端
      */
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     /**
      * 存值

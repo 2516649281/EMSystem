@@ -7,6 +7,7 @@ mybatis:
   #开启日志分析
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 ######服务端口######
 #server:
 #  #HTTPS端口
@@ -32,7 +33,7 @@ spring:
     #驱动程序
     driver-class-name: com.mysql.cj.jdbc.Driver
     #连接路径
-    url: jdbc:mysql://localhost:3306/ems?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/ems?serverTimezone=UTC&allowMultiQueries=true
     #用户名
     username: 'root'
     #密码
@@ -69,10 +70,11 @@ handle:
       #注册
       - '/user/register'
       #静态资源
-      - '/**'
-      - '/swagger-ui.html'
+      - '/swagger-ui.html/**'
       - '/doc.html'
       - '/webjars/**'
+      - '/v2/**'
+      - '/swagger-resources/**'
 #文件配置
 file:
   config:
@@ -97,3 +99,5 @@ springfox:
     description: '考试管理系统API接口文档'
     #版本
     version: 1.0
+  #开启详细日志
+debug: true

@@ -1,14 +1,17 @@
 package com.chunfeng.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.chunfeng.dao.entity.User;
+import com.chunfeng.dao.security.UserDetail;
 import com.chunfeng.properties.ExcludeUrlProperties;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.result.exception.ServiceException;
 import com.chunfeng.utils.RedisClientsUtils;
+import com.chunfeng.utils.SqlDateUtils;
 import com.chunfeng.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
@@ -61,16 +64,23 @@ public class TokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }
         //获取token中的ID
-        String id = TokenUtils.checkToken(token).getSubject();
+        String id = TokenUtils.checkToken(token).get("user").toString();
         String user = redisClientsUtils.get("login:" + id);
         //转换为对象
-        User user1 = JSON.parseObject(user, User.class);
+        UserDetail user1 = JSON.parseObject(user, UserDetail.class);
         //验证不通过或者redis数据库中不存在此数据
-        if (!StringUtils.hasText(user) || id.equals(user1.getId().toString())) {
+        if (!(StringUtils.hasText(user) || id.equals(user1.getUser().getId()))) {
             log.error("token验证失败!{}-{}", id, user);
             throw new ServiceException(RequestException.FORBIDDEN);
         }
+        //存入ID
+        SqlDateUtils.currentUserId = id;
         log.info("ID为{}用户通过验证!", id);
+        //存入
+        UsernamePasswordAuthenticationToken ut = new UsernamePasswordAuthenticationToken(
+                user1, null, user1.getAuthorities());
+        //将权限信息放入SecurityContextHolder
+        SecurityContextHolder.getContext().setAuthentication(ut);
         filterChain.doFilter(request, response);
     }
 

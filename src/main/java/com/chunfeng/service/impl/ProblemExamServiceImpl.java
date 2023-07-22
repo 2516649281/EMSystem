@@ -73,7 +73,7 @@ public class ProblemExamServiceImpl implements IProblemExamService {
     @CacheEvict(value = "problemExam_select", allEntries = true)
     public JsonRequest<Integer> addOneProblemExam(ProblemExam problemExam) {
         //日志信息
-        problemExam.setExamId(UIDCreateUtil.getUUId());
+        problemExam.setId(UIDCreateUtil.getUUId());
         problemExam.setCreateUser(SqlDateUtils.currentUserId);
         problemExam.setCreateTime(SqlDateUtils.date);
         Integer column = problemExamMapper.insertProblemExam(problemExam);

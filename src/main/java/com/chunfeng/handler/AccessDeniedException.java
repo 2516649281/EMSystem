@@ -33,7 +33,8 @@ public class AccessDeniedException implements AccessDeniedHandler {
      */
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, org.springframework.security.access.AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        log.warn("非法授权已触发!");
+        accessDeniedException.printStackTrace();
+        log.warn("非法授权已触发!原因:{}", accessDeniedException.getLocalizedMessage());
         ResponsePrinter.printer(request, response, JsonRequest.error(RequestException.FORBIDDEN));
     }
 }

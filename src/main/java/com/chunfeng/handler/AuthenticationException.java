@@ -31,7 +31,8 @@ public class AuthenticationException implements AuthenticationEntryPoint {
      */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.AuthenticationException authException) throws IOException, ServletException {
-        log.warn("非法认证已触发!");
+        authException.printStackTrace();
+        log.warn("非法认证已触发!原因:{}", authException.getLocalizedMessage());
         ResponsePrinter.printer(request, response, JsonRequest.error(RequestException.UNAUTHORIZED));
     }
 }

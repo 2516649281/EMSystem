@@ -17,10 +17,11 @@
         </where>
     </select>
     <!--根据ID查询科目-->
-    <select id="selectAllSubjectById" resultType="list">
+    <select id="selectAllSubjectById" resultType="com.chunfeng.dao.entity.Subject">
         select id, name
         from subject
         <where>
+            id in
             <foreach collection="ids" item="id" open="(" separator="," close=")">
                 #{id}
             </foreach>

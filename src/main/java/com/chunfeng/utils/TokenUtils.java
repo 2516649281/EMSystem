@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.UUID;
@@ -19,6 +20,7 @@ import java.util.UUID;
  * 2022/10/11
  */
 @Slf4j
+@Component
 public class TokenUtils {
     /**
      * 过期时间
@@ -61,24 +63,20 @@ public class TokenUtils {
      * @return object
      */
     public static Claims checkToken(String token) {
-        if (token.equals("")) {
+        if (token == null || token.equals("")) {
             log.error("token为空!");
             throw new ServiceException(RequestException.TOKEN_ERROR);
         }
         Jws<Claims> claimsJws;
-        //redis客户端
-        RedisClientsUtils redisClientsUtils = new RedisClientsUtils();
         try {
             claimsJws = Jwts.parser().setSigningKey(signature).parseClaimsJws(token);
             //如果解析结果为空
             if (claimsJws == null) {
-                redisClientsUtils.remove(token);
                 log.error("token解析失败!已删除key-{}", token);
                 throw new ServiceException(RequestException.TOKEN_ERROR);
             }
         }//如果发生异常
         catch (Exception e) {
-            redisClientsUtils.remove(token);
             log.error("token解析失败!已删除key-{}", token);
             throw new ServiceException(RequestException.TOKEN_ERROR);
         }

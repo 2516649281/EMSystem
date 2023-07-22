@@ -45,13 +45,14 @@
         select id,
                name,
                password,
-               status
+               status,
+               role
         from user
         where name = #{name}
         ;
     </select>
     <!--根据用户ID查询用户信息-->
-    <select id="selectAllByIds" resultType="list" resultMap="userMap">
+    <select id="selectAllByIds" resultType="com.chunfeng.dao.entity.User" resultMap="userMap">
         select id,
         name,
         nick_name,
@@ -62,6 +63,7 @@
         status
         from user
         <where>
+            id in
             <foreach collection="ids" item="id" open="(" separator="," close=")">
                 #{id}
             </foreach>

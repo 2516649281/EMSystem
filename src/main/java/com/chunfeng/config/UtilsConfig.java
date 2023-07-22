@@ -3,6 +3,7 @@ package com.chunfeng.config;
 import com.chunfeng.dao.entity.Exam;
 import com.chunfeng.dao.entity.Problem;
 import com.chunfeng.utils.FileMangerUtils;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
  * 2023/7/21
  */
 @Configuration
+// 开启缓存
+@EnableCaching
 public class UtilsConfig {
 
     /**

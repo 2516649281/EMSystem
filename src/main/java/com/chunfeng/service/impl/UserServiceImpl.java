@@ -1,6 +1,9 @@
 package com.chunfeng.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.chunfeng.dao.entity.Permission;
+import com.chunfeng.dao.entity.PermissionRole;
+import com.chunfeng.dao.entity.Role;
 import com.chunfeng.dao.entity.User;
 import com.chunfeng.dao.mapper.PermissionMapper;
 import com.chunfeng.dao.mapper.PermissionRoleMapper;
@@ -29,10 +32,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 用户的业务层实现
@@ -134,9 +136,8 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         //将用户信息存入Redis数据库
         redisClientsUtils.set(
                 "login:" + user.getId(), //key: login:2(数字代表ID)
-                JSON.toJSONString(user));//value: 用户序列化后的字符串
+                JSON.toJSONString(userDetail));//value: 用户序列化后的字符串
         log.info("用户{}登录成功!", name);
-        SqlDateUtils.currentUserId = user.getId();
         return JsonRequest.success(token);
     }
 
@@ -241,30 +242,38 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         }
         UserDetail userDetail = new UserDetail();
         userDetail.setUser(user);
-        /*//查询该用户的角色信息
-        List<Role> roles = roleMapper.selectAllRoleById(new String[]{user.getId()});
+        //查询该用户的角色信息
+        List<Role> roles = roleMapper.selectAllRoleById(new String[]{user.getRole()});
+        if (roles == null || roles.isEmpty()) {
+            log.error("用户{}尚未绑定角色信息!", username);
+            throw new ServiceException(RequestException.LOGIN_ERROR);
+        }
+        //构造条件
+        PermissionRole permissionRole = new PermissionRole();
+        permissionRole.setRoleId(roles.get(0).getId());
         //通过角色ID查询对应的权限ID
-        List<PermissionRole> permissionRoles = permissionRoleMapper.selectAllPermissionRoleById(
-                (String[]) roles
-                        .stream()
-                        .map(Role::getId)//取出ID值
-                        .toArray() //转换为数组
-        );*/
-       /* //获取权限ID
+        List<PermissionRole> permissionRoles = permissionRoleMapper.selectAllPermissionRole(permissionRole);
+        if (permissionRoles == null || permissionRoles.isEmpty()) {
+            log.error("角色{}尚未绑定权限信息!", roles.get(0).getName());
+            throw new ServiceException(RequestException.LOGIN_ERROR);
+        }
+        //获取权限ID
         String[] permissionIds =
-                (String[]) permissionRoles
+                permissionRoles
                         .stream()
                         .map(PermissionRole::getPermissionId)//取出权限ID
-                        .toArray();//转换为数组*/
+                        .toArray(String[]::new);//转换为数组
         //获取权限列表
-        // List<Permission> permissions = permissionMapper.selectAllPermissionById(permissionIds);
-        List<String> permissions = new ArrayList<>(Arrays.asList("system", "admin"));
-        userDetail.setPermission(permissions);
+        List<Permission> permissions = permissionMapper.selectAllPermissionById(permissionIds);
+        if (permissions == null || permissions.isEmpty()) {
+            log.error("未查询到任何权限信息!");
+            throw new ServiceException(RequestException.LOGIN_ERROR);
+        }
+        List<String> permissionList = permissions.stream()
+                .map(Permission::getSign)//取出标识符
+                .collect(Collectors.toList());//转换为List集合
         //封装权限信息
-        /*userDetail.setPermission(
-                permissions.stream()
-                        .map(Permission::getSign)//取出标识符
-                        .collect(Collectors.toList()));//转换为List集合*/
+        userDetail.setPermission(permissionList);
         return userDetail;
     }
 }

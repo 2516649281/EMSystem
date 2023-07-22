@@ -73,7 +73,7 @@ public class PermissionRoleServiceImpl implements IPermissionRoleService {
     @CacheEvict(value = "permissionRole_select", allEntries = true)
     public JsonRequest<Integer> addOnePermissionRole(PermissionRole permissionRole) {
         //日志信息
-        permissionRole.setPermissionId(UIDCreateUtil.getUUId());
+        permissionRole.setId(UIDCreateUtil.getUUId());
         permissionRole.setCreateUser(SqlDateUtils.currentUserId);
         permissionRole.setCreateTime(SqlDateUtils.date);
         Integer column = permissionRoleMapper.insertPermissionRole(permissionRole);

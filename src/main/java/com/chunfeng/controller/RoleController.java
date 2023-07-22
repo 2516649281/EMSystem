@@ -5,6 +5,7 @@ import com.chunfeng.result.JsonRequest;
 import com.chunfeng.service.IRoleService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class RoleController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
+    @PreAuthorize("hasAnyAuthority('sys:role:select')")
     public JsonRequest<List<Role>> lookRole(
             @ApiParam(value = "条件", required = true)
             @RequestParam Role role) {
@@ -56,6 +58,7 @@ public class RoleController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
+    @PreAuthorize("hasAnyAuthority('sys:role:select')")
     public JsonRequest<List<Role>> lookAllRole() {
         return roleService.lookAllRole();
     }
@@ -72,6 +75,7 @@ public class RoleController {
             @ApiResponse(code = 502, message = "添加失败!"),
             @ApiResponse(code = 200, message = "添加成功!")
     })
+    @PreAuthorize("hasAnyAuthority('sys:role:insert')")
     public JsonRequest<Integer> addOneRole(
             @ApiParam(value = "待添加的角色信息", required = true)
             @RequestBody Role role) {
@@ -90,6 +94,7 @@ public class RoleController {
             @ApiResponse(code = 503, message = "修改失败!"),
             @ApiResponse(code = 200, message = "修改成功!")
     })
+    @PreAuthorize("hasAnyAuthority('sys:role:update')")
     public JsonRequest<Integer> updateOneRole(
             @ApiParam(value = "待修改的角色信息", required = true)
             @RequestBody Role role) {
@@ -108,6 +113,7 @@ public class RoleController {
             @ApiResponse(code = 504, message = "删除失败!"),
             @ApiResponse(code = 200, message = "删除成功!")
     })
+    @PreAuthorize("hasAnyAuthority('sys:role:delete')")
     public JsonRequest<Integer> deleteRole(
             @ApiParam(value = "待删除的角色ID", required = true)
             @RequestBody String[] ids) {

@@ -24,10 +24,11 @@
         </where>
     </select>
     <!--根据ID查询题目-->
-    <select id="selectAllProblemById" resultType="list" resultMap="problemMap">
+    <select id="selectAllProblemById" resultType="com.chunfeng.dao.entity.Problem" resultMap="problemMap">
         select id, type, subject,file_path
         from problem
         <where>
+            id in
             <foreach collection="ids" item="id" open="(" separator="," close=")">
                 #{id}
             </foreach>
