@@ -1,0 +1,103 @@
+######MyBatis核心配置######
+mybatis:
+  #XML配置文件路径
+  mapper-locations: classpath:mappers/*xml
+  #实体类路径
+  type-aliases-package: com.chunfeng.entity
+  #开启日志分析
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+######服务端口######
+#server:
+#  #HTTPS端口
+#  port: 8081
+#  #HTTP端口
+#  httpsPort: 8080
+#  #SSL证书
+#  ssl:
+#    #证书位置
+#    key-store: classpath:lerun.site.jks
+#    #密钥
+#    key-store-password: 5e5n91h9v0p003
+#    #证书类型
+#    key-store-type: Jks
+######SpringBoot核心配置######
+spring:
+  #应用配置
+  application:
+    #应用名称
+    name: EMSystem
+  #数据源配置
+  datasource:
+    #驱动程序
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #连接路径
+    url: jdbc:mysql://localhost:3306/ems?serverTimezone=UTC&allowMultiQueries=true
+    #用户名
+    username: 'root'
+    #密码
+    password: '13597803422dw'
+  #Redis缓存配置
+  redis:
+    #默认数据库
+    database: 0
+    #Redis数据库端口
+    port: 6379
+    #IP地址
+    host: localhost
+    #Redis连接池
+    jedis:
+      pool:
+        #最小空闲数
+        min-idle: 0
+        #最大空闲数
+        max-idle: 8
+        #最大等待时间
+        max-wait: -1ms
+  #api配置
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+#拦截器配置
+handle:
+  config:
+    #拦截器排除路径
+    exclude-url:
+      #登录
+      - '/user/login'
+      #注册
+      - '/user/register'
+      #静态资源
+      - '/swagger-ui.html/**'
+      - '/doc.html'
+      - '/webjars/**'
+      - '/v2/**'
+      - '/swagger-resources/**'
+#文件配置
+file:
+  config:
+    #输出路径
+    url: 'D:/Test/'
+    #以MB为单位
+    file-max-size: 5
+#swagger配置
+springfox:
+  swagger2:
+    # 是否启用
+    enabled: true
+    # 组名
+    group-name: ems
+    #作者
+    author: '春风能解释'
+    #电子邮箱
+    email: 2516649281@qq.com
+    #标题
+    title: '考试管理系统'
+    #描述
+    description: '考试管理系统API接口文档'
+    #版本
+    version: 1.0
+  #开启详细日志
+debug: true

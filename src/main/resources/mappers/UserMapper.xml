@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chunfeng.dao.mapper.UserMapper">
+    <!--字段映射-->
+    <resultMap id="userMap" type="com.chunfeng.dao.entity.User">
+        <result column="nick_name" property="nickName"/>
+    </resultMap>
+    <!--条件查询用户-->
+    <select id="selectAllUser" resultType="com.chunfeng.dao.entity.User" parameterType="com.chunfeng.dao.entity.User"
+            resultMap="userMap">
+        select id,
+        name,
+        nick_name,
+        avatar,
+        sex,
+        email,
+        phone,
+        status
+        from user
+        <where>
+            <if test="id!='' and id!=null">
+                id=#{id}
+            </if>
+            <if test="name!='' and name!=null">
+                and name like CONCAT('%', #{name}, '%')
+            </if>
+            <if test="nickName!='' and nickName!=null">
+                and nick_name like CONCAT('%', #{nickName}, '%')
+            </if>
+            <if test="sex!=null">
+                and sex=#{sex}
+            </if>
+            <if test="role!=null">
+                and role=#{role}
+            </if>
+            <if test="status!=null">
+                and status=#{status}
+            </if>
+        </where>
+    </select>
+    <!--根据用户名和密码查询用户-->
+    <select id="selectAllByName" resultMap="userMap" resultType="com.chunfeng.dao.entity.User">
+        select id,
+               name,
+               password,
+               status,
+               role
+        from user
+        where name = #{name}
+        ;
+    </select>
+    <!--根据用户ID查询用户信息-->
+    <select id="selectAllByIds" resultType="com.chunfeng.dao.entity.User" resultMap="userMap">
+        select id,
+        name,
+        nick_name,
+        avatar,
+        sex,
+        email,
+        phone,
+        status
+        from user
+        <where>
+            id in
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+        ;
+    </select>
+    <!--插入一条用户数据-->
+    <insert id="insertUser">
+        insert into user (id, name, password, create_user, create_time)
+        values (#{id}, #{name}, #{password}, #{createUser}, #{createTime});
+    </insert>
+    <!--根据用户ID修改一条用户数据-->
+    <update id="updateUserById">
+        update user
+        <set>
+            <if test="name!='' and name!=null">
+                name=#{name}
+            </if>
+            <if test="password!='' and password!=null">
+                ,password=#{password}
+            </if>
+            <if test="nickName!='' and nickName!=null">
+                ,nick_name=#{nickName}
+            </if>
+            <if test="sex!=null">
+                ,sex=#{sex}
+            </if>
+            <if test="avatar!='' and avatar!=null">
+                ,avatar=#{avatar}
+            </if>
+            <if test="role!=null">
+                ,role=#{role}
+            </if>
+            <if test="email!='' and email!=null">
+                ,email=#{email}
+            </if>
+            <if test="phone!='' and phone!=null">
+                ,phone=#{phone}
+            </if>
+            <if test="status!=null">
+                ,status=#{status}
+            </if>
+            <if test="updateUser!='' and updateUser!=null">
+                ,update_user=#{updateUser}
+            </if>
+            <if test="updateTime!='' and updateTime!=null">
+                ,update_time=#{updateTime}
+            </if>
+        </set>
+        where id=#{id};
+    </update>
+    <!--根据用户ID批量删除用户信息-->
+    <delete id="deleteUserById" parameterType="list">
+        delete
+        from user
+        where
+        id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
