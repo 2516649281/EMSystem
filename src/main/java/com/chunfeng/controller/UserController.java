@@ -31,7 +31,7 @@ public class UserController {
     /**
      * 登录逻辑
      *
-     * @param name     用户名
+     * @param username 用户名
      * @param password 密码
      * @return JSON
      */
@@ -82,7 +82,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('sys:user:select','user:user:select')")
     public JsonRequest<List<User>> lookUser(
             @ApiParam(value = "条件", required = true)
-            @RequestParam User user) {
+                    User user) {
         return userService.lookUser(user);
     }
 

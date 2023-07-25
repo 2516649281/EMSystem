@@ -18,7 +18,6 @@ import com.chunfeng.utils.RedisClientsUtils;
 import com.chunfeng.utils.SqlDateUtils;
 import com.chunfeng.utils.TokenUtils;
 import com.chunfeng.utils.UIDCreateUtil;
-import io.jsonwebtoken.lang.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -32,7 +31,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -133,18 +131,13 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         }
         //获取用户实际对象
         User user = userDetail.getUser();
-        //获取Redis中的token
-        String token = redisClientsUtils.get("login:" + user.getId());
-        //判断token是否存在
-        if (!StringUtils.hasText(token)) {
-            //生成token对象
-            token = TokenUtils.createToken(user.getId());
-            //将用户信息存入Redis数据库
-            redisClientsUtils.set(
-                    "login:" + user.getId(), //key: login:2(数字代表ID)
-                    JSON.toJSONString(userDetail));//value: 用户序列化后的字符串
-            log.info("用户{}登录成功!", name);
-        }
+        //生成token对象
+        String token = TokenUtils.createToken(user.getId());
+        //将用户信息存入Redis数据库
+        redisClientsUtils.set(
+                "login:" + user.getId(), //key: login:2(数字代表ID)
+                JSON.toJSONString(userDetail));//value: 用户序列化后的字符串
+        log.info("用户{}登录成功!", name);
         return JsonRequest.success(token);
     }
 

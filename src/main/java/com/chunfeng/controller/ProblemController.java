@@ -43,7 +43,7 @@ public class ProblemController {
     @PreAuthorize("hasAnyAuthority('op:pro:select','user:pro:select')")
     public JsonRequest<List<Problem>> lookProblem(
             @ApiParam(value = "条件", required = true)
-            @RequestParam Problem problem) {
+                    Problem problem) {
         return problemService.lookProblem(problem);
     }
 

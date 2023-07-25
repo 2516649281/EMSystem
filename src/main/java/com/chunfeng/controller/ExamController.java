@@ -43,7 +43,7 @@ public class ExamController {
     @PreAuthorize("hasAnyAuthority('op:exam:select','user:pro:select')")
     public JsonRequest<List<Exam>> lookExam(
             @ApiParam(value = "条件", required = true)
-            @RequestParam Exam exam) {
+                    Exam exam) {
         return examService.lookExam(exam);
     }
 

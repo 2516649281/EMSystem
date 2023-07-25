@@ -43,7 +43,7 @@ public class SubjectController {
     @PreAuthorize("hasAuthority('op:sub:select')")
     public JsonRequest<List<Subject>> lookSubject(
             @ApiParam(value = "条件", required = true)
-            @RequestParam Subject subject) {
+                    Subject subject) {
         return subjectService.lookSubject(subject);
     }
 

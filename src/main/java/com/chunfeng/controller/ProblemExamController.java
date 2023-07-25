@@ -42,7 +42,7 @@ public class ProblemExamController {
     })
     public JsonRequest<List<ProblemExam>> lookProblemExam(
             @ApiParam(value = "条件", required = true)
-            @RequestParam ProblemExam problemExam) {
+                    ProblemExam problemExam) {
         return problemExamService.lookProblemExam(problemExam);
     }
 

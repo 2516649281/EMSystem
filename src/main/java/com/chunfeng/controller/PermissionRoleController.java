@@ -43,7 +43,7 @@ public class PermissionRoleController {
     @PreAuthorize("hasAnyAuthority('sys:role:select','sys:per:select')")
     public JsonRequest<List<PermissionRole>> lookPermissionRole(
             @ApiParam(value = "条件", required = true)
-            @RequestParam PermissionRole permissionRole) {
+                    PermissionRole permissionRole) {
         return permissionRoleService.lookPermissionRole(permissionRole);
     }
 

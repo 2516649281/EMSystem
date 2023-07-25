@@ -43,7 +43,7 @@ public class FeedBackController {
     @PreAuthorize("hasAuthority('sys:feed:select')")
     public JsonRequest<List<FeedBack>> lookFeedBack(
             @ApiParam(value = "条件", required = true)
-            @RequestParam FeedBack feedBack) {
+                    FeedBack feedBack) {
         return feedBackService.lookFeedBack(feedBack);
     }
 
