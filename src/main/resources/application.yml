@@ -59,6 +59,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+    static-path-pattern: classpath:static/**
 
 #拦截器配置
 handle:
@@ -75,6 +76,7 @@ handle:
       - '/webjars/**'
       - '/v2/**'
       - '/swagger-resources/**'
+      - '/static/**'
 #文件配置
 file:
   config:

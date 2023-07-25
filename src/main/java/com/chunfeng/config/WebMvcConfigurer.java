@@ -20,6 +20,7 @@ public class WebMvcConfigurer extends WebMvcConfigurationSupport {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        //静态资源
         registry.addResourceHandler("/**").addResourceLocations(
                 "classpath:/static/");
         //添加API映射
