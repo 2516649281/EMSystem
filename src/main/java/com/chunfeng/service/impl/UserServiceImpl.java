@@ -14,14 +14,13 @@ import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.result.exception.ServiceException;
 import com.chunfeng.service.IUserService;
-import com.chunfeng.utils.RedisClientsUtils;
-import com.chunfeng.utils.SqlDateUtils;
-import com.chunfeng.utils.TokenUtils;
-import com.chunfeng.utils.UIDCreateUtil;
+import com.chunfeng.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,6 +30,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -82,6 +82,9 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      */
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private FileMangerUtils<?> fileMangerUtils;
 
     /**
      * 分类查询用户
@@ -276,4 +279,73 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         userDetail.setPermission(permissionList);
         return userDetail;
     }
+
+
+    /**
+     * 头像显示
+     *
+     * @param userId 用户ID
+     * @return 文件响应流
+     */
+    @Override
+    public ResponseEntity<Resource> avatarDownload(String userId) {
+        User user = getUserInfo(userId);
+        String avatar = user.getAvatar();
+        //发送文件流
+        return fileMangerUtils.avatarDownload(avatar);
+    }
+
+    /**
+     * 头像上传
+     *
+     * @param file 头像文件
+     * @return 是否成功
+     */
+    @Override
+    @CacheEvict(value = {"select_user", "security_userDetail"}, allEntries = true)
+    public JsonRequest<Boolean> avatarUpload(MultipartFile file, String userId) {
+        User user = new User();
+        user.setId(userId);
+        // 获取文件后缀
+        String type = file.getOriginalFilename().split("\\.")[1];
+        //组合为文件名
+        String fileName = userId + "." + type;
+        //设置头像
+        user.setAvatar(fileName);
+        //修改数据库
+        JsonRequest<Integer> request = updateOneUser(user);
+        if (!request.getStatus().equals(200)) {
+            log.error("数据库修改失败!");
+            return JsonRequest.error(RequestException.UPDATE_ERROR);
+        }
+        //上传头像
+        Boolean aBoolean = fileMangerUtils.avatarUpload(file, fileName);
+        if (!aBoolean) {
+            log.error("文件修改失败!");
+            return JsonRequest.error(RequestException.FILE_ERROR);
+        }
+        log.info("ID为{}的用户头像上传成功!", userId);
+        return JsonRequest.success(true);
+    }
+
+    /**
+     * 获得用户信息
+     *
+     * @param userId 用户ID
+     * @return 用户信息
+     */
+    public User getUserInfo(String userId) {
+        //构造条件
+        User user = new User();
+        user.setId(userId);
+        //查询
+        JsonRequest<List<User>> request = lookUser(user);
+        //判断是否出错
+        if (!request.getStatus().equals(200)) {
+            log.error("{}", request.getMessage());
+            throw new ServiceException(RequestException.NOT_FOUND);
+        }
+        return request.getData().get(0);
+    }
+
 }

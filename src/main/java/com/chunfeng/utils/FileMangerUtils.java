@@ -6,6 +6,7 @@ import com.chunfeng.result.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -113,9 +114,9 @@ public class FileMangerUtils<T> {
      * 文件下载
      *
      * @param fileName 文件名
-     * @return 字节流
+     * @return 文件响应流
      */
-    public ResponseEntity<?> avatarDownload(String fileName) {
+    public ResponseEntity<Resource> avatarDownload(String fileName) {
         File file = new File(fileConfigProperties.getUrl() + fileName);
         //文件不存在
         if (!file.exists()) {
@@ -135,8 +136,14 @@ public class FileMangerUtils<T> {
      * @param fileName 文件名
      * @return 是否成功
      */
-    public Boolean avatarUpload(MultipartFile file, String fileName) throws IOException {
-        if (!file.isEmpty()) {
+    public Boolean avatarUpload(MultipartFile file, String fileName) {
+        File old = new File(fileConfigProperties.getUrl() + fileName);
+        //判断源文件是否存在
+        if (old.exists()) {
+            //删除文件避免重复
+            fileDelete(fileName);
+        }
+        if (file.isEmpty()) {
             log.error("待上传的文件为空!");
             throw new ServiceException(RequestException.FILE_ERROR);
         }
@@ -147,7 +154,12 @@ public class FileMangerUtils<T> {
             throw new ServiceException(RequestException.FILE_BEYOND_MAX_SIZE);
         }
         //上传文件
-        file.transferTo(new File(fileConfigProperties.getUrl() + fileName));
+        try {
+            file.transferTo(new File(fileConfigProperties.getUrl() + fileName));
+        } catch (IOException ioException) {
+            log.error("头像上传失败!");
+            ioException.printStackTrace();
+        }
         log.info("文件{}上传成功!", fileName);
         return true;
     }

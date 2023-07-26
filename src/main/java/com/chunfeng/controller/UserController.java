@@ -5,8 +5,11 @@ import com.chunfeng.result.JsonRequest;
 import com.chunfeng.service.IUserService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -138,5 +141,45 @@ public class UserController {
             @ApiParam(value = "待删除的用户ID", required = true)
             @RequestBody String[] ids) {
         return userService.deleteUser(ids);
+    }
+
+    /**
+     * 头像显示
+     *
+     * @param userId 用户ID
+     * @return 文件响应流
+     */
+    @GetMapping("/avatar")
+    @ApiOperation(value = "下载用户头像")
+    @ApiResponses({
+            @ApiResponse(code = 404, message = "没有找到任何数据!"),
+            @ApiResponse(code = 200, message = "查询成功!")
+    })
+    @PreAuthorize("hasAnyAuthority('sys:user:select','user:user:select')")
+    public ResponseEntity<Resource> avatarDownload(
+            @ApiParam(value = "用户ID", required = true)
+            @RequestParam String userId) {
+        return userService.avatarDownload(userId);
+    }
+
+    /**
+     * 头像上传
+     *
+     * @param file 头像文件
+     * @return 是否成功
+     */
+    @PostMapping("/upload")
+    @ApiOperation(value = "上传用户头像")
+    @ApiResponses({
+            @ApiResponse(code = 503, message = "修改失败!"),
+            @ApiResponse(code = 200, message = "修改成功!")
+    })
+    @PreAuthorize("hasAnyAuthority('sys:user:update','user:user:update')")
+    public JsonRequest<Boolean> avatarUpload(
+            @ApiParam(value = "头像文件", required = true)
+            @RequestBody MultipartFile file,
+            @ApiParam(value = "操作的用户ID", required = true)
+            @RequestParam String userId) {
+        return userService.avatarUpload(file, userId);
     }
 }

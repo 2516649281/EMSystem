@@ -2,7 +2,9 @@ package com.chunfeng.service;
 
 import com.chunfeng.dao.entity.User;
 import com.chunfeng.result.JsonRequest;
-import springfox.documentation.spring.web.json.Json;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -62,4 +64,21 @@ public interface IUserService {
      * @return JSON
      */
     JsonRequest<Integer> deleteUser(String[] ids);
+
+    /**
+     * 头像显示
+     *
+     * @param userId 用户ID
+     * @return 文件响应流
+     */
+    ResponseEntity<Resource> avatarDownload(String userId);
+
+    /**
+     * 头像上传
+     *
+     * @param file   头像文件
+     * @param userId 用户ID
+     * @return 是否成功
+     */
+    JsonRequest<Boolean> avatarUpload(MultipartFile file, String userId);
 }

@@ -1,4 +1,4 @@
-import {login, logout, getInfo} from "@/api/user";
+import {login, logout, getInfo, avatar} from "@/api/user";
 import {getToken, setToken, removeToken} from "@/utils/auth";
 import {resetRouter} from "@/router";
 import jwtDecode from "jwt-decode";
@@ -57,9 +57,11 @@ const actions = {
           if (!data) {
             reject("非法访问");
           }
-          const {name, avatar} = data;
+          const {name} = data;
           commit("SET_NAME", name);
-          commit("SET_AVATAR", avatar);
+          avatar({userId: id}).then((response) => {
+            commit("SET_AVATAR", window.URL.createObjectURL(response.data));
+          });
           resolve(data);
         })
         .catch((error) => {

@@ -44,12 +44,15 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status status
    */
   (response) => {
+    //判断响应是否为二进制
+    if (response.headers["accept-ranges"] === "bytes") {
+      return response;
+    }
     const res = response.data;
-
     // if the custom status is not 20000, it is judged as an error.
     if (res.status !== 200) {
       Message({
-        message: res.message || "Error",
+        message: res.message || "请求失败!",
         type: "error",
         duration: 5 * 1000,
       });
@@ -65,7 +68,7 @@ service.interceptors.response.use(
           router.go("/login");
         });
       }
-      return Promise.reject(new Error(res.message || "Error"));
+      return Promise.reject(new Error(res.message || "请求错误!"));
     } else {
       return res;
     }

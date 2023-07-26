@@ -62,3 +62,13 @@ export function deleteUser(ids) {
 //     method: "post",
 //   });
 // }
+
+//获取头像
+export function avatar(userId) {
+  return request({
+    url: "/user/avatar",
+    method: "get",
+    params: userId,
+    responseType: "blob",
+  });
+}
