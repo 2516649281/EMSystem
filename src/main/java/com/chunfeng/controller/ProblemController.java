@@ -97,7 +97,7 @@ public class ProblemController {
     @PreAuthorize("hasAnyAuthority('op:pro:update')")
     public JsonRequest<Integer> updateOneProblem(
             @ApiParam(value = "待修改的试卷信息", required = true)
-            @RequestBody Problem problem) {
+                    Problem problem) {
         return problemService.updateOneProblem(problem);
     }
 

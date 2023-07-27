@@ -17,7 +17,8 @@
         sex,
         email,
         phone,
-        status
+        status,
+        role
         from user
         <where>
             <if test="id!='' and id!=null">

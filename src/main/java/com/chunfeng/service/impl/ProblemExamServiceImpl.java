@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,13 +36,20 @@ public class ProblemExamServiceImpl implements IProblemExamService {
     private ProblemExamMapper problemExamMapper;
 
     /**
+     * 解决Spring缓存内部调用失效
+     */
+    @Lazy
+    @Autowired
+    private IProblemExamService problemExamService;
+
+    /**
      * 分类筛选关系信息
      *
      * @param problemExam 条件
      * @return JSON
      */
     @Override
-    @Cacheable(value = "problemExam_select", key = "#problemExam.hashCode()")
+    @Cacheable(value = "problemExam_select", key = "#problemExam")
     public JsonRequest<List<ProblemExam>> lookProblemExam(ProblemExam problemExam) {
         List<ProblemExam> problemExams = problemExamMapper.selectAllProblemExam(problemExam);
         //判断是否成功
@@ -59,8 +67,9 @@ public class ProblemExamServiceImpl implements IProblemExamService {
      * @return JSON
      */
     @Override
+    @Cacheable(value = "problemExam_select")
     public JsonRequest<List<ProblemExam>> lookAllProblemExam() {
-        return lookProblemExam(new ProblemExam());
+        return problemExamService.lookProblemExam(new ProblemExam());
     }
 
     /**

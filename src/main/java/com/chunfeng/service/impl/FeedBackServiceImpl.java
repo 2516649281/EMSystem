@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,13 +36,20 @@ public class FeedBackServiceImpl implements IFeedBackService {
     private FeedBackMapper feedBackMapper;
 
     /**
+     * 解决Spring缓存内部调用失效
+     */
+    @Lazy
+    @Autowired
+    private IFeedBackService feedBackService;
+
+    /**
      * 分类筛选反馈信息
      *
      * @param feedBack 条件
      * @return JSON
      */
     @Override
-    @Cacheable(value = "feedBack_select", key = "#feedBack.hashCode()")
+    @Cacheable(value = "feedBack_select", key = "#feedBack")
     public JsonRequest<List<FeedBack>> lookFeedBack(FeedBack feedBack) {
         List<FeedBack> feedBacks = feedBackMapper.selectAllFeedBack(feedBack);
         //判断是否成功
@@ -59,8 +67,9 @@ public class FeedBackServiceImpl implements IFeedBackService {
      * @return JSON
      */
     @Override
+    @Cacheable(value = "feedBack_select")
     public JsonRequest<List<FeedBack>> lookAllFeedBack() {
-        return lookFeedBack(new FeedBack());
+        return feedBackService.lookFeedBack(new FeedBack());
     }
 
     /**

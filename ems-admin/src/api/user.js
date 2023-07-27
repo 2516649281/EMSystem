@@ -37,9 +37,9 @@ export function getInfo(user) {
  */
 export function updateUser(user) {
   return request({
-    url: "/user/update",
+    url: "/user",
     method: "put",
-    data: user,
+    params: user,
   });
 }
 
@@ -50,7 +50,7 @@ export function updateUser(user) {
  */
 export function deleteUser(ids) {
   return request({
-    url: "/user/delete",
+    url: "/user",
     method: "delete",
     data: ids,
   });

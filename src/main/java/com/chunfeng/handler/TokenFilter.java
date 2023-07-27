@@ -92,7 +92,7 @@ public class TokenFilter extends OncePerRequestFilter {
      * @throws ServletException servlet异常
      */
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         String uri = request.getRequestURI();
         AntPathMatcher pathMatcher = new AntPathMatcher();
         //遍历并判断是否包含排除路径

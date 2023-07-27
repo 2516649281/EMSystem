@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,13 +45,20 @@ public class ProblemServiceImpl implements IProblemService {
     private FileMangerUtils<Problem> fileMangerUtils;
 
     /**
+     * 解决Spring缓存内部调用失效
+     */
+    @Lazy
+    @Autowired
+    private IProblemService problemService;
+
+    /**
      * 分类筛选题库信息
      *
      * @param problem 条件
      * @return JSON
      */
     @Override
-    @Cacheable(value = "problem_select", key = "#problem.hashCode()")
+    @Cacheable(value = "problem_select", key = "#problem")
     public JsonRequest<List<Problem>> lookProblem(Problem problem) {
         List<Problem> problems = problemMapper.selectAllProblem(problem);
         //判断是否成功
@@ -76,8 +84,9 @@ public class ProblemServiceImpl implements IProblemService {
      * @return JSON
      */
     @Override
+    @Cacheable(value = "problem_select")
     public JsonRequest<List<Problem>> lookAllProblem() {
-        return lookProblem(new Problem());
+        return problemService.lookProblem(new Problem());
     }
 
     /**

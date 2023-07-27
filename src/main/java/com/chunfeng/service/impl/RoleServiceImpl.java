@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,13 +36,20 @@ public class RoleServiceImpl implements IRoleService {
     private RoleMapper roleMapper;
 
     /**
+     * 解决Spring缓存内部调用失效
+     */
+    @Lazy
+    @Autowired
+    private IRoleService roleService;
+
+    /**
      * 分类筛选角色信息
      *
      * @param role 条件
      * @return JSON
      */
     @Override
-    @Cacheable(value = "role_select", key = "#role.hashCode()")
+    @Cacheable(value = "role_select", key = "#role")
     public JsonRequest<List<Role>> lookRole(Role role) {
         List<Role> roles = roleMapper.selectAllRole(role);
         //判断是否成功
@@ -60,7 +68,7 @@ public class RoleServiceImpl implements IRoleService {
      */
     @Override
     public JsonRequest<List<Role>> lookAllRole() {
-        return lookRole(new Role());
+        return roleService.lookRole(new Role());
     }
 
     /**

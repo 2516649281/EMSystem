@@ -39,9 +39,7 @@ export default {
       const first = matched[0];
 
       if (!this.isindex(first)) {
-        matched = [{path: "/index", meta: {title: "index"}}].concat(
-          matched
-        );
+        matched = [{path: "/index", meta: {title: "主页"}}].concat(matched);
       }
 
       this.levelList = matched.filter(

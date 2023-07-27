@@ -4,6 +4,7 @@ import com.chunfeng.utils.FileMangerUtils;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 /**
  * 工具类的配置类

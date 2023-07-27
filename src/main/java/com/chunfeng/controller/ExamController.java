@@ -97,7 +97,7 @@ public class ExamController {
     @PreAuthorize("hasAuthority('op:exam:update')")
     public JsonRequest<Integer> updateOneExam(
             @ApiParam(value = "待修改的试卷信息", required = true)
-            @RequestBody Exam exam) {
+                    Exam exam) {
         return examService.updateOneExam(exam);
     }
 

@@ -6,7 +6,7 @@ import router from "@/router/index";
 
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_ORIGN_API, // 后端服务器url
+  baseURL: process.env.VUE_APP_ORIGN_API, // 代理路径
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000, // request timeout
 });
@@ -21,6 +21,7 @@ service.interceptors.request.use(
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
       config.headers["token"] = getToken();
+      config.headers["Content-Type"] = "application/json";
     }
     return config;
   },
@@ -65,7 +66,7 @@ service.interceptors.response.use(
           cancelButtonText: "取消",
           type: "warning",
         }).then(() => {
-          router.go("/login");
+          router.push("/login");
         });
       }
       return Promise.reject(new Error(res.message || "请求错误!"));

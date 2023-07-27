@@ -54,7 +54,7 @@ spring:
         #最大空闲数
         max-idle: 8
         #最大等待时间
-        max-wait: -1ms
+        max-wait: 5000ms
   #api配置
   mvc:
     pathmatch:
@@ -102,4 +102,4 @@ springfox:
     #版本
     version: 1.0
   #开启详细日志
-debug: true
+debug: false

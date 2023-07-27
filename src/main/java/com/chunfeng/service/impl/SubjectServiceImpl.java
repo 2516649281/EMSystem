@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,13 +36,20 @@ public class SubjectServiceImpl implements ISubjectService {
     private SubjectMapper subjectMapper;
 
     /**
+     * 解决Spring缓存内部调用失效
+     */
+    @Lazy
+    @Autowired
+    private ISubjectService subjectService;
+
+    /**
      * 分类筛选科目信息
      *
      * @param subject 条件
      * @return JSON
      */
     @Override
-    @Cacheable(value = "subject_select", key = "#subject.hashCode()")
+    @Cacheable(value = "subject_select", key = "#subject")
     public JsonRequest<List<Subject>> lookSubject(Subject subject) {
         List<Subject> subjects = subjectMapper.selectAllSubject(subject);
         //判断是否成功
@@ -60,7 +68,7 @@ public class SubjectServiceImpl implements ISubjectService {
      */
     @Override
     public JsonRequest<List<Subject>> lookAllSubject() {
-        return lookSubject(new Subject());
+        return subjectService.lookSubject(new Subject());
     }
 
     /**

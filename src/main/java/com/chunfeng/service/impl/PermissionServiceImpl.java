@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,13 +36,20 @@ public class PermissionServiceImpl implements IPermissionService {
     private PermissionMapper permissionMapper;
 
     /**
+     * 解决Spring缓存内部调用失效
+     */
+    @Lazy
+    @Autowired
+    private IPermissionService permissionService;
+
+    /**
      * 分类筛选权限信息
      *
      * @param permission 条件
      * @return JSON
      */
     @Override
-    @Cacheable(value = "permission_select", key = "#permission.hashCode()")
+    @Cacheable(value = "permission_select", key = "#permission")
     public JsonRequest<List<Permission>> lookPermission(Permission permission) {
         List<Permission> permissions = permissionMapper.selectAllPermission(permission);
         //判断是否成功
@@ -59,8 +67,9 @@ public class PermissionServiceImpl implements IPermissionService {
      * @return JSON
      */
     @Override
+    @Cacheable(value = "permission_select")
     public JsonRequest<List<Permission>> lookAllPermission() {
-        return lookPermission(new Permission());
+        return permissionService.lookPermission(new Permission());
     }
 
     /**

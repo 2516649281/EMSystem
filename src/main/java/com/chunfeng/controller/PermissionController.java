@@ -97,7 +97,7 @@ public class PermissionController {
     @PreAuthorize("hasAnyAuthority('sys:per:update')")
     public JsonRequest<Integer> updateOnePermission(
             @ApiParam(value = "待修改的权限信息", required = true)
-            @RequestBody Permission permission) {
+                    Permission permission) {
         return permissionService.updateOnePermission(permission);
     }
 

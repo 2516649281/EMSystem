@@ -102,7 +102,7 @@ public class UserController {
     })
     @PreAuthorize("hasAuthority('sys:user:select')")
     public JsonRequest<List<User>> lookAllUser() {
-        return lookUser(new User());
+        return userService.lookAllUser();
     }
 
     /**
@@ -120,7 +120,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('sys:user:update','user:user:update')")
     public JsonRequest<Integer> updateOneUser(
             @ApiParam(value = "待修改的用户数据", required = true)
-            @RequestBody User user) {
+                    User user) {
         return userService.updateOneUser(user);
     }
 

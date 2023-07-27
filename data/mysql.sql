@@ -10,7 +10,7 @@ CREATE TABLE `user`
     `nick_name`   varchar(32) COMMENT '昵称',
     `avatar`      VARCHAR(64)        NOT NULL DEFAULT '0' COMMENT '头像',
     `sex`         INT                NOT NULL DEFAULT 1 COMMENT '性别(0女,1男)',
-    `email`       VARCHAR(16) COMMENT '邮箱',
+    `email`       VARCHAR(32) COMMENT '邮箱',
     `phone`       VARCHAR(11) COMMENT '电话',
     `role`        VARCHAR(48)        NOT NULL DEFAULT 0 COMMENT '用户角色',
     `status`      INT                         DEFAULT 0 NOT NULL COMMENT '状态(0正常,1失效)',

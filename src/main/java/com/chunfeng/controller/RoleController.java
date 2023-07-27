@@ -97,7 +97,7 @@ public class RoleController {
     @PreAuthorize("hasAnyAuthority('sys:role:update')")
     public JsonRequest<Integer> updateOneRole(
             @ApiParam(value = "待修改的角色信息", required = true)
-            @RequestBody Role role) {
+                    Role role) {
         return roleService.updateOneRole(role);
     }
 

@@ -60,7 +60,7 @@ public class SubjectController {
     })
     @PreAuthorize("hasAuthority('op:sub:select')")
     public JsonRequest<List<Subject>> lookAllSubject() {
-        return lookSubject(new Subject());
+        return subjectService.lookAllSubject();
     }
 
     /**
@@ -97,7 +97,7 @@ public class SubjectController {
     @PreAuthorize("hasAuthority('op:sub:update')")
     public JsonRequest<Integer> updateOneSubject(
             @ApiParam(value = "待修改的科目信息", required = true)
-            @RequestBody Subject subject) {
+                    Subject subject) {
         return subjectService.updateOneSubject(subject);
     }
 

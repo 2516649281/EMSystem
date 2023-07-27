@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,13 +45,20 @@ public class ExamServiceImpl implements IExamService {
     private FileMangerUtils<Exam> fileMangerUtils;
 
     /**
+     * 解决Spring缓存内部调用失效
+     */
+    @Lazy
+    @Autowired
+    private IExamService examService;
+
+    /**
      * 分类筛选试卷信息
      *
      * @param exam 条件
      * @return JSON
      */
     @Override
-    @Cacheable(value = "exam_select", key = "#exam.hashCode()")
+    @Cacheable(value = "exam_select", key = "#exam")
     public JsonRequest<List<Exam>> lookExam(Exam exam) {
         List<Exam> exams = examMapper.selectAllExam(exam);
         //判断是否成功
@@ -76,8 +84,9 @@ public class ExamServiceImpl implements IExamService {
      * @return JSON
      */
     @Override
+    @Cacheable(value = "exam_select")
     public JsonRequest<List<Exam>> lookAllExam() {
-        return lookExam(new Exam());
+        return examService.lookExam(new Exam());
     }
 
     /**

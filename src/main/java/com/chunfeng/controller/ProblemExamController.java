@@ -93,7 +93,7 @@ public class ProblemExamController {
     })
     public JsonRequest<Integer> updateOneProblemExam(
             @ApiParam(value = "待修改的关系信息", required = true)
-            @RequestBody ProblemExam problemExam) {
+                    ProblemExam problemExam) {
         return problemExamService.updateOneProblemExam(problemExam);
     }
 

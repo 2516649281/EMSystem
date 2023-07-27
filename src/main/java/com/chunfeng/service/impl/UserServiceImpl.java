@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -82,9 +83,17 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      */
     @Autowired
     private AuthenticationManager authenticationManager;
-
+    /**
+     * 文件的工具类
+     */
     @Autowired
     private FileMangerUtils<?> fileMangerUtils;
+    /**
+     * 解决Spring缓存内部调用失效
+     */
+    @Lazy
+    @Autowired
+    private IUserService userService;
 
     /**
      * 分类查询用户
@@ -93,7 +102,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @return JSON
      */
     @Override
-    @Cacheable(value = "select_user", key = "#user.hashCode()")
+    @Cacheable(value = "select_user", key = "#user")
     public JsonRequest<List<User>> lookUser(User user) {
         List<User> users = userMapper.selectAllUser(user);
         //判断是否为空
@@ -112,7 +121,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      */
     @Override
     public JsonRequest<List<User>> lookAllUser() {
-        return lookUser(new User());
+        return userService.lookUser(new User());
     }
 
     /**
@@ -188,7 +197,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     @CacheEvict(value = {"select_user", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> updateOneUser(User user) {
         //判断数据库中是否存在该用户
-        List<User> users = userMapper.selectAllUser(user);
+        List<User> users = userMapper.selectAllByIds(new String[]{user.getId()});
         if (users.isEmpty()) {
             log.error("ID为{}的用户不存在!", user.getId());
             return JsonRequest.error(RequestException.NOT_FOUND);
@@ -339,7 +348,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         User user = new User();
         user.setId(userId);
         //查询
-        JsonRequest<List<User>> request = lookUser(user);
+        JsonRequest<List<User>> request = userService.lookUser(user);
         //判断是否出错
         if (!request.getStatus().equals(200)) {
             log.error("{}", request.getMessage());

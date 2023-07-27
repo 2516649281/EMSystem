@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,13 +36,20 @@ public class PermissionRoleServiceImpl implements IPermissionRoleService {
     private PermissionRoleMapper permissionRoleMapper;
 
     /**
+     * 解决Spring缓存内部调用失效
+     */
+    @Lazy
+    @Autowired
+    private IPermissionRoleService permissionRoleService;
+
+    /**
      * 分类筛选关系信息
      *
      * @param permissionRole 条件
      * @return JSON
      */
     @Override
-    @Cacheable(value = "permissionRole_select", key = "#permissionRole.hashCode()")
+    @Cacheable(value = "permissionRole_select", key = "#permissionRole")
     public JsonRequest<List<PermissionRole>> lookPermissionRole(PermissionRole permissionRole) {
         List<PermissionRole> permissionRoles = permissionRoleMapper.selectAllPermissionRole(permissionRole);
         //判断是否成功
@@ -59,8 +67,9 @@ public class PermissionRoleServiceImpl implements IPermissionRoleService {
      * @return JSON
      */
     @Override
+    @Cacheable(value = "permissionRole_select")
     public JsonRequest<List<PermissionRole>> lookAllPermissionRole() {
-        return lookPermissionRole(new PermissionRole());
+        return permissionRoleService.lookPermissionRole(new PermissionRole());
     }
 
     /**
