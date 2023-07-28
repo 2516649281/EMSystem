@@ -184,11 +184,6 @@ export default {
         this.permissions = response.data;
       });
     },
-    //显示修改窗
-    showUpdate(oldRole) {
-      this.updateDialogVisible = true;
-      this.oldRole = oldRole;
-    },
     //添加角色
     addRole(role) {
       this.$refs["ruleForm"].validate((valid) => {
