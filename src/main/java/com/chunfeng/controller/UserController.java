@@ -65,7 +65,7 @@ public class UserController {
     })
     public JsonRequest<Integer> register(
             @ApiParam(value = "用户数据", required = true)
-            @RequestBody User user) {
+                    User user) {
         return userService.register(user);
     }
 
@@ -139,8 +139,22 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('sys:user:delete','user:user:delete')")
     public JsonRequest<Integer> deleteUser(
             @ApiParam(value = "待删除的用户ID", required = true)
-            @RequestBody String[] ids) {
+                    String[] ids) {
         return userService.deleteUser(ids);
+    }
+
+    /**
+     * 用户退出登录
+     *
+     * @return JSON
+     */
+    @GetMapping("/logout")
+    @ApiOperation(value = "用户登录接口")
+    @ApiResponses(value = {
+            @ApiResponse(code = 406, message = "退出失败!"),
+            @ApiResponse(code = 200, message = "退出成功!")})
+    public JsonRequest<Boolean> logout() {
+        return userService.logout();
     }
 
     /**

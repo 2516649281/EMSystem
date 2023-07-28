@@ -78,7 +78,7 @@ public class SubjectController {
     @PreAuthorize("hasAuthority('op:sub:insert')")
     public JsonRequest<Integer> addOneSubject(
             @ApiParam(value = "待新增的科目信息", required = true)
-            @RequestBody Subject subject) {
+                    Subject subject) {
         return subjectService.addOneSubject(subject);
     }
 
@@ -116,7 +116,7 @@ public class SubjectController {
     @PreAuthorize("hasAuthority('op:sub:delete')")
     public JsonRequest<Integer> deleteSubject(
             @ApiParam(value = "待删除的科目ID", required = true)
-            @RequestBody String[] ids) {
+                    String[] ids) {
         return subjectService.deleteSubject(ids);
     }
 }

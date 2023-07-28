@@ -81,4 +81,11 @@ public interface IUserService {
      * @return 是否成功
      */
     JsonRequest<Boolean> avatarUpload(MultipartFile file, String userId);
+
+    /**
+     * 用户退出登录
+     *
+     * @return JSON
+     */
+    JsonRequest<Boolean> logout();
 }

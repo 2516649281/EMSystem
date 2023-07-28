@@ -78,7 +78,7 @@ public class FeedBackController {
     @PreAuthorize("hasAuthority('user:feed:insert')")
     public JsonRequest<Integer> addOneFeedBack(
             @ApiParam(value = "待添加的反馈信息", required = true)
-            @RequestBody FeedBack feedBack) {
+                    FeedBack feedBack) {
         return feedBackService.addOneFeedBack(feedBack);
     }
 
@@ -97,7 +97,7 @@ public class FeedBackController {
     @PreAuthorize("hasAuthority('sys:feed:delete')")
     public JsonRequest<Integer> deleteFeedBack(
             @ApiParam(value = "待修改的反馈信息ID", required = true)
-            @RequestBody String[] ids) {
+                    String[] ids) {
         return feedBackService.deleteFeedBack(ids);
     }
 }

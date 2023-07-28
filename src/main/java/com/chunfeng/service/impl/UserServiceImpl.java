@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -334,6 +335,26 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
             return JsonRequest.error(RequestException.FILE_ERROR);
         }
         log.info("ID为{}的用户头像上传成功!", userId);
+        return JsonRequest.success(true);
+    }
+
+    /**
+     * 用户退出登录
+     *
+     * @return JSON
+     */
+    @Override
+    public JsonRequest<Boolean> logout() {
+        //获取用户ID
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UserDetail principal = (UserDetail) authentication.getPrincipal();
+        String id = principal.getUser().getId();
+        //删除Redis
+        boolean b = redisClientsUtils.remove("login:" + id);
+        if (!b) {
+            log.error("ID为{}的用户账号退出失败!", id);
+            return JsonRequest.error(RequestException.LOGOUT_ERROR);
+        }
         return JsonRequest.success(true);
     }
 

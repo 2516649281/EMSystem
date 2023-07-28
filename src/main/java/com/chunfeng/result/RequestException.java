@@ -34,6 +34,10 @@ public enum RequestException {
      */
     REGISTER_ERROR(405, "注册失败,请检查数据是否符合规范!"),
     /**
+     * 退出登录失败
+     */
+    LOGOUT_ERROR(406, "退出登录失败!"),
+    /**
      * 未知异常
      */
     UNKNOWN_EXCEPTION(500, "系统错误,请联系网站管理员!"),

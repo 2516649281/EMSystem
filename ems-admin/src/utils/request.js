@@ -56,10 +56,11 @@ service.interceptors.response.use(
         message: res.message || "请求失败!",
         type: "error",
         duration: 5 * 1000,
+        showClose: true,
       });
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.status === 501 || res.status === 503) {
+      if (res.status === 401 || res.status === 403) {
         // to re-login
         MessageBox.confirm("登录已过期，请重新登录!", {
           confirmButtonText: "重新登录",
@@ -80,6 +81,7 @@ service.interceptors.response.use(
       message: error.message,
       type: "error",
       duration: 5 * 1000,
+      showClose: true,
     });
     return Promise.reject(error);
   }

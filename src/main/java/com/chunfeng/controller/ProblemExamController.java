@@ -5,7 +5,6 @@ import com.chunfeng.result.JsonRequest;
 import com.chunfeng.service.IProblemExamService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -75,7 +74,7 @@ public class ProblemExamController {
     })
     public JsonRequest<Integer> addOneProblemExam(
             @ApiParam(value = "待绑定的关系信息", required = true)
-            @RequestBody ProblemExam problemExam) {
+                    ProblemExam problemExam) {
         return problemExamService.addOneProblemExam(problemExam);
     }
 
@@ -111,7 +110,7 @@ public class ProblemExamController {
     })
     public JsonRequest<Integer> deleteProblemExam(
             @ApiParam(value = "待解绑的关系ID", required = true)
-            @RequestBody String[] ids) {
+                    String[] ids) {
         return problemExamService.deleteProblemExam(ids);
     }
 }

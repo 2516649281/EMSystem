@@ -78,7 +78,7 @@ public class PermissionRoleController {
     @PreAuthorize("hasAnyAuthority('sys:role:insert','sys:per:insert')")
     public JsonRequest<Integer> addOnePermissionRole(
             @ApiParam(value = "待绑定的关系信息", required = true)
-            @RequestBody PermissionRole permissionRole) {
+                    PermissionRole permissionRole) {
         return permissionRoleService.addOnePermissionRole(permissionRole);
     }
 
@@ -116,7 +116,7 @@ public class PermissionRoleController {
     @PreAuthorize("hasAnyAuthority('sys:role:delete','sys:per:delete')")
     public JsonRequest<Integer> deletePermissionRole(
             @ApiParam(value = "待解绑的关系ID", required = true)
-            @RequestBody String[] ids) {
+                    String[] ids) {
         return permissionRoleService.deletePermissionRole(ids);
     }
 }

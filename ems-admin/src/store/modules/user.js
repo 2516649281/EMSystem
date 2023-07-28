@@ -2,12 +2,15 @@ import {login, logout, getInfo, avatar} from "@/api/user";
 import {getToken, setToken, removeToken} from "@/utils/auth";
 import {resetRouter} from "@/router";
 import jwtDecode from "jwt-decode";
+import {status} from "nprogress";
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: "",
     avatar: "",
+    id: "",
+    status: "",
   };
 };
 
@@ -17,6 +20,9 @@ const mutations = {
   RESET_STATE: (state) => {
     Object.assign(state, getDefaultState());
   },
+  SET_ID: (state, id) => {
+    state.id = id;
+  },
   SET_TOKEN: (state, token) => {
     state.token = token;
   },
@@ -25,6 +31,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar;
+  },
+  SET_STATUS: (state, status) => {
+    state.status = status;
   },
 };
 
@@ -50,6 +59,8 @@ const actions = {
   getInfo({commit, state}) {
     return new Promise((resolve, reject) => {
       var id = jwtDecode(state.token).user;
+      commit("SET_ID", id);
+      // console.log(id);
       //获取用户信息
       getInfo({id: id})
         .then((response) => {
@@ -57,7 +68,8 @@ const actions = {
           if (!data) {
             reject("非法访问");
           }
-          const {name} = data;
+          const {name, status} = data;
+          commit("SET_STATUS", status);
           commit("SET_NAME", name);
           avatar({userId: id}).then((response) => {
             commit("SET_AVATAR", window.URL.createObjectURL(response.data));
@@ -71,9 +83,9 @@ const actions = {
   },
 
   // user logout
-  logout({commit, state}) {
+  logout({commit}) {
     return new Promise((resolve, reject) => {
-      logout(state.token)
+      logout()
         .then(() => {
           removeToken(); // must remove  token  first
           resetRouter();

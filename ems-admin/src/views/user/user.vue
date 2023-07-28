@@ -19,11 +19,19 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="search(selectForm)">查询</el-button>
-        <el-button type="danger" @click="search(selectForm)"
-        >批量删除
+        <el-button
+          type="primary"
+          @click="search(selectForm)"
+          :icon="searchLoading ? 'el-icon-loading' : 'el-icon-search'"
+        >查询
         </el-button
         >
+        <el-button
+          type="danger"
+          @click="deleteUser(ids)"
+          :icon="deleteLoading ? 'el-icon-loading' : 'el-icon-delete'"
+        >批量删除
+        </el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -33,6 +41,8 @@
       border
       fit
       highlight-current-row
+      @selection-change="selectTable"
+      height="500"
     >
       <el-table-column
         type="selection"
@@ -83,19 +93,38 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" align="center" width="220">
         <template slot-scope="scope">
-          <el-button @click="showUpdate(scope.row)" type="primary"
+          <el-button
+            @click="showUpdate(scope.row)"
+            type="primary"
+            icon="el-icon-edit"
           >修改
+          </el-button>
+          <el-button
+            type="danger"
+            @click="deleteUser(scope.row.id)"
+            icon="el-icon-delete"
+          >删除
           </el-button
           >
-          <el-button type="danger">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <!-- 修改弹窗 -->
-    <el-dialog title="修改用户" :visible.sync="updateDialogVisible" width="30%">
-      <el-form :model="oldUser" :rules="userRules" status-icon ref="ruleForm">
+    <el-dialog
+      title="修改用户"
+      :visible.sync="updateDialogVisible"
+      label-position="left"
+      center
+    >
+      <el-form
+        :model="oldUser"
+        :rules="userRules"
+        status-icon
+        ref="ruleForm"
+        label-width="20%"
+      >
         <el-form-item label="用户名" prop="name">
           <el-input v-model="oldUser.name" clearable></el-input>
         </el-form-item>
@@ -124,7 +153,7 @@
         <el-form-item label="电话" prop="phone">
           <el-input v-model="oldUser.phone" clearable></el-input>
         </el-form-item>
-        <el-form-item label="用户状态" prop="status">
+        <el-form-item label="用户状态" prop="status" v-if="oldUser.id !== id">
           <el-radio-group v-model="oldUser.status">
             <el-radio :label="1" border>封禁</el-radio>
             <el-radio :label="0" border>正常</el-radio>
@@ -133,7 +162,13 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="updateDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="updateUser(oldUser)">确 定</el-button>
+        <el-button
+          type="primary"
+          @click="updateUser(oldUser)"
+          :icon="editLoading ? 'el-icon-loading' : ''"
+        >确 定
+        </el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -142,6 +177,7 @@
 <script>
 import {getRoles, getUsers} from "@/api/table";
 import {updateUser, deleteUser, getInfo} from "@/api/user";
+import {mapGetters} from "vuex";
 
 export default {
   filters: {
@@ -160,11 +196,18 @@ export default {
       return sexMap[sex];
     },
   },
+  computed: {
+    ...mapGetters(["id"]),
+  },
   data() {
     return {
       list: null,
+      ids: null,
       listLoading: true,
       updateDialogVisible: false,
+      editLoading: false,
+      searchLoading: false,
+      deleteLoading: false,
       oldUser: {},
       roleList: null,
       userRules: {
@@ -227,6 +270,7 @@ export default {
     updateUser(newUser) {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
+          this.editLoading = true;
           updateUser(newUser).then((response) => {
             if (response.success) {
               this.$message({
@@ -235,6 +279,7 @@ export default {
                 type: "success",
               });
               this.updateDialogVisible = false;
+              this.fetchData();
             } else {
               this.$message({
                 showClose: true,
@@ -242,19 +287,65 @@ export default {
                 type: "error",
               });
             }
+            this.editLoading = false;
           });
         } else {
           return false;
         }
       });
     },
+    //删除用户
+    deleteUser(ids) {
+      if (ids === this.id) {
+        this.$message({
+          showClose: true,
+          message: "我删我自己?不能哦!",
+          type: "error",
+        });
+        return;
+      }
+      if (ids === null || ids.length === 0) {
+        this.$message({
+          showClose: true,
+          message: "请选择至少一个用户!",
+          type: "warning",
+        });
+        return;
+      }
+      this.$confirm("此操作将永久删除该用户,是否继续?(真的很久)", "警告", {
+        confirmButtonText: "删除",
+        cancelButtonText: "点错了",
+        type: "warning",
+      }).then(() => {
+        this.deleteLoading = true;
+        deleteUser({ids: ids}).then((response) => {
+          if (response.success) {
+            this.$message({
+              showClose: true,
+              message: "删除用户成功!",
+              type: "success",
+            });
+            this.fetchData();
+          } else {
+            this.$message({
+              showClose: true,
+              message: "删除用户失败!",
+              type: "error",
+            });
+          }
+        });
+        this.deleteLoading = false;
+      });
+    },
     //按条件搜索用户
     search(selectForm) {
       this.listLoading = true;
+      this.searchLoading = true;
       console.log(selectForm);
       getInfo(this.isEntity(selectForm)).then((response) => {
         this.list = response.data;
         this.listLoading = false;
+        this.searchLoading = false;
       });
     },
     //判断字符串
@@ -266,8 +357,15 @@ export default {
           newObj[x] = obj[x];
         }
       });
-      console.log(newObj);
       return newObj;
+    },
+    //多选逻辑
+    selectTable(val) {
+      //获取ID
+      let ids = val.map((v) => {
+        return v.id;
+      });
+      this.ids = ids;
     },
   },
 };

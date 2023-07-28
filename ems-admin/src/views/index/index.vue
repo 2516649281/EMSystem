@@ -1,5 +1,7 @@
 <template>
-  <div class="index-container"></div>
+  <div class="index-container">
+    {{ name }}
+  </div>
 </template>
 
 <script>

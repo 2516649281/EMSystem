@@ -2,6 +2,7 @@
  * 所有有关用户的API接口
  */
 import request from "@/utils/request";
+import qs from "qs";
 
 /**
  * 用户登录
@@ -52,16 +53,24 @@ export function deleteUser(ids) {
   return request({
     url: "/user",
     method: "delete",
-    data: ids,
+    params: ids,
+    //参数转化
+    paramsSerializer: (params) => {
+      return qs.stringify(params, {indices: false});
+    },
   });
 }
 
-// export function logout() {
-//   return request({
-//     url: "/vue-admin-template/user/logout",
-//     method: "post",
-//   });
-// }
+/**
+ * 用户退出登录
+ * @returns 数据
+ */
+export function logout() {
+  return request({
+    url: "/user/logout",
+    method: "get",
+  });
+}
 
 //获取头像
 export function avatar(userId) {

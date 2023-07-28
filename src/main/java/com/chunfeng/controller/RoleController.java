@@ -78,7 +78,7 @@ public class RoleController {
     @PreAuthorize("hasAnyAuthority('sys:role:insert')")
     public JsonRequest<Integer> addOneRole(
             @ApiParam(value = "待添加的角色信息", required = true)
-            @RequestBody Role role) {
+                    Role role) {
         return roleService.addOneRole(role);
     }
 
@@ -116,7 +116,7 @@ public class RoleController {
     @PreAuthorize("hasAnyAuthority('sys:role:delete')")
     public JsonRequest<Integer> deleteRole(
             @ApiParam(value = "待删除的角色ID", required = true)
-            @RequestBody String[] ids) {
+                    String[] ids) {
         return roleService.deleteRole(ids);
     }
 }

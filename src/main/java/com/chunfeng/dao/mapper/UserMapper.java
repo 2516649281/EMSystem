@@ -59,5 +59,5 @@ public interface UserMapper {
      * @param ids 选择的用户ID
      * @return 影响行数
      */
-    Integer deleteUserById(@Param("id") String[] ids);
+    Integer deleteUserById(@Param("ids") String[] ids);
 }
