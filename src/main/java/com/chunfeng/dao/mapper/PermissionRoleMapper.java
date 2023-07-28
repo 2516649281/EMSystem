@@ -1,6 +1,7 @@
 package com.chunfeng.dao.mapper;
 
 import com.chunfeng.dao.entity.PermissionRole;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -30,20 +31,20 @@ public interface PermissionRoleMapper {
     List<PermissionRole> selectAllPermissionRoleById(String[] ids);
 
     /**
-     * 插入一条关系信息
+     * 批量插入关系信息
      *
-     * @param permissionRole 关系信息
+     * @param permissionRoles 关系信息
      * @return 影响行数
      */
-    Integer insertPermissionRole(PermissionRole permissionRole);
+    Integer insertPermissionRole(@Param("prs") List<PermissionRole> permissionRoles);
 
     /**
-     * 根据关系ID修改一条关系数据
+     * 根据关系ID批量修改关系数据
      *
-     * @param permissionRole 关系数据
+     * @param permissionRoles 关系数据
      * @return 影响行数
      */
-    Integer updatePermissionRoleById(PermissionRole permissionRole);
+    Integer updatePermissionRoleById(@Param("prs") List<PermissionRole> permissionRoles);
 
     /**
      * 根据关系ID批量解绑关系信息

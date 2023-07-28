@@ -64,13 +64,13 @@ public class PermissionRoleController {
     }
 
     /**
-     * 绑定一条关系信息
+     * 批量绑定关系信息
      *
      * @param permissionRole 关系信息
      * @return JSON
      */
     @PostMapping
-    @ApiOperation(value = "绑定一条关系信息")
+    @ApiOperation(value = "批量绑定关系信息")
     @ApiResponses({
             @ApiResponse(code = 502, message = "添加失败!"),
             @ApiResponse(code = 200, message = "添加成功!")
@@ -78,18 +78,18 @@ public class PermissionRoleController {
     @PreAuthorize("hasAnyAuthority('sys:role:insert','sys:per:insert')")
     public JsonRequest<Integer> addOnePermissionRole(
             @ApiParam(value = "待绑定的关系信息", required = true)
-                    PermissionRole permissionRole) {
-        return permissionRoleService.addOnePermissionRole(permissionRole);
+            @RequestBody List<PermissionRole> permissionRoles) {
+        return permissionRoleService.addPermissionRole(permissionRoles);
     }
 
     /**
-     * 修改一条关系信息
+     * 批量修改关系数据
      *
      * @param permissionRole 关系信息
      * @return JSON
      */
     @PutMapping
-    @ApiOperation(value = "修改一条关系信息")
+    @ApiOperation(value = "批量修改关系数据")
     @ApiResponses({
             @ApiResponse(code = 503, message = "修改失败!"),
             @ApiResponse(code = 200, message = "修改成功!")
@@ -97,8 +97,8 @@ public class PermissionRoleController {
     @PreAuthorize("hasAnyAuthority('sys:role:update','sys:per:update')")
     public JsonRequest<Integer> updateOnePermissionRole(
             @ApiParam(value = "待修改的关系信息", required = true)
-                    PermissionRole permissionRole) {
-        return permissionRoleService.updateOnePermissionRole(permissionRole);
+            @RequestBody List<PermissionRole> permissionRoles) {
+        return permissionRoleService.updatePermissionRole(permissionRoles);
     }
 
     /**
@@ -116,7 +116,7 @@ public class PermissionRoleController {
     @PreAuthorize("hasAnyAuthority('sys:role:delete','sys:per:delete')")
     public JsonRequest<Integer> deletePermissionRole(
             @ApiParam(value = "待解绑的关系ID", required = true)
-                    String[] ids) {
+            @RequestBody String[] ids) {
         return permissionRoleService.deletePermissionRole(ids);
     }
 }

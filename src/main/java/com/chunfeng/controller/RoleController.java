@@ -64,6 +64,18 @@ public class RoleController {
     }
 
     /**
+     * 根据ID值查询角色信息
+     *
+     * @param roleId 角色ID
+     * @return JSON
+     */
+    @GetMapping("/{roleId}")
+    @PreAuthorize("hasAnyAuthority('sys:role:select','sys:per:select')")
+    public JsonRequest<Role> lookRoleById(@PathVariable String roleId) {
+        return roleService.lookRoleById(roleId);
+    }
+
+    /**
      * 新增一条角色信息
      *
      * @param role 角色信息
@@ -78,7 +90,7 @@ public class RoleController {
     @PreAuthorize("hasAnyAuthority('sys:role:insert')")
     public JsonRequest<Integer> addOneRole(
             @ApiParam(value = "待添加的角色信息", required = true)
-                    Role role) {
+            @RequestBody Role role) {
         return roleService.addOneRole(role);
     }
 
@@ -97,7 +109,7 @@ public class RoleController {
     @PreAuthorize("hasAnyAuthority('sys:role:update')")
     public JsonRequest<Integer> updateOneRole(
             @ApiParam(value = "待修改的角色信息", required = true)
-                    Role role) {
+            @RequestBody Role role) {
         return roleService.updateOneRole(role);
     }
 
@@ -116,7 +128,7 @@ public class RoleController {
     @PreAuthorize("hasAnyAuthority('sys:role:delete')")
     public JsonRequest<Integer> deleteRole(
             @ApiParam(value = "待删除的角色ID", required = true)
-                    String[] ids) {
+            @RequestBody String[] ids) {
         return roleService.deleteRole(ids);
     }
 }

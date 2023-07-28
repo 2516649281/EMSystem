@@ -1,6 +1,7 @@
 package com.chunfeng.dao.mapper;
 
 import com.chunfeng.dao.entity.ProblemExam;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -30,20 +31,20 @@ public interface ProblemExamMapper {
     List<ProblemExam> selectAllProblemExamById(String[] ids);
 
     /**
-     * 插入一条关系信息
+     * 批量插入关系信息
      *
-     * @param problemExam 关系信息
+     * @param problemExams 关系信息
      * @return 影响行数
      */
-    Integer insertProblemExam(ProblemExam problemExam);
+    Integer insertProblemExam(@Param("pes") List<ProblemExam> problemExams);
 
     /**
-     * 根据关系ID修改一条关系数据
+     * 根据关系ID批量修改关系数据
      *
-     * @param problemExam 关系数据
+     * @param problemExams 关系数据
      * @return 影响行数
      */
-    Integer updateProblemExamById(ProblemExam problemExam);
+    Integer updateProblemExamById(@Param("pes") List<ProblemExam> problemExams);
 
     /**
      * 根据关系ID批量解绑关系信息

@@ -2,7 +2,6 @@
  * 所有有关用户的API接口
  */
 import request from "@/utils/request";
-import qs from "qs";
 
 /**
  * 用户登录
@@ -40,7 +39,7 @@ export function updateUser(user) {
   return request({
     url: "/user",
     method: "put",
-    params: user,
+    data: user,
   });
 }
 
@@ -53,11 +52,7 @@ export function deleteUser(ids) {
   return request({
     url: "/user",
     method: "delete",
-    params: ids,
-    //参数转化
-    paramsSerializer: (params) => {
-      return qs.stringify(params, {indices: false});
-    },
+    data: ids,
   });
 }
 

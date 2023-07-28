@@ -37,7 +37,7 @@ public class ProblemExam implements Serializable {
      * 题库ID
      */
     @ApiModelProperty(value = "题库ID", allowEmptyValue = true)
-    private String permissionId;
+    private String problemId;
     /**
      * 创建人
      */

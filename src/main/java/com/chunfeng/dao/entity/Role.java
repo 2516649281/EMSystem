@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 角色实体类
@@ -33,6 +34,11 @@ public class Role implements Serializable {
      */
     @ApiModelProperty(value = "角色名")
     private String name;
+    /**
+     * 权限列表
+     */
+    @ApiModelProperty(value = "权限列表")
+    private List<Permission> permissionList;
     /**
      * 创建人
      */

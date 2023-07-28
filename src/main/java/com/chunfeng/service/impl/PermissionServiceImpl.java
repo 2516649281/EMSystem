@@ -72,6 +72,7 @@ public class PermissionServiceImpl implements IPermissionService {
         return permissionService.lookPermission(new Permission());
     }
 
+
     /**
      * 新增一条权限信息
      *

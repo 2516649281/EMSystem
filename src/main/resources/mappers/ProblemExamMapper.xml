@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.chunfeng.dao.mapper.ProblemExamMapper">
     <!--字段映射-->
-    <resultMap id="permissionRoleMap" type="com.chunfeng.dao.entity.PermissionRole">
-        <result column="exam_id" property="permissionId"/>
-        <result column="permission_id" property="permissionId"/>
+    <resultMap id="problemExamRole" type="com.chunfeng.dao.entity.ProblemExam">
+        <result column="exam_id" property="examId"/>
+        <result column="problem_id" property="problemId"/>
     </resultMap>
     <!--条件查询关系-->
     <select id="selectAllProblemExam" resultType="com.chunfeng.dao.entity.ProblemExam"
@@ -16,7 +16,7 @@
                 id=#{id}
             </if>
             <if test="permissionId!='' and permissionId!=null">
-                and permission_id=#{permissionId}
+                and problem_id=#{problemId}
             </if>
             <if test="roleId!='' and roleId!=null">
                 and role_id=#{roleId}
@@ -38,26 +38,30 @@
     <!--插入一条关系数据-->
     <insert id="insertProblemExam">
         insert into problem_exam (id, exam_id, permission_id, create_user, create_time)
-        values (#{id}, #{examId}, #{permissionId}, #{createUser}, #{createTime});
+        <foreach collection="pes" item="pe" open="values" separator="," close=";">
+            (#{pe.id}, #{pe.examId}, #{pe.permissionId}, #{pe.createUser}, #{pe.createTime})
+        </foreach>
     </insert>
-    <!--根据关系ID修改一条关系数据-->
+    <!--根据关系ID批量修改关系数据-->
     <update id="updateProblemExamById">
-        update problem_exam
-        <set>
-            <if test="examId!='' and examId!=null">
-                exam_id=#{examId}
-            </if>
-            <if test="permissionId!='' and permissionId!=null">
-                ,permission_id=#{permissionId}
-            </if>
-            <if test="updateUser!='' and updateUser!=null">
-                ,update_user=#{updateUser}
-            </if>
-            <if test="updateTime!='' and updateTime!=null">
-                ,update_time=#{updateTime}
-            </if>
-        </set>
-        where id=#{id};
+        <foreach collection="pes" item="pe" separator="," close=";">
+            update problem_exam
+            <set>
+                <if test="pe.examId!='' and pe.examId!=null">
+                    exam_id=#{pe.examId}
+                </if>
+                <if test="pe.permissionId!='' and pe.permissionId!=null">
+                    ,permission_id=#{pe.permissionId}
+                </if>
+                <if test="pe.updateUser!='' and pe.updateUser!=null">
+                    ,update_user=#{pe.updateUser}
+                </if>
+                <if test="pe.updateTime!='' and pe.updateTime!=null">
+                    ,update_time=#{pe.updateTime}
+                </if>
+            </set>
+            where id=#{id}
+        </foreach>
     </update>
     <!--根据关系ID批量解绑关系信息-->
     <delete id="deleteProblemExamById" parameterType="list">

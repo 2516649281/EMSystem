@@ -62,26 +62,26 @@ export const constantRoutes = [
     component: Layout,
     redirect: "/user/look",
     name: "user",
-    meta: {title: "用户管理", icon: "el-icon-user"},
     children: [
       {
         path: "look",
         name: "look",
         component: () => import("@/views/user/user"),
-        meta: {title: "管理用户信息", icon: "table"},
+        meta: {title: "管理用户信息", icon: "el-icon-user"},
       },
     ],
   },
-
   {
-    path: "/form",
+    path: "/role",
     component: Layout,
+    redirect: "/role/look",
+    name: "role",
     children: [
       {
-        path: "index",
-        name: "Form",
-        component: () => import("@/views/form/index"),
-        meta: {title: "Form", icon: "form"},
+        path: "look",
+        name: "look",
+        component: () => import("@/views/role/role"),
+        meta: {title: "管理角色信息", icon: "el-icon-setting"},
       },
     ],
   },

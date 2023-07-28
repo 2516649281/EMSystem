@@ -24,8 +24,7 @@
           @click="search(selectForm)"
           :icon="searchLoading ? 'el-icon-loading' : 'el-icon-search'"
         >查询
-        </el-button
-        >
+        </el-button>
         <el-button
           type="danger"
           @click="deleteUser(ids)"
@@ -106,8 +105,7 @@
             @click="deleteUser(scope.row.id)"
             icon="el-icon-delete"
           >删除
-          </el-button
-          >
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -167,8 +165,7 @@
           @click="updateUser(oldUser)"
           :icon="editLoading ? 'el-icon-loading' : ''"
         >确 定
-        </el-button
-        >
+        </el-button>
       </div>
     </el-dialog>
   </div>
@@ -318,7 +315,7 @@ export default {
         type: "warning",
       }).then(() => {
         this.deleteLoading = true;
-        deleteUser({ids: ids}).then((response) => {
+        deleteUser(ids).then((response) => {
           if (response.success) {
             this.$message({
               showClose: true,

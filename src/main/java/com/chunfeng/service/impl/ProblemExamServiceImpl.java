@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 权限-角色关系业务层实现
@@ -73,52 +74,62 @@ public class ProblemExamServiceImpl implements IProblemExamService {
     }
 
     /**
-     * 绑定一条关系信息
+     * 批量绑定关系信息
      *
-     * @param problemExam 关系信息
+     * @param problemExams 关系信息
      * @return JSON
      */
     @Override
     @CacheEvict(value = "problemExam_select", allEntries = true)
-    public JsonRequest<Integer> addOneProblemExam(ProblemExam problemExam) {
-        //日志信息
-        problemExam.setId(UIDCreateUtil.getUUId());
-        problemExam.setCreateUser(SqlDateUtils.currentUserId);
-        problemExam.setCreateTime(SqlDateUtils.date);
-        Integer column = problemExamMapper.insertProblemExam(problemExam);
+    public JsonRequest<Integer> addProblemExam(List<ProblemExam> problemExams) {
+        //添加日志信息
+        List<ProblemExam> problemExamList = problemExams.stream().peek(v -> {
+            //日志信息
+            v.setId(UIDCreateUtil.getUUId());
+            v.setCreateUser(SqlDateUtils.currentUserId);
+            v.setCreateTime(SqlDateUtils.date);
+        }).collect(Collectors.toList());
+        //添加
+        Integer column = problemExamMapper.insertProblemExam(problemExamList);
         //判断添加是否成功
         if (column < 1) {
             log.error("添加关系数据失败!");
             return JsonRequest.error(RequestException.INSERT_ERROR);
         }
-        log.info("已向数据库添加一条关系信息!");
+        log.info("已向数据库添加{}条关系信息!", problemExams.size());
         return JsonRequest.success(column);
     }
 
     /**
-     * 修改一条关系信息
+     * 批量修改关系数据
      *
-     * @param problemExam 关系信息
+     * @param problemExams 关系信息
      * @return JSON
      */
     @Override
     @CacheEvict(value = {"problemExam_select"}, allEntries = true)
-    public JsonRequest<Integer> updateOneProblemExam(ProblemExam problemExam) {
-        List<ProblemExam> problemExams = problemExamMapper.selectAllProblemExamById(new String[]{problemExam.getId()});
+    public JsonRequest<Integer> updateProblemExam(List<ProblemExam> problemExams) {
+        //获取ID值
+        String[] ids = problemExams.stream().map(ProblemExam::getId).toArray(String[]::new);
+        List<ProblemExam> problemExamList = problemExamMapper.selectAllProblemExamById(ids);
         //判断是否成功
-        if (problemExams.isEmpty()) {
-            log.warn("数据库中不存在ID为{}的关系信息!", problemExam.getId());
+        if (problemExamList.size() != problemExams.size()) {
+            log.warn("数据库数据与待查找数据不一致!数据库:{},传入:{}", problemExamList.size(), problemExams.size());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
-        //日志信息
-        problemExam.setUpdateUser(SqlDateUtils.currentUserId);
-        problemExam.setUpdateTime(SqlDateUtils.date);
-        Integer column = problemExamMapper.updateProblemExamById(problemExam);
+        //加入日志
+        List<ProblemExam> problemExamList1 = problemExams.stream().peek(v -> {
+            //日志信息
+            v.setUpdateUser(SqlDateUtils.currentUserId);
+            v.setUpdateTime(SqlDateUtils.date);
+        }).collect(Collectors.toList());
+        //修改
+        Integer column = problemExamMapper.updateProblemExamById(problemExamList1);
         if (column < 1) {
-            log.error("修改ID为{}的关系信息失败!", problemExam.getId());
+            log.error("修改关系信息失败!");
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
-        log.info("ID为{}的关系信息修改成功!", problemExam.getId());
+        log.info("已修改{}条关系信息!", problemExams.size());
         return JsonRequest.success(column);
     }
 

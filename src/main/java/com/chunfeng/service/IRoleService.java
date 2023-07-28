@@ -30,6 +30,14 @@ public interface IRoleService {
     JsonRequest<List<Role>> lookAllRole();
 
     /**
+     * 根据ID值查询角色信息
+     *
+     * @param roleId 角色ID
+     * @return JSON
+     */
+    JsonRequest<Role> lookRoleById(String roleId);
+
+    /**
      * 新增一条角色信息
      *
      * @param role 角色信息

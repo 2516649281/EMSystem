@@ -2,7 +2,6 @@ import {login, logout, getInfo, avatar} from "@/api/user";
 import {getToken, setToken, removeToken} from "@/utils/auth";
 import {resetRouter} from "@/router";
 import jwtDecode from "jwt-decode";
-import {status} from "nprogress";
 
 const getDefaultState = () => {
   return {
@@ -10,7 +9,6 @@ const getDefaultState = () => {
     name: "",
     avatar: "",
     id: "",
-    status: "",
   };
 };
 
@@ -31,9 +29,6 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar;
-  },
-  SET_STATUS: (state, status) => {
-    state.status = status;
   },
 };
 
@@ -68,8 +63,7 @@ const actions = {
           if (!data) {
             reject("非法访问");
           }
-          const {name, status} = data;
-          commit("SET_STATUS", status);
+          const {name} = data;
           commit("SET_NAME", name);
           avatar({userId: id}).then((response) => {
             commit("SET_AVATAR", window.URL.createObjectURL(response.data));

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 权限-角色关系业务层实现
@@ -73,52 +74,64 @@ public class PermissionRoleServiceImpl implements IPermissionRoleService {
     }
 
     /**
-     * 绑定一条关系信息
+     * 批量绑定关系信息
      *
-     * @param permissionRole 关系信息
+     * @param permissionRoles 关系信息
      * @return JSON
      */
     @Override
     @CacheEvict(value = "permissionRole_select", allEntries = true)
-    public JsonRequest<Integer> addOnePermissionRole(PermissionRole permissionRole) {
-        //日志信息
-        permissionRole.setId(UIDCreateUtil.getUUId());
-        permissionRole.setCreateUser(SqlDateUtils.currentUserId);
-        permissionRole.setCreateTime(SqlDateUtils.date);
-        Integer column = permissionRoleMapper.insertPermissionRole(permissionRole);
+    public JsonRequest<Integer> addPermissionRole(List<PermissionRole> permissionRoles) {
+        //日志信息注入
+        List<PermissionRole> permissionRoleList = permissionRoles
+                .stream()
+                .peek(v -> {
+                    v.setId(UIDCreateUtil.getUUId());
+                    v.setCreateUser(SqlDateUtils.currentUserId);
+                    v.setCreateTime(SqlDateUtils.date);
+                }).collect(Collectors.toList());
+        Integer column = permissionRoleMapper.insertPermissionRole(permissionRoleList);
         //判断添加是否成功
         if (column < 1) {
             log.error("添加关系数据失败!");
             return JsonRequest.error(RequestException.INSERT_ERROR);
         }
-        log.info("已向数据库添加一条关系信息!");
+        log.info("已向数据库添加{}条关系信息!", permissionRoles.size());
         return JsonRequest.success(column);
     }
 
     /**
-     * 修改一条关系信息
+     * 批量修改关系数据
      *
-     * @param permissionRole 关系信息
+     * @param permissionRoles 关系信息
      * @return JSON
      */
     @Override
     @CacheEvict(value = {"permissionRole_select"}, allEntries = true)
-    public JsonRequest<Integer> updateOnePermissionRole(PermissionRole permissionRole) {
-        List<PermissionRole> permissionRoles = permissionRoleMapper.selectAllPermissionRoleById(new String[]{permissionRole.getId()});
-        //判断是否成功
-        if (permissionRoles.isEmpty()) {
-            log.warn("数据库中不存在ID为{}的关系信息!", permissionRole.getId());
+    public JsonRequest<Integer> updatePermissionRole(List<PermissionRole> permissionRoles) {
+        //提取ID值
+        String[] ids = permissionRoles.stream()
+                .map(PermissionRole::getId)
+                .toArray(String[]::new);
+        List<PermissionRole> permissionRoles1 = permissionRoleMapper.selectAllPermissionRoleById(ids);
+        //判断关系数据是否一致
+        if (permissionRoles1.size() != permissionRoles.size()) {
+            log.warn("数据库中未找到任何信息!");
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
-        //日志信息
-        permissionRole.setUpdateUser(SqlDateUtils.currentUserId);
-        permissionRole.setUpdateTime(SqlDateUtils.date);
-        Integer column = permissionRoleMapper.updatePermissionRoleById(permissionRole);
+        //封装日志
+        List<PermissionRole> permissionRoleList = permissionRoles.stream().peek(v -> {
+            //日志信息
+            v.setUpdateUser(SqlDateUtils.currentUserId);
+            v.setUpdateTime(SqlDateUtils.date);
+        }).collect(Collectors.toList());
+        //修改
+        Integer column = permissionRoleMapper.updatePermissionRoleById(permissionRoleList);
         if (column < 1) {
-            log.error("修改ID为{}的关系信息失败!", permissionRole.getId());
+            log.error("修改关系信息失败!");
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
-        log.info("ID为{}的关系信息修改成功!", permissionRole.getId());
+        log.info("已修改{}条关系信息!", permissionRoleList.size());
         return JsonRequest.success(column);
     }
 

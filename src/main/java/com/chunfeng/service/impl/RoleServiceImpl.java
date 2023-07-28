@@ -1,9 +1,13 @@
 package com.chunfeng.service.impl;
 
+import com.chunfeng.dao.entity.Permission;
+import com.chunfeng.dao.entity.PermissionRole;
 import com.chunfeng.dao.entity.Role;
+import com.chunfeng.dao.mapper.PermissionMapper;
 import com.chunfeng.dao.mapper.RoleMapper;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
+import com.chunfeng.service.IPermissionRoleService;
 import com.chunfeng.service.IRoleService;
 import com.chunfeng.utils.SqlDateUtils;
 import com.chunfeng.utils.UIDCreateUtil;
@@ -43,6 +47,18 @@ public class RoleServiceImpl implements IRoleService {
     private IRoleService roleService;
 
     /**
+     * 导入关系业务
+     */
+    @Autowired
+    private IPermissionRoleService permissionRoleService;
+
+    /**
+     * 导入权限业务
+     */
+    @Autowired
+    private PermissionMapper permissionMapper;
+
+    /**
      * 分类筛选角色信息
      *
      * @param role 条件
@@ -70,6 +86,45 @@ public class RoleServiceImpl implements IRoleService {
     public JsonRequest<List<Role>> lookAllRole() {
         return roleService.lookRole(new Role());
     }
+
+    /**
+     * 根据ID值查询角色信息
+     *
+     * @param roleId 角色ID
+     * @return JSON
+     */
+    @Override
+    @Cacheable(value = "role_select", key = "#roleId")
+    public JsonRequest<Role> lookRoleById(String roleId) {
+        //构造条件
+        Role role = new Role();
+        role.setId(roleId);
+        //调用本地方法使其缓存生效
+        JsonRequest<List<Role>> lookRole = roleService.lookRole(role);
+        //获得指定ID的角色信息
+        Role role1 = lookRole.getData().get(0);
+        //构造条件
+        PermissionRole permissionRole = new PermissionRole();
+        permissionRole.setRoleId(role1.getId());
+        //查询
+        JsonRequest<List<PermissionRole>> lookPermissionRole = permissionRoleService.lookPermissionRole(permissionRole);
+        //获得权限ID
+        String[] permissionIds =
+                lookPermissionRole.getData().
+                        stream()
+                        .map(PermissionRole::getPermissionId)
+                        .toArray(String[]::new);
+        // 最终获得权限列表
+        List<Permission> permissions = permissionMapper.selectAllPermissionById(permissionIds);
+        if (permissions.isEmpty()) {
+            log.error("未查询到任何权限列表!");
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        //存入角色中
+        role1.setPermissionList(permissions);
+        return JsonRequest.success(role1);
+    }
+
 
     /**
      * 新增一条角色信息

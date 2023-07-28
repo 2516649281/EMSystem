@@ -61,39 +61,39 @@ public class ProblemExamController {
     }
 
     /**
-     * 绑定一条关系信息
+     * 批量绑定关系信息
      *
-     * @param problemExam 关系信息
+     * @param problemExams 关系信息
      * @return JSON
      */
     @PostMapping
-    @ApiOperation(value = "绑定一条关系信息")
+    @ApiOperation(value = "批量绑定关系信息")
     @ApiResponses({
             @ApiResponse(code = 502, message = "添加失败!"),
             @ApiResponse(code = 200, message = "添加成功!")
     })
     public JsonRequest<Integer> addOneProblemExam(
             @ApiParam(value = "待绑定的关系信息", required = true)
-                    ProblemExam problemExam) {
-        return problemExamService.addOneProblemExam(problemExam);
+            @RequestBody List<ProblemExam> problemExams) {
+        return problemExamService.addProblemExam(problemExams);
     }
 
     /**
-     * 修改一条关系信息
+     * 批量修改关系数据
      *
-     * @param problemExam 关系信息
+     * @param problemExams 关系信息
      * @return JSON
      */
     @PutMapping
-    @ApiOperation(value = "修改一条关系信息")
+    @ApiOperation(value = "批量修改关系数据")
     @ApiResponses({
             @ApiResponse(code = 503, message = "修改失败!"),
             @ApiResponse(code = 200, message = "修改成功!")
     })
     public JsonRequest<Integer> updateOneProblemExam(
             @ApiParam(value = "待修改的关系信息", required = true)
-                    ProblemExam problemExam) {
-        return problemExamService.updateOneProblemExam(problemExam);
+            @RequestBody List<ProblemExam> problemExams) {
+        return problemExamService.updateProblemExam(problemExams);
     }
 
     /**
@@ -110,7 +110,7 @@ public class ProblemExamController {
     })
     public JsonRequest<Integer> deleteProblemExam(
             @ApiParam(value = "待解绑的关系ID", required = true)
-                    String[] ids) {
+            @RequestBody String[] ids) {
         return problemExamService.deleteProblemExam(ids);
     }
 }

@@ -62,14 +62,9 @@
 
 <script>
 import {validUsername} from "@/utils/validate";
-import {mapGetters} from "vuex";
-import {status} from "nprogress";
 
 export default {
   name: "Login",
-  computed: {
-    ...mapGetters(["status"]),
-  },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -123,14 +118,6 @@ export default {
       });
     },
     handleLogin() {
-      if (status === 1) {
-        this.$message({
-          showClose: true,
-          message: "当前用户已被封禁!请联系管理员处理!",
-          type: "error",
-        });
-        return;
-      }
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;

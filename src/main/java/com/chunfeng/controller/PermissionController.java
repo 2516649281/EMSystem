@@ -78,7 +78,7 @@ public class PermissionController {
     @PreAuthorize("hasAnyAuthority('sys:per:insert')")
     public JsonRequest<Integer> addOnePermission(
             @ApiParam(value = "待添加的权限信息", required = true)
-                    Permission permission) {
+            @RequestBody Permission permission) {
         return permissionService.addOnePermission(permission);
     }
 
@@ -97,7 +97,7 @@ public class PermissionController {
     @PreAuthorize("hasAnyAuthority('sys:per:update')")
     public JsonRequest<Integer> updateOnePermission(
             @ApiParam(value = "待修改的权限信息", required = true)
-                    Permission permission) {
+            @RequestBody Permission permission) {
         return permissionService.updateOnePermission(permission);
     }
 
@@ -116,7 +116,7 @@ public class PermissionController {
     @PreAuthorize("hasAnyAuthority('sys:per:delete')")
     public JsonRequest<Integer> deletePermission(
             @ApiParam(value = "待修改的权限ID", required = true)
-                    String[] ids) {
+            @RequestBody String[] ids) {
         return permissionService.deletePermission(ids);
     }
 }

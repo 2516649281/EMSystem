@@ -30,20 +30,20 @@ public interface IProblemExamService {
     JsonRequest<List<ProblemExam>> lookAllProblemExam();
 
     /**
-     * 绑定一条关系信息
+     * 批量绑定关系信息
      *
-     * @param problemExam 关系信息
+     * @param problemExams 关系信息
      * @return JSON
      */
-    JsonRequest<Integer> addOneProblemExam(ProblemExam problemExam);
+    JsonRequest<Integer> addProblemExam(List<ProblemExam> problemExams);
 
     /**
-     * 修改一条关系信息
+     * 批量修改关系数据
      *
-     * @param problemExam 关系信息
+     * @param problemExams 关系信息
      * @return JSON
      */
-    JsonRequest<Integer> updateOneProblemExam(ProblemExam problemExam);
+    JsonRequest<Integer> updateProblemExam(List<ProblemExam> problemExams);
 
     /**
      * 批量解绑关系信息

@@ -37,28 +37,32 @@
         ;
     </select>
     <!--插入一条关系数据-->
-    <insert id="insertPermissionRole">
+    <insert id="insertPermissionRole" parameterType="com.chunfeng.dao.entity.PermissionRole">
         insert into permission_role (id, permission_id, role_id, create_user, create_time)
-        values (#{id}, #{permissionId}, #{roleId}, #{createUser}, #{createTime});
+        <foreach collection="prs" item="pr" open="values" separator="," close=";">
+            (#{pr.id}, #{pr.permissionId}, #{pr.roleId}, #{pr.createUser}, #{pr.createTime})
+        </foreach>
     </insert>
-    <!--根据关系ID修改一条关系数据-->
+    <!--根据关系ID批量修改关系数据-->
     <update id="updatePermissionRoleById">
-        update permission_role
-        <set>
-            <if test="permissionId!='' and permissionId!=null">
-                permission_id=#{permissionId}
-            </if>
-            <if test="roleId!='' and roleId!=null">
-                ,role_id=#{roleId}
-            </if>
-            <if test="updateUser!='' and updateUser!=null">
-                ,update_user=#{updateUser}
-            </if>
-            <if test="updateTime!='' and updateTime!=null">
-                ,update_time=#{updateTime}
-            </if>
-        </set>
-        where id=#{id};
+        <foreach collection="prs" item="pr" separator=";">
+            update permission_role
+            <set>
+                <if test=" pr.permissionId!='' and  pr.permissionId!=null">
+                    permission_id=#{pr.permissionId}
+                </if>
+                <if test=" pr.roleId!='' and  pr.roleId!=null">
+                    ,role_id=#{pr.roleId}
+                </if>
+                <if test=" pr.updateUser!='' and  pr.updateUser!=null">
+                    ,update_user=#{pr.updateUser}
+                </if>
+                <if test=" pr.updateTime!='' and  pr.updateTime!=null">
+                    ,update_time=#{pr.updateTime}
+                </if>
+            </set>
+            where id=#{pr.id}
+        </foreach>
     </update>
     <!--根据关系ID批量解绑关系信息-->
     <delete id="deletePermissionRoleById" parameterType="list">

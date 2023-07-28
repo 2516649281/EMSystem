@@ -78,7 +78,7 @@ public class ExamController {
     @PreAuthorize("hasAuthority('op:exam:insert')")
     public JsonRequest<Integer> addOneExam(
             @ApiParam(value = "待添加的试卷信息", required = true)
-                    Exam exam) {
+            @RequestBody Exam exam) {
         return examService.addOneExam(exam);
     }
 
@@ -97,7 +97,7 @@ public class ExamController {
     @PreAuthorize("hasAuthority('op:exam:update')")
     public JsonRequest<Integer> updateOneExam(
             @ApiParam(value = "待修改的试卷信息", required = true)
-                    Exam exam) {
+            @RequestBody Exam exam) {
         return examService.updateOneExam(exam);
     }
 
@@ -116,7 +116,7 @@ public class ExamController {
     @PreAuthorize("hasAuthority('op:exam:delete')")
     public JsonRequest<Integer> deleteExam(
             @ApiParam(value = "待修改的试卷ID", required = true)
-                    String[] ids) {
+            @RequestBody String[] ids) {
         return examService.deleteExam(ids);
     }
 }

@@ -43,6 +43,20 @@ module.exports = {
         changeOrigin: true,
         logLevel: "debug",
         pathRewrite: {"^/api": ""},
+        onProxyReq: function (proxyReq, req, res, options) {
+          // 由于vue中使用了body-parser
+          //导致http中的body被序列化两次，从而使得配置代理后后端无法获取body中的数据
+          //感谢https://blog.csdn.net/yuse6262/article/details/107393394提供的解决方案
+          if (req.body) {
+            const reg = new RegExp("application/json");
+            if (reg.test(proxyReq.getHeader("Content-Type"))) {
+              const bodyData = JSON.stringify(req.body);
+              proxyReq.setHeader("Content-Length", Buffer.byteLength(bodyData));
+              // stream the content
+              proxyReq.write(bodyData);
+            }
+          }
+        },
       },
     },
     before: require("./mock/mock-server.js"),

@@ -65,7 +65,7 @@ public class UserController {
     })
     public JsonRequest<Integer> register(
             @ApiParam(value = "用户数据", required = true)
-                    User user) {
+            @RequestBody User user) {
         return userService.register(user);
     }
 
@@ -120,7 +120,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('sys:user:update','user:user:update')")
     public JsonRequest<Integer> updateOneUser(
             @ApiParam(value = "待修改的用户数据", required = true)
-                    User user) {
+            @RequestBody User user) {
         return userService.updateOneUser(user);
     }
 
@@ -139,7 +139,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('sys:user:delete','user:user:delete')")
     public JsonRequest<Integer> deleteUser(
             @ApiParam(value = "待删除的用户ID", required = true)
-                    String[] ids) {
+            @RequestBody String[] ids) {
         return userService.deleteUser(ids);
     }
 

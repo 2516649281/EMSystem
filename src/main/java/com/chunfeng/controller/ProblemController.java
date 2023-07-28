@@ -78,7 +78,7 @@ public class ProblemController {
     @PreAuthorize("hasAnyAuthority('op:pro:insert')")
     public JsonRequest<Integer> addOneProblem(
             @ApiParam(value = "待添加的试卷信息", required = true)
-                    Problem problem) {
+            @RequestBody Problem problem) {
         return problemService.addOneProblem(problem);
     }
 
@@ -97,7 +97,7 @@ public class ProblemController {
     @PreAuthorize("hasAnyAuthority('op:pro:update')")
     public JsonRequest<Integer> updateOneProblem(
             @ApiParam(value = "待修改的试卷信息", required = true)
-                    Problem problem) {
+            @RequestBody Problem problem) {
         return problemService.updateOneProblem(problem);
     }
 
@@ -116,7 +116,7 @@ public class ProblemController {
     @PreAuthorize("hasAnyAuthority('op:pro:delete')")
     public JsonRequest<Integer> deleteProblem(
             @ApiParam(value = "待解绑的试卷ID", required = true)
-                    String[] ids) {
+            @RequestBody String[] ids) {
         return problemService.deleteProblem(ids);
     }
 }
