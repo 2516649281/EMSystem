@@ -66,7 +66,7 @@ public class PermissionRoleController {
     /**
      * 批量绑定关系信息
      *
-     * @param permissionRole 关系信息
+     * @param permissionRoles 关系信息
      * @return JSON
      */
     @PostMapping
@@ -85,7 +85,7 @@ public class PermissionRoleController {
     /**
      * 批量修改关系数据
      *
-     * @param permissionRole 关系信息
+     * @param permissionRoles 关系信息
      * @return JSON
      */
     @PutMapping
