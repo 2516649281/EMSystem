@@ -12,6 +12,10 @@ export default {
   computed: {
     ...mapGetters(["name"]),
   },
+  data() {
+    return {};
+  },
+  methods: {},
 };
 </script>
 

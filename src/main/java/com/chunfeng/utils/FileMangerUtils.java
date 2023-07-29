@@ -117,13 +117,17 @@ public class FileMangerUtils<T> {
      * @return 文件响应流
      */
     public ResponseEntity<Resource> avatarDownload(String fileName) {
+        ResourceLoader loader = new DefaultResourceLoader();
+        if (fileName.equals("0")) {
+            log.warn("该用户未设置头像,输出默认头像");
+            return ResponseEntity.ok(loader.getResource("file:" + fileConfigProperties.getUrl() + fileConfigProperties.getDefaultFile()));
+        }
         File file = new File(fileConfigProperties.getUrl() + fileName);
         //文件不存在
         if (!file.exists()) {
             log.warn("找不到图片{}", fileName);
             return ResponseEntity.notFound().build();
         }
-        ResourceLoader loader = new DefaultResourceLoader();
         log.info("已找到{}", fileName);
         //获取当前文件
         return ResponseEntity.ok(loader.getResource("file:" + fileConfigProperties.getUrl() + fileName));

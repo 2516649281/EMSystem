@@ -28,6 +28,20 @@
         >添加角色
         </el-button>
       </el-form-item>
+      <el-form-item>
+        <download-excel
+          class="export-excel-wrapper"
+          :data="list"
+          :fields="column"
+          :header="title"
+          :name="`${title}.xls`"
+        >
+          <el-button icon="el-icon-printer" type="warning"
+          >导出Excel表格
+          </el-button
+          >
+        </download-excel>
+      </el-form-item>
     </el-form>
     <el-table
       v-loading="listLoading"
@@ -44,14 +58,21 @@
         width="30"
         align="center"
       ></el-table-column>
-      <el-table-column align="center" label="序号" width="220">
+      <el-table-column
+        align="center"
+        v-for="table in tableColumn"
+        :key="table.$index"
+        :width="table.width"
+        :label="table.name"
+      >
         <template slot-scope="scope">
-          {{ scope.$index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="角色名" width="220">
-        <template slot-scope="scope">
-          {{ scope.row.name }}
+          <!-- ID特殊列 -->
+          <template v-if="table.value === 'id'">{{
+              scope.$index + 1
+            }}
+          </template>
+          <!-- 其他列 -->
+          <template v-else>{{ scope.row[table.value] }}</template>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="440">
@@ -64,7 +85,7 @@
           </el-button>
           <el-button
             type="danger"
-            @click="deleteRole(scope.row.id)"
+            @click="deleteRole([scope.row.id])"
             icon="el-icon-delete"
           >删除
           </el-button>
@@ -163,11 +184,28 @@ export default {
       permissions: [],
       permissionIds: [],
       oldPermissionIds: [],
+      title: "考试管理系统-角色表",
+      //字段备注
+      column: {},
+      //表格
+      tableColumn: [
+        {
+          name: "编号",
+          value: "id",
+          width: 220,
+        },
+        {
+          name: "角色名",
+          value: "name",
+          width: 220,
+        },
+      ],
     };
   },
   created() {
     this.fetchData();
     this.initPermission();
+    this.getExcel();
   },
   methods: {
     //查看所有角色
@@ -177,6 +215,14 @@ export default {
         this.list = response.data;
         this.listLoading = false;
       });
+    },
+    //初始化Excel组件
+    getExcel() {
+      var map = {};
+      this.tableColumn.forEach((v) => {
+        map[v.name] = v.value;
+      });
+      this.column = map;
     },
     //获取权限
     getPermission() {
@@ -197,12 +243,6 @@ export default {
               });
               this.fetchData();
               this.addDialogVisible = false;
-            } else {
-              this.$message({
-                showClose: true,
-                message: "添加角色失败!",
-                type: "error",
-              });
             }
           });
         } else {
@@ -214,6 +254,7 @@ export default {
     updateRole(newRole) {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
+          //判断是否为默认角色
           if (
             (newRole.id === "0") |
             (newRole.id === "232b9005ab8a466495ca0b1f741e5adc")
@@ -227,13 +268,11 @@ export default {
           }
           this.editLoading = true;
           // 修改本体
-          updateRole(newRole).then((response) => {
-          });
+          updateRole(newRole);
           //修改关系
           //1.删除所有已授权内容
           if (this.oldPermissionIds.length !== 0) {
-            deletePermissionRole(this.oldPermissionIds).then((response) => {
-            });
+            deletePermissionRole(this.oldPermissionIds);
           }
           //构造条件
           var pr = this.permissionIds.map((v) => {
@@ -264,13 +303,18 @@ export default {
     },
     //删除角色
     deleteRole(ids) {
-      if ((ids === "0") | (ids === "232b9005ab8a466495ca0b1f741e5adc")) {
-        this.$message({
-          showClose: true,
-          message: "不得删除默认角色!",
-          type: "error",
-        });
-        return;
+      for (let i = 0; i < ids.length; i++) {
+        if (
+          (ids[i] === "0") |
+          (ids[i] === "232b9005ab8a466495ca0b1f741e5adc")
+        ) {
+          this.$message({
+            showClose: true,
+            message: "不得删除默认角色!",
+            type: "error",
+          });
+          return;
+        }
       }
       if (ids === null || ids.length === 0) {
         this.$message({
@@ -294,12 +338,6 @@ export default {
               type: "success",
             });
             this.fetchData();
-          } else {
-            this.$message({
-              showClose: true,
-              message: "删除角色失败!",
-              type: "error",
-            });
           }
         });
         this.deleteLoading = false;

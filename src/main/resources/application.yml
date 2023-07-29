@@ -67,9 +67,9 @@ handle:
     #拦截器排除路径
     exclude-url:
       #登录
-      - '/user/login'
+      - '/user/login/**'
       #注册
-      - '/user/register'
+      - '/user/register/**'
       #静态资源
       - '/swagger-ui.html/**'
       - '/doc.html'
@@ -84,6 +84,8 @@ file:
     url: 'D:/Test/'
     #以MB为单位
     file-max-size: 5
+    #默认头像名
+    default-file: '0.png'
 #swagger配置
 springfox:
   swagger2:

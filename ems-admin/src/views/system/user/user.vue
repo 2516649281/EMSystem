@@ -32,6 +32,20 @@
         >批量删除
         </el-button>
       </el-form-item>
+      <el-form-item>
+        <download-excel
+          class="export-excel-wrapper"
+          :data="list"
+          :fields="column"
+          :header="title"
+          :name="`${title}.xls`"
+        >
+          <el-button icon="el-icon-printer" type="warning"
+          >导出Excel表格
+          </el-button
+          >
+        </download-excel>
+      </el-form-item>
     </el-form>
     <el-table
       v-loading="listLoading"
@@ -48,48 +62,34 @@
         width="30"
         align="center"
       ></el-table-column>
-      <el-table-column align="center" label="序号" width="110">
-        <template slot-scope="scope">
-          {{ scope.$index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="用户名" width="110">
-        <template slot-scope="scope">
-          {{ scope.row.name }}
-        </template>
-      </el-table-column>
-      <el-table-column label="昵称" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.nickName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="性别" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.sex | sexColor"
-          >{{ scope.row.sex === 1 ? "男" : "女" }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="电子邮箱" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.email }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="电话" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.phone }}</span>
-        </template>
-      </el-table-column>
       <el-table-column
-        class-name="status-col"
-        label="状态"
-        width="110"
         align="center"
+        v-for="table in tableColumn"
+        :key="table.$index"
+        :width="table.width"
+        :label="table.name"
       >
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter"
-          >{{ scope.row.status === 0 ? "正常" : "异常" }}
+          <!-- ID特殊列 -->
+          <template v-if="table.value === 'id'">{{
+              scope.$index + 1
+            }}
+          </template>
+          <!-- 性别特殊列 -->
+          <el-tag
+            :type="scope.row.sex | sexColor"
+            v-else-if="table.value === 'sex'"
+          >{{ scope.row.sex === 1 ? "男" : "女" }}
           </el-tag>
+          <!-- 状态特殊列 -->
+          <el-tag
+            :type="scope.row.status | statusFilter"
+            v-else-if="table.value === 'status'"
+          >
+            <!-- 其他列 -->
+            {{ scope.row.status === 0 ? "正常" : "异常" }}
+          </el-tag>
+          <template v-else>{{ scope.row[table.value] }}</template>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="220">
@@ -102,7 +102,7 @@
           </el-button>
           <el-button
             type="danger"
-            @click="deleteUser(scope.row.id)"
+            @click="deleteUser([scope.row.id])"
             icon="el-icon-delete"
           >删除
           </el-button>
@@ -205,6 +205,47 @@ export default {
       editLoading: false,
       searchLoading: false,
       deleteLoading: false,
+      title: "考试管理系统-用户表",
+      //字段备注
+      column: {},
+      //表格
+      tableColumn: [
+        {
+          name: "编号",
+          value: "id",
+          width: 110,
+        },
+        {
+          name: "用户名",
+          value: "name",
+          width: 110,
+        },
+        {
+          name: "昵称",
+          value: "nickName",
+          width: 110,
+        },
+        {
+          name: "性别",
+          value: "sex",
+          width: 110,
+        },
+        {
+          name: "电子邮箱",
+          value: "email",
+          width: 110,
+        },
+        {
+          name: "电话号码",
+          value: "phone",
+          width: 110,
+        },
+        {
+          name: "状态",
+          value: "status",
+          width: 110,
+        },
+      ],
       oldUser: {},
       roleList: null,
       userRules: {
@@ -245,6 +286,7 @@ export default {
   },
   created() {
     this.fetchData();
+    this.getExcel();
   },
   methods: {
     //查看所有用户
@@ -257,6 +299,14 @@ export default {
       getRoles().then((response) => {
         this.roleList = response.data;
       });
+    },
+    //初始化Excel组件
+    getExcel() {
+      var map = {};
+      this.tableColumn.forEach((v) => {
+        map[v.name] = v.value;
+      });
+      this.column = map;
     },
     //显示修改窗
     showUpdate(oldUser) {
@@ -277,12 +327,6 @@ export default {
               });
               this.updateDialogVisible = false;
               this.fetchData();
-            } else {
-              this.$message({
-                showClose: true,
-                message: "修改用户失败!",
-                type: "error",
-              });
             }
             this.editLoading = false;
           });
@@ -293,14 +337,6 @@ export default {
     },
     //删除用户
     deleteUser(ids) {
-      if (ids === this.id) {
-        this.$message({
-          showClose: true,
-          message: "我删我自己?不能哦!",
-          type: "error",
-        });
-        return;
-      }
       if (ids === null || ids.length === 0) {
         this.$message({
           showClose: true,
@@ -308,6 +344,16 @@ export default {
           type: "warning",
         });
         return;
+      }
+      for (let i = 0; i < ids.length; i++) {
+        if (ids[i] === this.id) {
+          this.$message({
+            showClose: true,
+            message: "我删我自己?不能哦!",
+            type: "error",
+          });
+          return;
+        }
       }
       this.$confirm("此操作将永久删除该用户,是否继续?(真的很久)", "警告", {
         confirmButtonText: "删除",
@@ -323,12 +369,6 @@ export default {
               type: "success",
             });
             this.fetchData();
-          } else {
-            this.$message({
-              showClose: true,
-              message: "删除用户失败!",
-              type: "error",
-            });
           }
         });
         this.deleteLoading = false;

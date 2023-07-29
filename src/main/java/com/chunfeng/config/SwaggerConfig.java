@@ -15,6 +15,9 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+/**
+ * Swagger全局配置
+ */
 @Configuration
 @EnableSwagger2
 @ConditionalOnClass(Docket.class)
@@ -45,6 +48,8 @@ public class SwaggerConfig {
 
     /**
      * 摘要信息
+     *
+     * @return 初始化API
      */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
@@ -54,5 +59,4 @@ public class SwaggerConfig {
                 .version(swaggerProperties.getVersion())
                 .build();
     }
-
 }

@@ -54,7 +54,6 @@ const actions = {
   getInfo({commit, state}) {
     return new Promise((resolve, reject) => {
       var id = jwtDecode(state.token).user;
-      commit("SET_ID", id);
       // console.log(id);
       //获取用户信息
       getInfo({id: id})
@@ -63,8 +62,9 @@ const actions = {
           if (!data) {
             reject("非法访问");
           }
-          const {name} = data;
+          const {name, id} = data[0];
           commit("SET_NAME", name);
+          commit("SET_ID", id);
           avatar({userId: id}).then((response) => {
             commit("SET_AVATAR", window.URL.createObjectURL(response.data));
           });

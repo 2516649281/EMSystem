@@ -39,6 +39,11 @@ public class Permission implements Serializable {
     @ApiModelProperty(value = "权限标识", required = true)
     private String sign;
     /**
+     * 是否为默认
+     */
+    @ApiModelProperty(value = "是否为默认", required = true)
+    private Integer isDefault;
+    /**
      * 创建人
      */
     @ApiModelProperty(value = "创建人", hidden = true)

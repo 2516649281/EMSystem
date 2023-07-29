@@ -26,7 +26,7 @@ public class JsonRequest<T> implements Serializable {
     /**
      * 错误代码
      */
-    @ApiModelProperty(value = "错误代码")
+    @ApiModelProperty(value = "错误代码", allowableValues = "range[100,511]")
     private Integer status = 200;
     /**
      * 消息

@@ -27,4 +27,8 @@ public class FileConfigProperties {
      * 最大文件大小
      */
     private Long fileMaxSize;
+    /**
+     * 默认头像文件
+     */
+    private String defaultFile = "default.png";
 }

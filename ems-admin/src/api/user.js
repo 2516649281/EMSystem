@@ -76,3 +76,12 @@ export function avatar(userId) {
     responseType: "blob",
   });
 }
+
+export function setAvatar(userId, img) {
+  return request({
+    url: "/user/avatar",
+    method: "get",
+    params: userId,
+    data: {file: img},
+  });
+}

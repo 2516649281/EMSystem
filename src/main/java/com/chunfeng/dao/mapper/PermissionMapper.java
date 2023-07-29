@@ -1,7 +1,6 @@
 package com.chunfeng.dao.mapper;
 
 import com.chunfeng.dao.entity.Permission;
-import com.chunfeng.dao.entity.PermissionRole;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -52,5 +51,5 @@ public interface PermissionMapper {
      * @param ids 选择的权限ID
      * @return 影响行数
      */
-    Integer deletePermissionById(@Param("id") String[] ids);
+    Integer deletePermissionById(@Param("ids") String[] ids);
 }

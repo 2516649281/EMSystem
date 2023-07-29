@@ -324,7 +324,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         user.setAvatar(fileName);
         //修改数据库
         JsonRequest<Integer> request = updateOneUser(user);
-        if (!request.getStatus().equals(200)) {
+        if (!request.getSuccess()) {
             log.error("数据库修改失败!");
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
@@ -371,7 +371,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         //查询
         JsonRequest<List<User>> request = userService.lookUser(user);
         //判断是否出错
-        if (!request.getStatus().equals(200)) {
+        if (!request.getSuccess()) {
             log.error("{}", request.getMessage());
             throw new ServiceException(RequestException.NOT_FOUND);
         }

@@ -149,7 +149,7 @@ public class UserController {
      * @return JSON
      */
     @GetMapping("/logout")
-    @ApiOperation(value = "用户登录接口")
+    @ApiOperation(value = "用户退出接口")
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "退出失败!"),
             @ApiResponse(code = 200, message = "退出成功!")})

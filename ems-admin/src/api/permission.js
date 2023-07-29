@@ -24,8 +24,8 @@ export function getPermissionInfo(per) {
  */
 export function addPermission(per) {
   return request({
-    url: "/per/select",
-    method: "get",
+    url: "/per",
+    method: "post",
     data: per,
   });
 }

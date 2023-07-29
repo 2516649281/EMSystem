@@ -16,7 +16,7 @@
                 id=#{id}
             </if>
             <if test="type!=null">
-                and type like #{type}
+                and type=#{type}
             </if>
             <if test="subject!='' and subject!=null">
                 and subject=#{subject}

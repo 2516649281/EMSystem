@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 权限业务层实现
@@ -82,6 +83,17 @@ public class PermissionServiceImpl implements IPermissionService {
     @Override
     @CacheEvict(value = "permission_select", allEntries = true)
     public JsonRequest<Integer> addOnePermission(Permission permission) {
+        //获取标识符
+        String sign = permission.getSign();
+        // 构造条件
+        Permission permission1 = new Permission();
+        permission1.setSign(sign);
+        JsonRequest<List<Permission>> request = permissionService.lookPermission(permission1);
+        //如果存在该标识符
+        if (request.getSuccess()) {
+            log.error("添加权限名为{}的数据失败!原因:标识符已存在!", permission.getName());
+            return JsonRequest.error(RequestException.INSERT_ERROR);
+        }
         //日志信息
         permission.setId(UIDCreateUtil.getUUId());
         permission.setCreateUser(SqlDateUtils.currentUserId);
@@ -111,6 +123,16 @@ public class PermissionServiceImpl implements IPermissionService {
             log.warn("数据库中不存在ID为{}的权限信息!", permission.getId());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
+        //获取权限
+        Permission permission1 = permissions.get(0);
+        //判断是否为默认权限
+        if (permission1.getIsDefault().equals(0)) {
+            log.warn("ID为{}的权限为默认权限,不得修改标识符!", permission1.getId());
+            //不允许修改标识符
+            permission.setSign(permission1.getSign());
+            //不允许修改状态
+            permission.setIsDefault(permission1.getIsDefault());
+        }
         //日志信息
         permission.setUpdateUser(SqlDateUtils.currentUserId);
         permission.setUpdateTime(SqlDateUtils.date);
@@ -133,10 +155,28 @@ public class PermissionServiceImpl implements IPermissionService {
     @CacheEvict(value = {"permission_select", "role_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> deletePermission(String[] ids) {
         List<Permission> permissions = permissionMapper.selectAllPermissionById(ids);
+        //替换ID
+        ids = permissions
+                .stream()
+                .filter(v -> !v.getIsDefault().equals(0))//剔除默认元素
+                .map(Permission::getId)//取出可删除的ID
+                .toArray(String[]::new);//转换成String数组
+        //替换原集合
+        permissions = permissions
+                .stream()
+                .filter(v -> !v.getIsDefault().equals(0))
+                .collect(Collectors.toList());
+        //剔除默认权限
         if (permissions.size() != ids.length) {
             log.error("删除权限信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", permissions.size(), ids.length);
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
+        //判断ID是否为空
+        if (ids.length == 0) {
+            log.error("删除权限失败!原因:未选择任何权限");
+            return JsonRequest.error(RequestException.DELETE_ERROR);
+        }
+        //正式删除
         Integer column = permissionMapper.deletePermissionById(ids);
         if (column < 1) {
             log.error("删除权限失败!");
