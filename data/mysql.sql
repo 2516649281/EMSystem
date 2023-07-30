@@ -71,6 +71,7 @@ CREATE TABLE `router`
     `name`        VARCHAR(32) NOT NULL COMMENT '路由名',
     `value`       VARCHAR(48) NOT NULL COMMENT '路由值',
     `type`        INT         NOT NULL COMMENT '路由类型(0后端路由,1前端路由)',
+    `is_default`  INT         NOT NULL COMMENT '是否默认(0默认,1用户自定义)',
     `create_user` VARCHAR(48) NOT NULL COMMENT '创建用户',
     `update_user` VARCHAR(48) COMMENT '修改用户',
     `create_time` DATETIME    NOT NULL COMMENT '创建时间',

@@ -2,7 +2,6 @@ import axios from "axios";
 import {MessageBox, Message} from "element-ui";
 import store from "@/store";
 import {getToken} from "@/utils/auth";
-import router from "@/router/index";
 
 // create an axios instance
 const service = axios.create({
@@ -49,6 +48,17 @@ service.interceptors.response.use(
       return response;
     }
     const res = response.data;
+    // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
+    if (res.status === 401 || res.status === 403) {
+      // to re-login
+      MessageBox.confirm("登录已过期，请重新登录!", {
+        confirmButtonText: "重新登录",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        store.dispatch("/user/logout");
+      });
+    }
     // if the custom status is not 20000, it is judged as an error.
     if (res.status !== 200) {
       Message({
@@ -57,18 +67,6 @@ service.interceptors.response.use(
         duration: 5 * 1000,
         showClose: true,
       });
-
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.status === 401 || res.status === 403) {
-        // to re-login
-        MessageBox.confirm("登录已过期，请重新登录!", {
-          confirmButtonText: "重新登录",
-          cancelButtonText: "取消",
-          type: "warning",
-        }).then(() => {
-          router.push("/login");
-        });
-      }
       return Promise.reject(new Error(res.message || "请求错误!"));
     } else {
       return res;

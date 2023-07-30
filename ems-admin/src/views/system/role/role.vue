@@ -157,7 +157,7 @@ import {
   getRoleInfo,
   addRole,
 } from "@/api/role";
-import {getPermissionInfo} from "@/api/permission";
+import {getPermissions} from "@/api/table";
 
 export default {
   data() {
@@ -252,18 +252,18 @@ export default {
     updateRole(newRole) {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          //判断是否为默认角色
-          if (
-            (newRole.id === "0") |
-            (newRole.id === "232b9005ab8a466495ca0b1f741e5adc")
-          ) {
-            this.$message({
-              showClose: true,
-              message: "不得修改默认角色!",
-              type: "error",
-            });
-            return;
-          }
+          // //判断是否为默认角色
+          // if (
+          //   (newRole.id === "0") |
+          //   (newRole.id === "232b9005ab8a466495ca0b1f741e5adc")
+          // ) {
+          //   this.$message({
+          //     showClose: true,
+          //     message: "不得修改默认角色!",
+          //     type: "error",
+          //   });
+          //   return;
+          // }
           this.editLoading = true;
           // 修改本体
           updateRole(newRole);
@@ -365,7 +365,7 @@ export default {
     },
     //初始化权限列表
     initPermission() {
-      getPermissionInfo().then((response) => {
+      getPermissions().then((response) => {
         var list = response.data;
         const data = [];
         list.forEach((v) => {

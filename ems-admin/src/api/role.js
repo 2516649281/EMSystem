@@ -23,8 +23,9 @@ export function getRoleInfo(role) {
  */
 export function getRoleById(roleId) {
   return request({
-    url: `/role/${roleId}`,
+    url: `/role`,
     method: "get",
+    params: roleId,
   });
 }
 

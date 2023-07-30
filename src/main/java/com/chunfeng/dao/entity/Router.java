@@ -22,7 +22,7 @@ public class Router implements Serializable {
      * 序列化字段
      */
     @ApiModelProperty(value = "序列化字段", hidden = true)
-    private static final long serialVersionUID = -4353449119732554009L;
+    private static final long serialVersionUID = 7154360014276182302L;
     /**
      * 路由ID
      */
@@ -38,6 +38,16 @@ public class Router implements Serializable {
      */
     @ApiModelProperty(value = "路由值")
     private String value;
+    /**
+     * 请求方式
+     */
+    @ApiModelProperty(value = "请求方式", allowEmptyValue = true)
+    private String method;
+    /**
+     * 是否默认(0默认,1自定义)
+     */
+    @ApiModelProperty(value = "是否默认(0默认,1自定义)", allowEmptyValue = true)
+    private Integer isDefault;
     /**
      * 路由类型(0后端,1前端)
      */

@@ -31,3 +31,11 @@ export function getSubjects() {
     method: "get",
   });
 }
+
+//路由
+export function getRouters() {
+  return request({
+    url: "/router",
+    method: "get",
+  });
+}

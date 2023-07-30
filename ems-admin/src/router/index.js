@@ -82,6 +82,12 @@ export const constantRoutes = [
         component: () => import("@/views/system/permission/permission"),
         meta: {title: "管理权限信息", icon: "el-icon-medal"},
       },
+      {
+        path: "/router",
+        name: "router",
+        component: () => import("@/views/system/router/router"),
+        meta: {title: "管理路由信息", icon: "el-icon-guide"},
+      },
     ],
   },
   {

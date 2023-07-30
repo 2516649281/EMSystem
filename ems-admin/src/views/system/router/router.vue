@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :inline="true" :model="selectForm" class="demo-form-inline">
-      <el-form-item label="权限名">
+      <el-form-item label="路由名">
         <el-input
           v-model="selectForm.name"
-          placeholder="权限名"
+          placeholder="路由名"
           clearable
         ></el-input>
       </el-form-item>
@@ -17,7 +17,7 @@
         </el-button>
         <el-button
           type="danger"
-          @click="deletePermission(ids)"
+          @click="deleteRouter(ids)"
           :icon="deleteLoading ? 'el-icon-loading' : 'el-icon-delete'"
         >批量删除
         </el-button>
@@ -25,7 +25,7 @@
           type="success"
           @click="addDialogVisible = true"
           icon="el-icon-plus"
-        >添加权限
+        >添加路由
         </el-button>
       </el-form-item>
       <el-form-item>
@@ -69,6 +69,18 @@
           <template v-if="table.value === 'id'"
           >{{ scope.$index + 1 }}
           </template>
+          <!-- 类型特殊列 -->
+          <el-tag
+            :type="scope.row.type | statusFilter"
+            v-else-if="table.value === 'type'"
+          >{{ scope.row.type === 0 ? "后端" : "前端" }}
+          </el-tag>
+          <!-- 请求方式特殊列 -->
+          <el-tag
+            :type="scope.row.method | methodFilter"
+            v-else-if="table.value === 'method'"
+          >{{ scope.row.method }}
+          </el-tag>
           <!-- 是否默认特殊列 -->
           <el-tag
             :type="scope.row.isDefault | statusFilter"
@@ -90,7 +102,7 @@
           </el-button>
           <el-button
             type="danger"
-            @click="deletePermission([scope.row.id])"
+            @click="deleteRouter([scope.row.id])"
             icon="el-icon-delete"
           >删除
           </el-button>
@@ -99,71 +111,100 @@
     </el-table>
     <!-- 修改弹窗 -->
     <el-dialog
-      title="修改权限"
+      title="修改路由"
       :visible.sync="updateDialogVisible"
-      center
       label-position="left"
-      width="60%"
+      center
     >
       <el-form
-        :model="oldPermission"
-        :rules="permissionRules"
+        :model="oldRouter"
+        :rules="routerRules"
         status-icon
         ref="ruleForm"
+        label-width="20%"
       >
-        <el-form-item label="权限名" prop="name">
-          <el-input v-model="oldPermission.name" clearable></el-input>
+        <el-form-item label="路由名" prop="name">
+          <el-input v-model="oldRouter.name" clearable></el-input>
         </el-form-item>
-        <el-form-item label="标记值" prop="sign">
-          <el-input v-model="oldPermission.sign" clearable></el-input>
+        <el-form-item label="路由值" prop="value">
+          <el-input v-model="oldRouter.value" clearable></el-input>
         </el-form-item>
-        <el-form-item label="路由列表">
-          <el-transfer
-            filterable
-            :filter-method="selectRouter"
-            filter-placeholder="请输入路由关键字"
-            v-model="routerIds"
-            :data="routerList"
-            :titles="['未拥有', '已拥有']"
-            :button-texts="['删', '加']"
-          ></el-transfer>
+        <el-form-item label="请求方式" prop="method">
+          <el-select
+            v-model="oldRouter.method"
+            clearable
+            placeholder="选择请求方式"
+          >
+            <el-option
+              :label="method"
+              :value="method"
+              v-for="method in methods"
+              :key="method.$index"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="类型" prop="type">
+          <el-radio-group v-model="oldRouter.type">
+            <el-radio :label="1" border>前端</el-radio>
+            <el-radio :label="0" border>后端</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="updateDialogVisible = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="updatePermission(oldPermission)"
+          @click="updateRouter(oldRouter)"
           :icon="editLoading ? 'el-icon-loading' : ''"
         >确 定
         </el-button>
       </div>
     </el-dialog>
     <el-dialog
-      title="添加权限"
+      title="添加路由"
       :visible.sync="addDialogVisible"
       label-position="left"
       center
       width="50%"
     >
       <el-form
-        :model="newPermission"
-        :rules="permissionRules"
+        :model="newRouter"
+        :rules="routerRules"
         status-icon
         ref="ruleForm"
       >
-        <el-form-item label="权限名" prop="name">
-          <el-input v-model="newPermission.name" clearable></el-input>
+        <el-form-item label="路由名" prop="name">
+          <el-input v-model="newRouter.name" clearable></el-input>
         </el-form-item>
-        <el-form-item label="标记值" prop="sign">
-          <el-input v-model="newPermission.sign" clearable></el-input>
+        <el-form-item label="路由值" prop="value">
+          <el-input v-model="newRouter.value" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="请求方式" prop="method">
+          <el-select
+            v-model="newRouter.method"
+            clearable
+            placeholder="选择请求方式"
+          >
+            <el-option
+              :label="method"
+              :value="method"
+              v-for="method in methods"
+              :key="method.$index"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="类型" prop="type">
+          <el-radio-group v-model="newRouter.type">
+            <el-radio :label="1" border>前端</el-radio>
+            <el-radio :label="0" border>后端</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="addPermission(newPermission)"
+          @click="addRouter(newRouter)"
           :icon="editLoading ? 'el-icon-loading' : ''"
         >确 定
         </el-button>
@@ -173,16 +214,13 @@
 </template>
 
 <script>
-import {getRouters, getPermissions} from "@/api/table";
+import {getRouters} from "@/api/table";
 import {
-  addPermission,
-  updatePermission,
-  deletePermission,
-  getPermissionInfo,
-  getPermissionRouter,
-  setPermissionRouter,
-  deletePermissionRouter,
-} from "@/api/permission";
+  addRouter,
+  updateRouter,
+  deleteRouter,
+  getRouterInfo,
+} from "@/api/router";
 
 export default {
   filters: {
@@ -193,11 +231,19 @@ export default {
       };
       return statusMap[status];
     },
+    methodFilter(status) {
+      const methodMap = {
+        GET: "primary",
+        POST: "success",
+        PUT: "warning",
+        DELETE: "danger",
+      };
+      return methodMap[status];
+    },
   },
   data() {
     return {
       list: null,
-      routerList: [],
       ids: null,
       listLoading: true,
       updateDialogVisible: false,
@@ -205,20 +251,30 @@ export default {
       editLoading: false,
       searchLoading: false,
       deleteLoading: false,
-      oldPermission: {},
-      newPermission: {},
-      routerIds: [],
-      routerList: [],
-      permissionRouterId: [],
-      routerId: [],
-      permissionRules: {
-        name: [{required: true, message: "权限名不得为空!", trigger: "blur"}],
-        sign: [{required: true, message: "标记名不得为空!", trigger: "blur"}],
+      oldRouter: {},
+      newRouter: {},
+      routerRules: {
+        name: [{required: true, message: "路由名不得为空!", trigger: "blur"}],
+        value: [
+          {required: true, message: "路由值不得为空!", trigger: "blur"},
+        ],
+        value: [
+          {required: true, message: "请求方式不得为空!", trigger: "change"},
+        ],
+        type: [
+          {
+            required: true,
+            message: "请选择类型",
+            trigger: "change",
+          },
+        ],
       },
       selectForm: {},
-      title: "考试管理系统-权限表",
+      title: "考试管理系统-路由表",
       //字段备注
       column: {},
+      //请求方式
+      methods: ["GET", "POST", "PUT", "DELETE"],
       //表格
       tableColumn: [
         {
@@ -227,14 +283,24 @@ export default {
           width: 110,
         },
         {
-          name: "权限名",
+          name: "路由名",
           value: "name",
-          width: 220,
+          width: 110,
         },
         {
-          name: "标记值",
-          value: "sign",
-          width: 220,
+          name: "路由值",
+          value: "value",
+          width: 200,
+        },
+        {
+          name: "请求方式",
+          value: "method",
+          width: 110,
+        },
+        {
+          name: "类型",
+          value: "type",
+          width: 110,
         },
         {
           name: "是否默认",
@@ -246,14 +312,13 @@ export default {
   },
   created() {
     this.fetchData();
-    this.initRouter();
     this.getExcel();
   },
   methods: {
-    //查看所有权限
+    //查看所有路由
     fetchData() {
       this.listLoading = true;
-      getPermissions().then((response) => {
+      getRouters().then((response) => {
         this.list = response.data;
         this.listLoading = false;
       });
@@ -267,35 +332,19 @@ export default {
       this.column = map;
     },
     //显示修改窗
-    showUpdate(oldPermission) {
-      //获取已获得的
-      getPermissionRouter({permissionId: oldPermission.id}).then(
-        (response) => {
-          //路由ID
-          var ids = response.data.map((v) => {
-            return v.routerId;
-          });
-          //实体ID
-          var idsA = response.data.map((v) => {
-            return v.id;
-          });
-          //保存实体ID
-          this.permissionRouterId = idsA;
-          this.routerId = ids;
-        }
-      );
+    showUpdate(oldRouter) {
       this.updateDialogVisible = true;
-      this.oldPermission = oldPermission;
+      this.oldRouter = oldRouter;
     },
-    //添加权限
-    addPermission(permission) {
+    //添加路由
+    addRouter(router) {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          addPermission(permission).then((response) => {
+          addRouter(router).then((response) => {
             if (response.success) {
               this.$message({
                 showClose: true,
-                message: "添加权限成功!",
+                message: "添加路由成功!",
                 type: "success",
               });
               this.fetchData();
@@ -307,74 +356,58 @@ export default {
         }
       });
     },
-    //修改权限信息
-    updatePermission(newPermission) {
-      // //判断是否为默认权限
-      // if (newPermission.isDefault === 0) {
-      //   this.$message({
-      //     showClose: true,
-      //     message: "待修改的权限为默认权限,不允许修改!",
-      //     type: "error",
-      //   });
-      //   return;
-      // }
+    //修改路由信息
+    updateRouter(newRouter) {
+      //判断是否为默认路由
+      if (newRouter.isDefault === 0) {
+        this.$message({
+          showClose: true,
+          message: "待修改的路由为默认路由,不允许修改!",
+          type: "error",
+        });
+        return;
+      }
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
           this.editLoading = true;
-          updatePermission(newPermission);
-          //修改关系
-          //1.删除所有已授权内容
-          if (this.permissionRouterId.length !== 0) {
-            deletePermissionRouter(this.permissionRouterId);
-          }
-          //构造条件
-          var prt = this.routerIds.map((v) => {
-            var obj = {};
-            obj["permissionId"] = newPermission.id;
-            obj["routerId"] = v;
-            return obj;
+          updateRouter(newRouter).then((response) => {
+            if (response.success) {
+              this.$message({
+                showClose: true,
+                message: "修改路由成功!",
+                type: "success",
+              });
+              this.updateDialogVisible = false;
+              this.fetchData();
+            }
+            this.editLoading = false;
           });
-          if (prt.length !== 0) {
-            //2.添加新的权限
-            setPermissionRouter(prt).then((response) => {
-              if (response.success) {
-                this.$message({
-                  showClose: true,
-                  message: "修改权限成功!",
-                  type: "success",
-                });
-                this.updateDialogVisible = false;
-                this.fetchData();
-              }
-            });
-          }
-          this.editLoading = false;
         } else {
           return false;
         }
       });
     },
-    //删除权限
-    deletePermission(ids) {
+    //删除路由
+    deleteRouter(ids) {
       if (ids === null || ids.length === 0) {
         this.$message({
           showClose: true,
-          message: "请选择至少一个权限!",
+          message: "请选择至少一个路由!",
           type: "warning",
         });
         return;
       }
-      this.$confirm("此操作将永久删除该权限,是否继续?(真的很久)", "警告", {
+      this.$confirm("此操作将永久删除该路由,是否继续?(真的很久)", "警告", {
         confirmButtonText: "删除",
         cancelButtonText: "点错了",
         type: "warning",
       }).then(() => {
         this.deleteLoading = true;
-        deletePermission(ids).then((response) => {
+        deleteRouter(ids).then((response) => {
           if (response.success) {
             this.$message({
               showClose: true,
-              message: "删除权限成功!",
+              message: "删除路由成功!",
               type: "success",
             });
             this.fetchData();
@@ -383,12 +416,12 @@ export default {
         this.deleteLoading = false;
       });
     },
-    //按条件搜索权限
+    //按条件搜索路由
     search(selectForm) {
       this.listLoading = true;
       this.searchLoading = true;
       console.log(selectForm);
-      getPermissionInfo(this.isEntity(selectForm)).then((response) => {
+      getRouterInfo(this.isEntity(selectForm)).then((response) => {
         this.list = response.data;
         this.listLoading = false;
         this.searchLoading = false;
@@ -405,28 +438,6 @@ export default {
       });
       return newObj;
     },
-    //初始化权限列表
-    initRouter() {
-      getRouters().then((response) => {
-        var list = response.data;
-        var map = new Map();
-        //保存数据以便搜索
-        list.forEach((v) => {
-          map.set(v.id, v.name);
-        });
-        this.routerList = map;
-        console.log(this.routerList);
-        const data = [];
-        list.forEach((v) => {
-          data.push({
-            key: v.id,
-            label: `${v.name} ${v.value}`,
-            pinyin: this.routerList.get(v.id),
-          });
-        });
-        this.routerList = data;
-      });
-    },
     //多选逻辑
     selectTable(val) {
       //获取ID
@@ -434,10 +445,6 @@ export default {
         return v.id;
       });
       this.ids = ids;
-    },
-    //分类查询路由
-    selectRouter(query, item) {
-      return item.pinyin.indexOf(query) > -1;
     },
   },
 };

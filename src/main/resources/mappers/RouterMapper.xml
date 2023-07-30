@@ -3,7 +3,7 @@
 <mapper namespace="com.chunfeng.dao.mapper.RouterMapper">
     <!--条件查询路由信息-->
     <select id="selectAllRouter" resultType="com.chunfeng.dao.entity.Router">
-        select id, name,value,type
+        select id, name,value,method,type,is_default
         from router
         <where>
             <if test="id!='' and id!=null">
@@ -12,15 +12,21 @@
             <if test="name!='' and name!=null">
                 and name like CONCAT('%', #{name}, '%')
             </if>
+            <if test="method!='' and method!=null">
+                and method =#{method}
+            </if>
             <if test="type!='' and type!=null">
                 and type=#{type}
+            </if>
+            <if test="isDefault!=null">
+                and is_default=#{isDefault}
             </if>
         </where>
         ;
     </select>
     <!--根据ID查询路由-->
     <select id="selectAllRouterById" resultType="com.chunfeng.dao.entity.Router">
-        select id, name,value,type
+        select id, name,value,method,type
         from router
         <where>
             id in
@@ -32,8 +38,8 @@
     </select>
     <!--插入一条路由信息-->
     <insert id="insertRouter">
-        insert into router (id, name, value, type, create_user, create_time)
-        values (#{id}, #{name}, #{value}, #{type}, #{createUser}, #{createTime});
+        insert into router (id, name, value, method, type, create_user, create_time)
+        values (#{id}, #{name}, #{value}, #{method}, #{type}, #{createUser}, #{createTime});
     </insert>
     <!--修改一条路由信息-->
     <update id="updateRouterById">
@@ -45,8 +51,14 @@
             <if test="value!='' and value!=null">
                 ,value=#{value}
             </if>
+            <if test="method!='' and method!=null">
+                ,method=#{method}
+            </if>
             <if test="type!='' and type!=null">
                 ,type=#{type}
+            </if>
+            <if test="isDefault!=null">
+                ,is_default=#{isDefault}
             </if>
             <if test="updateUser!='' and updateUser!=null">
                 ,update_user=#{updateUser}

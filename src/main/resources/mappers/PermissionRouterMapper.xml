@@ -36,6 +36,16 @@
         </where>
         ;
     </select>
+    <!--根据路由ID查询权限ID-->
+    <select id="selectAllPermissionRouterByRouterId" resultType="java.lang.String" resultMap="permissionRouterMap">
+        select permission_id
+        from permission_router
+        where
+        router_id in
+        <foreach collection="rids" item="rid" open="(" separator="," close=")">
+            #{rids}
+        </foreach>
+    </select>
     <!--插入一条关系数据-->
     <insert id="insertPermissionRouter" parameterType="com.chunfeng.dao.entity.PermissionRouter">
         insert into permission_router (id, permission_id, router_id, create_user, create_time)

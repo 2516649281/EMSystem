@@ -69,9 +69,16 @@ public class RoleController {
      * @param roleId 角色ID
      * @return JSON
      */
-    @GetMapping("/{roleId}")
+    @GetMapping("/one")
+    @ApiOperation(value = "查询单个角色信息")
+    @ApiResponses({
+            @ApiResponse(code = 404, message = "没有找到任何数据!"),
+            @ApiResponse(code = 200, message = "查询成功!")
+    })
     @PreAuthorize("hasAnyAuthority('sys:role:select','sys:per:select')")
-    public JsonRequest<Role> lookRoleById(@PathVariable String roleId) {
+    public JsonRequest<Role> lookRoleById(
+            @ApiParam(value = "角色ID", required = true)
+            @RequestParam String roleId) {
         return roleService.lookRoleById(roleId);
     }
 

@@ -70,9 +70,16 @@ public class PermissionController {
      * @param permissionId 角色ID
      * @return JSON
      */
-    @GetMapping("/{permissionId}")
+    @GetMapping("/one")
+    @ApiOperation(value = "查询单个权限信息")
+    @ApiResponses({
+            @ApiResponse(code = 404, message = "没有找到任何数据!"),
+            @ApiResponse(code = 200, message = "查询成功!")
+    })
     @PreAuthorize("hasAnyAuthority('sys:router:select','sys:per:select')")
-    public JsonRequest<Permission> lookRoleById(@PathVariable String permissionId) {
+    public JsonRequest<Permission> lookRoleById(
+            @ApiParam(value = "权限ID", required = true)
+            @RequestParam String permissionId) {
         return permissionService.lookPermissionById(permissionId);
     }
 

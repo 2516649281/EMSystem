@@ -23,6 +23,14 @@ public interface PermissionRouterMapper {
     List<PermissionRouter> selectAllPermissionRouter(PermissionRouter permissionRouter);
 
     /**
+     * 根据路由ID查询权限ID
+     *
+     * @param routerId 路由ID
+     * @return 权限ID
+     */
+    List<String> selectAllPermissionRouterByRouterId(@Param("rids") String[] routerId);
+
+    /**
      * 根据ID查询关系
      *
      * @param ids 关系ID

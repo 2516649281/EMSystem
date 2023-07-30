@@ -9,7 +9,7 @@
     <!--条件查询关系-->
     <select id="selectAllProblemExam" resultType="com.chunfeng.dao.entity.ProblemExam"
             parameterType="com.chunfeng.dao.entity.ProblemExam">
-        select id, exam_id, permission_id
+        select id, exam_id, problem_id
         from problem_exam
         <where>
             <if test="id!='' and id!=null">
@@ -25,7 +25,7 @@
     </select>
     <!--根据关系ID查询关系信息-->
     <select id="selectAllProblemExamById" resultType="com.chunfeng.dao.entity.ProblemExam">
-        select id, exam_id, permission_id
+        select id, exam_id, problem_id
         from problem_exam
         <where>
             id in
@@ -37,9 +37,9 @@
     </select>
     <!--插入一条关系数据-->
     <insert id="insertProblemExam">
-        insert into problem_exam (id, exam_id, permission_id, create_user, create_time)
+        insert into problem_exam (id, exam_id, problem_id, create_user, create_time)
         <foreach collection="pes" item="pe" open="values" separator="," close=";">
-            (#{pe.id}, #{pe.examId}, #{pe.permissionId}, #{pe.createUser}, #{pe.createTime})
+            (#{pe.id}, #{pe.examId}, #{pe.problemId}, #{pe.createUser}, #{pe.createTime})
         </foreach>
     </insert>
     <!--根据关系ID批量修改关系数据-->
@@ -50,8 +50,8 @@
                 <if test="pe.examId!='' and pe.examId!=null">
                     exam_id=#{pe.examId}
                 </if>
-                <if test="pe.permissionId!='' and pe.permissionId!=null">
-                    ,permission_id=#{pe.permissionId}
+                <if test="pe.problemId!='' and pe.problemId!=null">
+                    ,problem_id=#{pe.problemId}
                 </if>
                 <if test="pe.updateUser!='' and pe.updateUser!=null">
                     ,update_user=#{pe.updateUser}

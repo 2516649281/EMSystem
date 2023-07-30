@@ -62,7 +62,7 @@ public class Problem implements Serializable {
      * 科目
      */
     @ApiModelProperty(value = "科目")
-    private String subject;
+    private String subjectId;
     /**
      * 存放路径
      */

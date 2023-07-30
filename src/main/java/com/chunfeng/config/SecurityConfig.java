@@ -1,8 +1,6 @@
 package com.chunfeng.config;
 
-import com.chunfeng.handler.AccessDeniedException;
-import com.chunfeng.handler.AuthenticationException;
-import com.chunfeng.handler.TokenFilter;
+import com.chunfeng.handler.*;
 import com.chunfeng.properties.ExcludeUrlProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -53,6 +52,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private ExcludeUrlProperties excludeUrlProperties;
 
     /**
+     * 控制类
+     */
+    @Autowired
+    private PermissionRouterControllerHandler permissionRouterControllerHandler;
+
+    /**
+     * 配置类
+     */
+    @Autowired
+    private PermissionRouterSetHandler permissionRouterSetHandler;
+
+    /**
      * http核心配置
      *
      * @param http http对象
@@ -67,8 +78,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 // 允许匿名访问
-                .authorizeRequests().antMatchers(excludeUrlProperties.getExcludeUrl()).permitAll()
-                // 除上面外的所有请求全部需要鉴权认证
+                .authorizeRequests()
+                // //动态权限设置
+                // .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                //     @Override
+                //     public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                //         o.setAccessDecisionManager(permissionRouterControllerHandler);
+                //         o.setSecurityMetadataSource(permissionRouterSetHandler);
+                //         return o;
+                //     }
+                // })
+                .antMatchers(excludeUrlProperties.getExcludeUrl()).permitAll()
+                // 其他请求必须授权
                 .anyRequest().authenticated();
         //拦截器配置
         http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
@@ -77,6 +98,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationException);//认证异常处理
         http.cors();//允许跨域
         log.info("SpringSecurity-http核心已成功配置!");
+    }
+
+    /**
+     * SpringSecurity Web配置
+     *
+     * @param web web配置对象
+     */
+    @Override
+    public void configure(WebSecurity web) {
+        web
+                //全局排除路径
+                .ignoring()
+                .antMatchers(excludeUrlProperties.getExcludeUrl());
     }
 
     /**
