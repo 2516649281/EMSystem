@@ -256,7 +256,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         UserDetail userDetail = new UserDetail();
         userDetail.setUser(user);
         //查询该用户的角色信息
-        List<Role> roles = roleMapper.selectAllRoleById(new String[]{user.getRole()});
+        List<Role> roles = roleMapper.selectAllRoleById(new String[]{user.getRoleId()});
         if (roles == null || roles.isEmpty()) {
             log.error("用户{}尚未绑定角色信息!", username);
             throw new ServiceException(RequestException.LOGIN_ERROR);

@@ -6,6 +6,7 @@
     <!--字段映射-->
     <resultMap id="userMap" type="com.chunfeng.dao.entity.User">
         <result column="nick_name" property="nickName"/>
+        <result column="role_id" property="roleId"/>
     </resultMap>
     <!--条件查询用户-->
     <select id="selectAllUser" resultType="com.chunfeng.dao.entity.User" parameterType="com.chunfeng.dao.entity.User"
@@ -18,7 +19,7 @@
         email,
         phone,
         status,
-        role
+        role_id
         from user
         <where>
             <if test="id!='' and id!=null">
@@ -33,8 +34,8 @@
             <if test="sex!=null">
                 and sex=#{sex}
             </if>
-            <if test="role!=null">
-                and role=#{role}
+            <if test="roleId!=null">
+                and role_id=#{roleId}
             </if>
             <if test="status!=null">
                 and status=#{status}
@@ -47,7 +48,7 @@
                name,
                password,
                status,
-               role
+               role_id
         from user
         where name = #{name}
         ;
@@ -95,8 +96,8 @@
             <if test="avatar!='' and avatar!=null">
                 ,avatar=#{avatar}
             </if>
-            <if test="role!=null">
-                ,role=#{role}
+            <if test="roleId!=null">
+                ,role_id=#{roleId}
             </if>
             <if test="email!='' and email!=null">
                 ,email=#{email}

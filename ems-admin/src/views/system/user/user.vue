@@ -42,8 +42,7 @@
         >
           <el-button icon="el-icon-printer" type="warning"
           >导出Excel表格
-          </el-button
-          >
+          </el-button>
         </download-excel>
       </el-form-item>
     </el-form>
@@ -71,9 +70,8 @@
       >
         <template slot-scope="scope">
           <!-- ID特殊列 -->
-          <template v-if="table.value === 'id'">{{
-              scope.$index + 1
-            }}
+          <template v-if="table.value === 'id'"
+          >{{ scope.$index + 1 }}
           </template>
           <!-- 性别特殊列 -->
           <el-tag
@@ -136,7 +134,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="角色" prop="role">
-          <el-select v-model="oldUser.role" clearable placeholder="选择角色">
+          <el-select v-model="oldUser.roleId" clearable placeholder="选择角色">
             <el-option
               :label="role.name"
               :value="role.id"
@@ -266,7 +264,7 @@ export default {
             trigger: "change",
           },
         ],
-        role: [
+        roleId: [
           {
             required: true,
             message: "请选择角色",

@@ -22,7 +22,7 @@ public class User implements Serializable {
      * 序列化字段
      */
     @ApiModelProperty(value = "序列化字段", hidden = true)
-    private static final long serialVersionUID = 8920582492562666756L;
+    private static final long serialVersionUID = -1122718285158189698L;
     /**
      * 编号
      */
@@ -67,7 +67,7 @@ public class User implements Serializable {
      * 角色
      */
     @ApiModelProperty(value = "角色", allowEmptyValue = true)
-    private String role;
+    private String roleId;
     /**
      * 状态(0正常,1失效)
      */
