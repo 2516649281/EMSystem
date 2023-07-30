@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.chunfeng.dao.mapper.SubjectMapper">
-    <!--条件查询科目-->
-    <select id="selectAllSubject" resultType="com.chunfeng.dao.entity.Subject"
-            parameterType="com.chunfeng.dao.entity.Subject">
-        select
-        id, name
-        from subject
+<mapper namespace="com.chunfeng.dao.mapper.RouterMapper">
+    <!--条件查询路由信息-->
+    <select id="selectAllRouter" resultType="com.chunfeng.dao.entity.Router">
+        select id, name,value,type
+        from router
         <where>
             <if test="id!='' and id!=null">
-                and id=#{id}
+                id=#{id}
             </if>
             <if test="name!='' and name!=null">
                 and name like CONCAT('%', #{name}, '%')
             </if>
+            <if test="type!='' and type!=null">
+                and type=#{type}
+            </if>
         </where>
+        ;
     </select>
-    <!--根据ID查询科目-->
-    <select id="selectAllSubjectById" resultType="com.chunfeng.dao.entity.Subject">
-        select id, name
-        from subject
+    <!--根据ID查询路由-->
+    <select id="selectAllRouterById" resultType="com.chunfeng.dao.entity.Router">
+        select id, name,value,type
+        from router
         <where>
             id in
             <foreach collection="ids" item="id" open="(" separator="," close=")">
@@ -28,17 +30,23 @@
         </where>
         ;
     </select>
-    <!--插入一条科目数据-->
-    <insert id="insertSubject">
-        insert into subject (id, name, create_user, create_time)
-        values (#{id}, #{name}, #{createUser}, #{createTime});
+    <!--插入一条路由信息-->
+    <insert id="insertRouter">
+        insert into router (id, name, value, type, create_user, create_time)
+        values (#{id}, #{name}, #{value}, #{type}, #{createUser}, #{createTime});
     </insert>
-    <!--根据科目ID修改一条科目数据-->
-    <update id="updateSubjectById">
-        update subject
+    <!--修改一条路由信息-->
+    <update id="updateRouterById">
+        update router
         <set>
             <if test="name!='' and name!=null">
                 name=#{name}
+            </if>
+            <if test="value!='' and value!=null">
+                ,value=#{value}
+            </if>
+            <if test="type!='' and type!=null">
+                ,type=#{type}
             </if>
             <if test="updateUser!='' and updateUser!=null">
                 ,update_user=#{updateUser}
@@ -49,10 +57,10 @@
         </set>
         where id=#{id};
     </update>
-    <!--根据科目ID批量删除科目信息-->
-    <delete id="deleteSubjectById" parameterType="list">
+    <!--根据路由ID批量删除路由信息-->
+    <delete id="deleteRouterById" parameterType="list">
         delete
-        from subject
+        from router
         where
         id in
         <foreach collection="ids" item="id" open="(" separator="," close=")">

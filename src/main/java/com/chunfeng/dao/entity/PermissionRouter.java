@@ -1,54 +1,41 @@
 package com.chunfeng.dao.entity;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
- * 权限实体
+ * 权限-路由关系表
  *
  * @author by 春风能解释
  * <p>
- * 2023/7/14
+ * 2023/7/30
  */
 @Data
 @NoArgsConstructor
-@ApiModel(value = "权限实体类", description = "用于存储权限的实体")
-public class Permission implements Serializable {
+public class PermissionRouter implements Serializable {
     /**
      * 序列化字段
      */
     @ApiModelProperty(value = "序列化字段", hidden = true)
-    private static final long serialVersionUID = -1429041090000746090L;
+    private static final long serialVersionUID = 7802761045880041309L;
     /**
      * 主键
      */
-    @ApiModelProperty(value = "权限ID")
+    @ApiModelProperty(value = "关系ID")
     private String id;
     /**
-     * 权限名
+     * 权限ID
      */
-    @ApiModelProperty(value = "权限名")
-    private String name;
+    @ApiModelProperty(value = "权限ID", allowEmptyValue = true)
+    private String permissionId;
     /**
-     * 权限标识
+     * 路由ID
      */
-    @ApiModelProperty(value = "权限标识", required = true)
-    private String sign;
-    /**
-     * 路由列表
-     */
-    @ApiModelProperty(value = "路由列表")
-    private List<Router> routerList;
-    /**
-     * 是否为默认
-     */
-    @ApiModelProperty(value = "是否为默认", required = true)
-    private Integer isDefault;
+    @ApiModelProperty(value = "路由ID", allowEmptyValue = true)
+    private String routerId;
     /**
      * 创建人
      */

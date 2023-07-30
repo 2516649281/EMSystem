@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :inline="true" :model="selectForm" class="demo-form-inline">
-      <el-form-item label="权限名">
+      <el-form-item label="科目名">
         <el-input
           v-model="selectForm.name"
-          placeholder="权限名"
+          placeholder="科目名"
           clearable
         ></el-input>
       </el-form-item>
@@ -17,7 +17,7 @@
         </el-button>
         <el-button
           type="danger"
-          @click="deletePermission(ids)"
+          @click="deleteSubject(ids)"
           :icon="deleteLoading ? 'el-icon-loading' : 'el-icon-delete'"
         >批量删除
         </el-button>
@@ -25,7 +25,7 @@
           type="success"
           @click="addDialogVisible = true"
           icon="el-icon-plus"
-        >添加权限
+        >添加科目
         </el-button>
       </el-form-item>
       <el-form-item>
@@ -69,18 +69,11 @@
           <template v-if="table.value === 'id'"
           >{{ scope.$index + 1 }}
           </template>
-          <!-- 是否默认特殊列 -->
-          <el-tag
-            :type="scope.row.isDefault | statusFilter"
-            v-else-if="table.value === 'isDefault'"
-          >
-            {{ scope.row.isDefault === 0 ? "默认" : "自定义" }}
-          </el-tag>
           <!-- 其他列 -->
           <template v-else>{{ scope.row[table.value] }}</template>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="220">
+      <el-table-column label="操作" align="center" width="440">
         <template slot-scope="scope">
           <el-button
             @click="showUpdate(scope.row)"
@@ -90,7 +83,7 @@
           </el-button>
           <el-button
             type="danger"
-            @click="deletePermission([scope.row.id])"
+            @click="deleteSubject([scope.row.id])"
             icon="el-icon-delete"
           >删除
           </el-button>
@@ -99,60 +92,54 @@
     </el-table>
     <!-- 修改弹窗 -->
     <el-dialog
-      title="修改权限"
+      title="修改科目"
       :visible.sync="updateDialogVisible"
       label-position="left"
       center
+      width="60%"
     >
       <el-form
-        :model="oldPermission"
-        :rules="permissionRules"
+        :model="oldSubject"
+        :rules="subjectRules"
         status-icon
         ref="ruleForm"
-        label-width="20%"
       >
-        <el-form-item label="权限名" prop="name">
-          <el-input v-model="oldPermission.name" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="标记值" prop="sign">
-          <el-input v-model="oldPermission.sign" clearable></el-input>
+        <el-form-item label="科目名" prop="name">
+          <el-input v-model="oldSubject.name" clearable></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="updateDialogVisible = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="updatePermission(oldPermission)"
+          @click="updateSubject(oldSubject)"
           :icon="editLoading ? 'el-icon-loading' : ''"
         >确 定
         </el-button>
       </div>
     </el-dialog>
     <el-dialog
-      title="添加权限"
+      title="添加科目"
       :visible.sync="addDialogVisible"
       label-position="left"
       center
       width="50%"
     >
       <el-form
-        :model="newPermission"
-        :rules="permissionRules"
+        :model="newSubject"
+        :rules="subjectRules"
         status-icon
         ref="ruleForm"
       >
-        <el-form-item label="权限名" prop="name">
-          <el-input v-model="newPermission.name" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="标记值" prop="sign">
-          <el-input v-model="newPermission.sign" clearable></el-input>
+        <el-form-item label="科目名" prop="name">
+          <el-input v-model="newSubject.name" clearable></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="addPermission(newPermission)"
+          @click="addSubject(newSubject)"
           :icon="editLoading ? 'el-icon-loading' : ''"
         >确 定
         </el-button>
@@ -162,42 +149,33 @@
 </template>
 
 <script>
-import {getPermissions} from "@/api/table";
+import {getSubjects} from "@/api/table";
 import {
-  addPermission,
-  updatePermission,
-  deletePermission,
-  getPermissionInfo,
-} from "@/api/permission";
+  updateSubject,
+  deleteSubject,
+  getSubjectInfo,
+  addSubject,
+} from "@/api/subject";
 
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        1: "success",
-        0: "danger",
-      };
-      return statusMap[status];
-    },
-  },
   data() {
     return {
       list: null,
-      ids: null,
       listLoading: true,
       updateDialogVisible: false,
-      addDialogVisible: false,
       editLoading: false,
       searchLoading: false,
       deleteLoading: false,
-      oldPermission: {},
-      newPermission: {},
-      permissionRules: {
-        name: [{required: true, message: "权限名不得为空!", trigger: "blur"}],
-        sign: [{required: true, message: "标记名不得为空!", trigger: "blur"}],
+      addDialogVisible: false,
+      oldSubject: {},
+      newSubject: {},
+      ids: [],
+      subjectList: null,
+      subjectRules: {
+        name: [{required: true, message: "科目名不得为空!", trigger: "blur"}],
       },
       selectForm: {},
-      title: "考试管理系统-权限表",
+      title: "考试管理系统-科目表",
       //字段备注
       column: {},
       //表格
@@ -205,22 +183,12 @@ export default {
         {
           name: "编号",
           value: "id",
-          width: 110,
+          width: 220,
         },
         {
-          name: "权限名",
+          name: "科目名",
           value: "name",
           width: 220,
-        },
-        {
-          name: "标记值",
-          value: "sign",
-          width: 220,
-        },
-        {
-          name: "是否默认",
-          value: "isDefault",
-          width: 110,
         },
       ],
     };
@@ -230,10 +198,10 @@ export default {
     this.getExcel();
   },
   methods: {
-    //查看所有权限
+    //查看所有科目
     fetchData() {
       this.listLoading = true;
-      getPermissions().then((response) => {
+      getSubjects().then((response) => {
         this.list = response.data;
         this.listLoading = false;
       });
@@ -246,20 +214,15 @@ export default {
       });
       this.column = map;
     },
-    //显示修改窗
-    showUpdate(oldPermission) {
-      this.updateDialogVisible = true;
-      this.oldPermission = oldPermission;
-    },
-    //添加权限
-    addPermission(permission) {
+    //添加科目
+    addSubject(subject) {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          addPermission(permission).then((response) => {
+          addSubject(subject).then((response) => {
             if (response.success) {
               this.$message({
                 showClose: true,
-                message: "添加权限成功!",
+                message: "添加科目成功!",
                 type: "success",
               });
               this.fetchData();
@@ -271,58 +234,49 @@ export default {
         }
       });
     },
-    //修改权限信息
-    updatePermission(newPermission) {
-      //判断是否为默认权限
-      if (newPermission.isDefault === 0) {
-        this.$message({
-          showClose: true,
-          message: "待修改的权限为默认权限,不允许修改!",
-          type: "error",
-        });
-        return;
-      }
+    //修改科目信息
+    updateSubject(newSubject) {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
           this.editLoading = true;
-          updatePermission(newPermission).then((response) => {
+          updateSubject(newSubject).then((response) => {
             if (response.success) {
               this.$message({
                 showClose: true,
-                message: "修改权限成功!",
+                message: "修改科目成功!",
                 type: "success",
               });
-              this.updateDialogVisible = false;
               this.fetchData();
+              this.editLoading = false;
             }
-            this.editLoading = false;
           });
+          this.updateDialogVisible = false;
         } else {
           return false;
         }
       });
     },
-    //删除权限
-    deletePermission(ids) {
+    //删除科目
+    deleteSubject(ids) {
       if (ids === null || ids.length === 0) {
         this.$message({
           showClose: true,
-          message: "请选择至少一个权限!",
+          message: "请选择至少一个科目!",
           type: "warning",
         });
         return;
       }
-      this.$confirm("此操作将永久删除该权限,是否继续?(真的很久)", "警告", {
+      this.$confirm("此操作将永久删除该科目,是否继续?(真的很久)", "警告", {
         confirmButtonText: "删除",
         cancelButtonText: "点错了",
         type: "warning",
       }).then(() => {
         this.deleteLoading = true;
-        deletePermission(ids).then((response) => {
+        deleteSubject(ids).then((response) => {
           if (response.success) {
             this.$message({
               showClose: true,
-              message: "删除权限成功!",
+              message: "删除科目成功!",
               type: "success",
             });
             this.fetchData();
@@ -331,12 +285,12 @@ export default {
         this.deleteLoading = false;
       });
     },
-    //按条件搜索权限
+    //按条件搜索科目
     search(selectForm) {
       this.listLoading = true;
       this.searchLoading = true;
       console.log(selectForm);
-      getPermissionInfo(this.isEntity(selectForm)).then((response) => {
+      getSubjectInfo(this.isEntity(selectForm)).then((response) => {
         this.list = response.data;
         this.listLoading = false;
         this.searchLoading = false;
@@ -360,6 +314,11 @@ export default {
         return v.id;
       });
       this.ids = ids;
+    },
+    //显示修改窗
+    showUpdate(oldSubject) {
+      this.oldSubject = oldSubject;
+      this.updateDialogVisible = true;
     },
   },
 };

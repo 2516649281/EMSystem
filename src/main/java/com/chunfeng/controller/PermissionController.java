@@ -63,6 +63,19 @@ public class PermissionController {
         return permissionService.lookAllPermission();
     }
 
+
+    /**
+     * 根据ID值查询权限信息
+     *
+     * @param permissionId 角色ID
+     * @return JSON
+     */
+    @GetMapping("/{permissionId}")
+    @PreAuthorize("hasAnyAuthority('sys:router:select','sys:per:select')")
+    public JsonRequest<Permission> lookRoleById(@PathVariable String permissionId) {
+        return permissionService.lookPermissionById(permissionId);
+    }
+
     /**
      * 新增一条权限信息
      *

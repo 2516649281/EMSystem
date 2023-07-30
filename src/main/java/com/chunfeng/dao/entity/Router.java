@@ -6,49 +6,43 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
- * 权限实体
+ * 路由实体
  *
  * @author by 春风能解释
  * <p>
- * 2023/7/14
+ * 2023/7/30
  */
 @Data
 @NoArgsConstructor
-@ApiModel(value = "权限实体类", description = "用于存储权限的实体")
-public class Permission implements Serializable {
+@ApiModel(value = "路由实体", description = "用于存储请求路由")
+public class Router implements Serializable {
     /**
      * 序列化字段
      */
     @ApiModelProperty(value = "序列化字段", hidden = true)
-    private static final long serialVersionUID = -1429041090000746090L;
+    private static final long serialVersionUID = -4353449119732554009L;
     /**
-     * 主键
+     * 路由ID
      */
-    @ApiModelProperty(value = "权限ID")
+    @ApiModelProperty(value = "路由ID", allowEmptyValue = true)
     private String id;
     /**
-     * 权限名
+     * 路由名
      */
-    @ApiModelProperty(value = "权限名")
+    @ApiModelProperty(value = "路由名")
     private String name;
     /**
-     * 权限标识
+     * 路由值
      */
-    @ApiModelProperty(value = "权限标识", required = true)
-    private String sign;
+    @ApiModelProperty(value = "路由值")
+    private String value;
     /**
-     * 路由列表
+     * 路由类型(0后端,1前端)
      */
-    @ApiModelProperty(value = "路由列表")
-    private List<Router> routerList;
-    /**
-     * 是否为默认
-     */
-    @ApiModelProperty(value = "是否为默认", required = true)
-    private Integer isDefault;
+    @ApiModelProperty(value = "路由类型(0后端,1前端)", allowableValues = "0,1", allowEmptyValue = true)
+    private Integer type;
     /**
      * 创建人
      */

@@ -20,7 +20,7 @@
             <if test="sign!='' and sign!=null">
                 and sign like CONCAT('%',#{sign}, '%')
             </if>
-            <if test="name!='' and name!=null">
+            <if test="isDefault!=null">
                 and is_default=#{isDefault}
             </if>
         </where>

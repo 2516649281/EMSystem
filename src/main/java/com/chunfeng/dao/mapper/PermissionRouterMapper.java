@@ -1,0 +1,56 @@
+package com.chunfeng.dao.mapper;
+
+import com.chunfeng.dao.entity.PermissionRouter;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * 权限-路由数据层接口
+ *
+ * @author by 春风能解释
+ * <p>
+ * 2023/7/16
+ */
+public interface PermissionRouterMapper {
+
+    /**
+     * 条件查询关系信息
+     *
+     * @param permissionRouter 条件
+     * @return 关系列表
+     */
+    List<PermissionRouter> selectAllPermissionRouter(PermissionRouter permissionRouter);
+
+    /**
+     * 根据ID查询关系
+     *
+     * @param ids 关系ID
+     * @return 关系列表
+     */
+    List<PermissionRouter> selectAllPermissionRouterById(String[] ids);
+
+    /**
+     * 批量插入关系信息
+     *
+     * @param permissionRouters 关系信息
+     * @return 影响行数
+     */
+    Integer insertPermissionRouter(@Param("prs") List<PermissionRouter> permissionRouters);
+
+    /**
+     * 根据关系ID批量修改关系数据
+     *
+     * @param permissionRouters 关系数据
+     * @return 影响行数
+     */
+    Integer updatePermissionRouterById(@Param("prs") List<PermissionRouter> permissionRouters);
+
+    /**
+     * 根据关系ID批量解绑关系信息
+     *
+     * @param ids 选择的关系ID
+     * @return 影响行数
+     */
+    Integer deletePermissionRouterById(String[] ids);
+}

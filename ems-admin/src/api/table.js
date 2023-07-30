@@ -1,19 +1,33 @@
 import request from "@/utils/request";
 
 //用户
-export function getUsers(params) {
+export function getUsers() {
   return request({
     url: "/user",
     method: "get",
-    params,
   });
 }
 
 //角色
-export function getRoles(params) {
+export function getRoles() {
   return request({
     url: "/role",
     method: "get",
-    params,
+  });
+}
+
+//角色
+export function getPermissions() {
+  return request({
+    url: "/per",
+    method: "get",
+  });
+}
+
+//科目
+export function getSubjects() {
+  return request({
+    url: "/subject",
+    method: "get",
   });
 }

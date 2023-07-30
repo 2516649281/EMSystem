@@ -1,6 +1,7 @@
 package com.chunfeng.service;
 
 import com.chunfeng.dao.entity.Permission;
+import com.chunfeng.dao.entity.Role;
 import com.chunfeng.result.JsonRequest;
 
 import java.util.List;
@@ -28,6 +29,14 @@ public interface IPermissionService {
      * @return JSON
      */
     JsonRequest<List<Permission>> lookAllPermission();
+
+    /**
+     * 根据ID值查询权限信息
+     *
+     * @param permissionId 权限ID
+     * @return JSON
+     */
+    JsonRequest<Permission> lookPermissionById(String permissionId);
 
     /**
      * 添加一条权限信息

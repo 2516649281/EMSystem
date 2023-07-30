@@ -84,6 +84,21 @@ export const constantRoutes = [
       },
     ],
   },
+  {
+    path: "/op",
+    component: Layout,
+    redirect: "/op/subject",
+    name: "op",
+    meta: {title: "教学管理", icon: "el-icon-setting"},
+    children: [
+      {
+        path: "/op",
+        name: "op",
+        component: () => import("@/views/op/subject/subject"),
+        meta: {title: "管理科目信息", icon: "el-icon-user"},
+      },
+    ],
+  },
   // 404 page must be placed at the end !!!
   {path: "*", redirect: "/404", hidden: true},
 ];

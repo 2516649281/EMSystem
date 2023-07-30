@@ -38,8 +38,7 @@
         >
           <el-button icon="el-icon-printer" type="warning"
           >导出Excel表格
-          </el-button
-          >
+          </el-button>
         </download-excel>
       </el-form-item>
     </el-form>
@@ -67,9 +66,8 @@
       >
         <template slot-scope="scope">
           <!-- ID特殊列 -->
-          <template v-if="table.value === 'id'">{{
-              scope.$index + 1
-            }}
+          <template v-if="table.value === 'id'"
+          >{{ scope.$index + 1 }}
           </template>
           <!-- 其他列 -->
           <template v-else>{{ scope.row[table.value] }}</template>
