@@ -29,6 +29,15 @@ public interface IExamService {
      */
     JsonRequest<List<Exam>> lookAllExam();
 
+
+    /**
+     * 根据ID值批量查询试卷信息
+     *
+     * @param ids 试卷ID
+     * @return JSON
+     */
+    JsonRequest<List<Exam>> lookExamById(String[] ids);
+
     /**
      * 新增一条试卷信息
      *

@@ -22,6 +22,15 @@ public interface PermissionRoleMapper {
      */
     List<PermissionRole> selectAllPermissionRole(PermissionRole permissionRole);
 
+
+    /**
+     * 按条件批量查询符合条件的个数
+     *
+     * @param permissionRoles 条件
+     * @return 个数
+     */
+    Integer selectAllPermissionRoleCount(@Param("prs") List<PermissionRole> permissionRoles);
+
     /**
      * 根据ID查询关系
      *
@@ -53,4 +62,12 @@ public interface PermissionRoleMapper {
      * @return 影响行数
      */
     Integer deletePermissionRoleById(String[] ids);
+
+    /**
+     * 根据权限ID解绑关系信息
+     *
+     * @param ids 条件集合
+     * @return 影响行数
+     */
+    Integer deletePermissionRoleByPer(@Param("ids") String[] ids);
 }

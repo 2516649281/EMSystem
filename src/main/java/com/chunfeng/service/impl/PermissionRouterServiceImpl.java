@@ -73,6 +73,25 @@ public class PermissionRouterServiceImpl implements IPermissionRouterService {
         return permissionRouterService.lookPermissionRouter(new PermissionRouter());
     }
 
+
+    /**
+     * 根据ID值批量查询关系信息
+     *
+     * @param ids 关系ID
+     * @return JSON
+     */
+    @Override
+    @Cacheable(value = "permissionRouter_select", key = "#ids")
+    public JsonRequest<List<PermissionRouter>> lookPermissionRouterById(String[] ids) {
+        List<PermissionRouter> permissionRouters = permissionRouterMapper.selectAllPermissionRouterById(ids);
+        if (permissionRouters.size() != ids.length) {
+            log.warn("待查询的关系ID与数据库中的数量不符!数据库:{},实际:{}", permissionRouters.size(), ids.length);
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        log.info("已查询出{}条关系数据!", permissionRouters.size());
+        return JsonRequest.success(permissionRouters);
+    }
+
     /**
      * 批量绑定关系信息
      *
@@ -80,8 +99,14 @@ public class PermissionRouterServiceImpl implements IPermissionRouterService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = "permissionRouter_select", allEntries = true)
+    @CacheEvict(value = {"permissionRouter_select", "router_select"}, allEntries = true)
     public JsonRequest<Integer> addPermissionRouter(List<PermissionRouter> permissionRouters) {
+        //判断关系是否已经存在
+        Integer column = permissionRouterMapper.selectAllPermissionRouterCount(permissionRouters);
+        if (column > 0) {
+            log.error("添加关系数据失败!原因:该关系已在数据库中找到");
+            return JsonRequest.error(RequestException.INSERT_ERROR);
+        }
         //日志信息注入
         List<PermissionRouter> permissionRouterList = permissionRouters
                 .stream()
@@ -90,7 +115,7 @@ public class PermissionRouterServiceImpl implements IPermissionRouterService {
                     v.setCreateUser(SqlDateUtils.currentUserId);
                     v.setCreateTime(SqlDateUtils.date);
                 }).collect(Collectors.toList());
-        Integer column = permissionRouterMapper.insertPermissionRouter(permissionRouterList);
+        column = permissionRouterMapper.insertPermissionRouter(permissionRouterList);
         //判断添加是否成功
         if (column < 1) {
             log.error("添加关系数据失败!");
@@ -107,7 +132,7 @@ public class PermissionRouterServiceImpl implements IPermissionRouterService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"permissionRouter_select"}, allEntries = true)
+    @CacheEvict(value = {"permissionRouter_select", "router_select"}, allEntries = true)
     public JsonRequest<Integer> updatePermissionRouter(List<PermissionRouter> permissionRouters) {
         //提取ID值
         String[] ids = permissionRouters.stream()
@@ -142,7 +167,7 @@ public class PermissionRouterServiceImpl implements IPermissionRouterService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"permissionRouter_select"}, allEntries = true)
+    @CacheEvict(value = {"permissionRouter_select", "router_select"}, allEntries = true)
     public JsonRequest<Integer> deletePermissionRouter(String[] ids) {
         List<PermissionRouter> permissionRouters = permissionRouterMapper.selectAllPermissionRouterById(ids);
         if (permissionRouters.size() != ids.length) {

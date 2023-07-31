@@ -117,17 +117,6 @@
         <el-form-item label="标记值" prop="sign">
           <el-input v-model="oldPermission.sign" clearable></el-input>
         </el-form-item>
-        <el-form-item label="路由列表">
-          <el-transfer
-            filterable
-            :filter-method="selectRouter"
-            filter-placeholder="请输入路由关键字"
-            v-model="routerIds"
-            :data="routerList"
-            :titles="['未拥有', '已拥有']"
-            :button-texts="['删', '加']"
-          ></el-transfer>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="updateDialogVisible = false">取 消</el-button>
@@ -179,9 +168,6 @@ import {
   updatePermission,
   deletePermission,
   getPermissionInfo,
-  getPermissionRouter,
-  setPermissionRouter,
-  deletePermissionRouter,
 } from "@/api/permission";
 
 export default {
@@ -197,7 +183,6 @@ export default {
   data() {
     return {
       list: null,
-      routerList: [],
       ids: null,
       listLoading: true,
       updateDialogVisible: false,
@@ -207,10 +192,6 @@ export default {
       deleteLoading: false,
       oldPermission: {},
       newPermission: {},
-      routerIds: [],
-      routerList: [],
-      permissionRouterId: [],
-      routerId: [],
       permissionRules: {
         name: [{required: true, message: "权限名不得为空!", trigger: "blur"}],
         sign: [{required: true, message: "标记名不得为空!", trigger: "blur"}],
@@ -268,22 +249,6 @@ export default {
     },
     //显示修改窗
     showUpdate(oldPermission) {
-      //获取已获得的
-      getPermissionRouter({permissionId: oldPermission.id}).then(
-        (response) => {
-          //路由ID
-          var ids = response.data.map((v) => {
-            return v.routerId;
-          });
-          //实体ID
-          var idsA = response.data.map((v) => {
-            return v.id;
-          });
-          //保存实体ID
-          this.permissionRouterId = idsA;
-          this.routerId = ids;
-        }
-      );
       this.updateDialogVisible = true;
       this.oldPermission = oldPermission;
     },
@@ -321,33 +286,15 @@ export default {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
           this.editLoading = true;
-          updatePermission(newPermission);
-          //修改关系
-          //1.删除所有已授权内容
-          if (this.permissionRouterId.length !== 0) {
-            deletePermissionRouter(this.permissionRouterId);
-          }
-          //构造条件
-          var prt = this.routerIds.map((v) => {
-            var obj = {};
-            obj["permissionId"] = newPermission.id;
-            obj["routerId"] = v;
-            return obj;
+          updatePermission(newPermission).then((response) => {
+            if (response.success) {
+              this.$message({
+                showClose: true,
+                message: "修改权限成功!",
+                type: "success",
+              });
+            }
           });
-          if (prt.length !== 0) {
-            //2.添加新的权限
-            setPermissionRouter(prt).then((response) => {
-              if (response.success) {
-                this.$message({
-                  showClose: true,
-                  message: "修改权限成功!",
-                  type: "success",
-                });
-                this.updateDialogVisible = false;
-                this.fetchData();
-              }
-            });
-          }
           this.editLoading = false;
         } else {
           return false;

@@ -33,6 +33,14 @@ public interface IUserService {
     JsonRequest<List<User>> lookAllUser();
 
     /**
+     * 按ID值批量查询用户数据
+     *
+     * @param ids ID值
+     * @return JSON
+     */
+    JsonRequest<List<User>> lookUserById(String[] ids);
+
+    /**
      * 登录逻辑
      *
      * @param name     用户名

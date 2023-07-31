@@ -64,6 +64,24 @@ public class RouterController {
     }
 
     /**
+     * 查询一条路由信息
+     *
+     * @param routerId 路由ID
+     * @return JSON
+     */
+    @GetMapping("/one")
+    @ApiOperation(value = "查询一条路由信息")
+    @ApiResponses({
+            @ApiResponse(code = 404, message = "没有找到任何数据!"),
+            @ApiResponse(code = 200, message = "查询成功!")
+    })
+    @PreAuthorize("hasAnyAuthority('sys:router:select')")
+    public JsonRequest<Router> lookOneRouter(
+            @RequestParam String routerId) {
+        return routerService.lookOneRouter(routerId);
+    }
+
+    /**
      * 新增一条路由信息
      *
      * @param router 路由信息

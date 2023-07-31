@@ -30,6 +30,14 @@ public interface ISubjectService {
     JsonRequest<List<Subject>> lookAllSubject();
 
     /**
+     * 根据ID值查询科目信息
+     *
+     * @param ids 科目ID
+     * @return JSON
+     */
+    JsonRequest<List<Subject>> lookOneSubject(String[] ids);
+
+    /**
      * 新增一条科目信息
      *
      * @param subject 科目信息

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 权限-角色关系业务层实现
+ * 题库-试卷关系业务层实现
  *
  * @author by 春风能解释
  * <p>
@@ -74,6 +74,24 @@ public class ProblemExamServiceImpl implements IProblemExamService {
     }
 
     /**
+     * 根据ID值批量查询角色信息
+     *
+     * @param ids 角色ID
+     * @return JSON
+     */
+    @Override
+    @Cacheable(value = "problemExam_select", key = "#ids")
+    public JsonRequest<List<ProblemExam>> lookProblemExamById(String[] ids) {
+        List<ProblemExam> problemExams = problemExamMapper.selectAllProblemExamById(ids);
+        if (problemExams.size() != ids.length) {
+            log.warn("待查询的角色ID与数据库中的数量不符!数据库:{},实际:{}", problemExams.size(), ids.length);
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        log.info("已查询出{}条角色数据!", problemExams.size());
+        return JsonRequest.success(problemExams);
+    }
+
+    /**
      * 批量绑定关系信息
      *
      * @param problemExams 关系信息
@@ -82,6 +100,12 @@ public class ProblemExamServiceImpl implements IProblemExamService {
     @Override
     @CacheEvict(value = "problemExam_select", allEntries = true)
     public JsonRequest<Integer> addProblemExam(List<ProblemExam> problemExams) {
+        //判断关系是否已经存在
+        Integer column = problemExamMapper.selectAllProblemExamCount(problemExams);
+        if (column > 0) {
+            log.error("添加关系数据失败!原因:该关系已在数据库中找到");
+            return JsonRequest.error(RequestException.INSERT_ERROR);
+        }
         //添加日志信息
         List<ProblemExam> problemExamList = problemExams.stream().peek(v -> {
             //日志信息
@@ -90,7 +114,7 @@ public class ProblemExamServiceImpl implements IProblemExamService {
             v.setCreateTime(SqlDateUtils.date);
         }).collect(Collectors.toList());
         //添加
-        Integer column = problemExamMapper.insertProblemExam(problemExamList);
+        column = problemExamMapper.insertProblemExam(problemExamList);
         //判断添加是否成功
         if (column < 1) {
             log.error("添加关系数据失败!");

@@ -149,6 +149,21 @@
             <el-radio :label="0" border>后端</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="权限" prop="permission">
+          <el-checkbox-group
+            v-model="oldPermissionIds"
+            multiple
+            placeholder="请选择必需的权限"
+          >
+            <el-checkbox
+              v-for="item in permissions"
+              :key="item.id"
+              :label="item.id"
+            >
+              {{ item.name }}
+            </el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="updateDialogVisible = false">取 消</el-button>
@@ -214,13 +229,16 @@
 </template>
 
 <script>
-import {getRouters} from "@/api/table";
+import {getRouters, getPermissions} from "@/api/table";
 import {
   addRouter,
   updateRouter,
   deleteRouter,
   getRouterInfo,
+  getRouterById,
+  setPermissionRouter,
 } from "@/api/router";
+import {deletePermissionRouter, getPermissionRouter} from "@/api/permission";
 
 export default {
   filters: {
@@ -251,6 +269,9 @@ export default {
       editLoading: false,
       searchLoading: false,
       deleteLoading: false,
+      permissions: [],
+      permissionRouters: [],
+      oldPermissionIds: [],
       oldRouter: {},
       newRouter: {},
       routerRules: {
@@ -265,6 +286,13 @@ export default {
           {
             required: true,
             message: "请选择类型",
+            trigger: "change",
+          },
+        ],
+        permissions: [
+          {
+            required: true,
+            message: "请选择权限",
             trigger: "change",
           },
         ],
@@ -313,6 +341,7 @@ export default {
   created() {
     this.fetchData();
     this.getExcel();
+    this.getPermissions();
   },
   methods: {
     //查看所有路由
@@ -331,8 +360,20 @@ export default {
       });
       this.column = map;
     },
+    //获取所有的权限
+    getPermissions() {
+      getPermissions().then((response) => {
+        this.permissions = response.data;
+      });
+    },
     //显示修改窗
     showUpdate(oldRouter) {
+      //获取已绑定的权限ID
+      getRouterById({routerId: oldRouter.id}).then((response) => {
+        this.oldPermissionIds = response.data.permissionList.map((v) => {
+          return v.id;
+        });
+      });
       this.updateDialogVisible = true;
       this.oldRouter = oldRouter;
     },
@@ -372,18 +413,48 @@ export default {
           this.editLoading = true;
           updateRouter(newRouter).then((response) => {
             if (response.success) {
-              this.$message({
-                showClose: true,
-                message: "修改路由成功!",
-                type: "success",
-              });
-              this.updateDialogVisible = false;
-              this.fetchData();
+              //修改关系
+              this.updatePermissionRouter(newRouter.id);
             }
+            this.fetchData();
+            this.getPermissions();
             this.editLoading = false;
+            this.updateDialogVisible = false;
           });
         } else {
           return false;
+        }
+      });
+    },
+    //修改关系
+    updatePermissionRouter(id) {
+      var del = [];
+      //获取关系ID
+      getPermissionRouter({routerId: id}).then((response) => {
+        if (response.data.length !== 0) {
+          //首先删除所有关系
+          var prId = response.data.map((v) => {
+            return v.id;
+          });
+          deletePermissionRouter(prId);
+        }
+      });
+      //构造条件
+      del = this.oldPermissionIds.map((v) => {
+        var obj = {
+          permissionId: v,
+          routerId: id,
+        };
+        return obj;
+      });
+      //直接添加
+      setPermissionRouter(del).then((response) => {
+        if (response.success) {
+          this.$message({
+            showClose: true,
+            message: "修改路由成功!",
+            type: "success",
+          });
         }
       });
     },

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 权限实体
@@ -39,11 +38,6 @@ public class Permission implements Serializable {
      */
     @ApiModelProperty(value = "权限标识", required = true)
     private String sign;
-    /**
-     * 路由列表
-     */
-    @ApiModelProperty(value = "路由列表")
-    private List<Router> routerList;
     /**
      * 是否为默认
      */

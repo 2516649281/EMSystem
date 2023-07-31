@@ -9,7 +9,7 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="选择角色">
-        <el-select v-model="selectForm.role" clearable placeholder="选择角色">
+        <el-select v-model="selectForm.roleId" clearable placeholder="选择角色">
           <el-option
             :label="role.name"
             :value="role.id"

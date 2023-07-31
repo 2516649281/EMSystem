@@ -74,14 +74,38 @@ public class PermissionRoleServiceImpl implements IPermissionRoleService {
     }
 
     /**
+     * 根据ID值批量查询关系信息
+     *
+     * @param ids 关系ID
+     * @return JSON
+     */
+    @Override
+    @Cacheable(value = "permissionRole_select", key = "#ids")
+    public JsonRequest<List<PermissionRole>> lookPermissionRoleById(String[] ids) {
+        List<PermissionRole> permissionRoles = permissionRoleMapper.selectAllPermissionRoleById(ids);
+        if (permissionRoles.size() != ids.length) {
+            log.warn("待查询的关系ID与数据库中的数量不符!数据库:{},实际:{}", permissionRoles.size(), ids.length);
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        log.info("已查询出{}条关系数据!", permissionRoles.size());
+        return JsonRequest.success(permissionRoles);
+    }
+
+    /**
      * 批量绑定关系信息
      *
      * @param permissionRoles 关系信息
      * @return JSON
      */
     @Override
-    @CacheEvict(value = "permissionRole_select", allEntries = true)
+    @CacheEvict(value = {"permissionRole_select", "role_select"}, allEntries = true)
     public JsonRequest<Integer> addPermissionRole(List<PermissionRole> permissionRoles) {
+        //判断关系是否已经存在
+        Integer column = permissionRoleMapper.selectAllPermissionRoleCount(permissionRoles);
+        if (column > 0) {
+            log.error("添加关系数据失败!原因:该关系已在数据库中找到");
+            return JsonRequest.error(RequestException.INSERT_ERROR);
+        }
         //日志信息注入
         List<PermissionRole> permissionRoleList = permissionRoles
                 .stream()
@@ -90,7 +114,7 @@ public class PermissionRoleServiceImpl implements IPermissionRoleService {
                     v.setCreateUser(SqlDateUtils.currentUserId);
                     v.setCreateTime(SqlDateUtils.date);
                 }).collect(Collectors.toList());
-        Integer column = permissionRoleMapper.insertPermissionRole(permissionRoleList);
+        column = permissionRoleMapper.insertPermissionRole(permissionRoleList);
         //判断添加是否成功
         if (column < 1) {
             log.error("添加关系数据失败!");
@@ -107,8 +131,14 @@ public class PermissionRoleServiceImpl implements IPermissionRoleService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"permissionRole_select"}, allEntries = true)
+    @CacheEvict(value = {"permissionRole_select", "role_select"}, allEntries = true)
     public JsonRequest<Integer> updatePermissionRole(List<PermissionRole> permissionRoles) {
+        //判断关系是否存在
+        Integer column = permissionRoleMapper.selectAllPermissionRoleCount(permissionRoles);
+        if (column < permissionRoles.size()) {
+            log.error("修改关系数据失败!原因:待修改的关系数据与数据库不符!数据库:{},实际:{}", column, permissionRoles.size());
+            return JsonRequest.error(RequestException.INSERT_ERROR);
+        }
         //提取ID值
         String[] ids = permissionRoles.stream()
                 .map(PermissionRole::getId)
@@ -126,7 +156,7 @@ public class PermissionRoleServiceImpl implements IPermissionRoleService {
             v.setUpdateTime(SqlDateUtils.date);
         }).collect(Collectors.toList());
         //修改
-        Integer column = permissionRoleMapper.updatePermissionRoleById(permissionRoleList);
+        column = permissionRoleMapper.updatePermissionRoleById(permissionRoleList);
         if (column < 1) {
             log.error("修改关系信息失败!");
             return JsonRequest.error(RequestException.UPDATE_ERROR);
@@ -142,8 +172,9 @@ public class PermissionRoleServiceImpl implements IPermissionRoleService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"permissionRole_select"}, allEntries = true)
+    @CacheEvict(value = {"permissionRole_select", "role_select"}, allEntries = true)
     public JsonRequest<Integer> deletePermissionRole(String[] ids) {
+        //判断关系是否存在
         List<PermissionRole> permissionRoles = permissionRoleMapper.selectAllPermissionRoleById(ids);
         if (permissionRoles.size() != ids.length) {
             log.error("删除关系信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", permissionRoles.size(), ids.length);

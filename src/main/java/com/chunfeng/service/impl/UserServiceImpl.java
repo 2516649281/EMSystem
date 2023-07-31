@@ -5,14 +5,14 @@ import com.chunfeng.dao.entity.Permission;
 import com.chunfeng.dao.entity.PermissionRole;
 import com.chunfeng.dao.entity.Role;
 import com.chunfeng.dao.entity.User;
-import com.chunfeng.dao.mapper.PermissionMapper;
-import com.chunfeng.dao.mapper.PermissionRoleMapper;
-import com.chunfeng.dao.mapper.RoleMapper;
 import com.chunfeng.dao.mapper.UserMapper;
 import com.chunfeng.dao.security.UserDetail;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.result.exception.ServiceException;
+import com.chunfeng.service.IPermissionRoleService;
+import com.chunfeng.service.IPermissionService;
+import com.chunfeng.service.IRoleService;
 import com.chunfeng.service.IUserService;
 import com.chunfeng.utils.*;
 import lombok.extern.slf4j.Slf4j;
@@ -55,20 +55,20 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     @Autowired
     private UserMapper userMapper;
     /**
-     * 角色用户层注入
+     * 导入角色业务
      */
     @Autowired
-    private RoleMapper roleMapper;
+    private IRoleService roleService;
     /**
-     * 权限数据层注入
+     * 导入权限业务
      */
     @Autowired
-    private PermissionMapper permissionMapper;
+    private IPermissionService permissionService;
     /**
-     * 关系数据层注入
+     * 导入关系业务
      */
     @Autowired
-    private PermissionRoleMapper permissionRoleMapper;
+    private IPermissionRoleService permissionRoleService;
     /**
      * Redis工具类
      */
@@ -103,7 +103,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @return JSON
      */
     @Override
-    @Cacheable(value = "select_user", key = "#user")
+    @Cacheable(value = "user_select", key = "#user")
     public JsonRequest<List<User>> lookUser(User user) {
         List<User> users = userMapper.selectAllUser(user);
         //判断是否为空
@@ -121,8 +121,27 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @return JSON
      */
     @Override
+    @Cacheable(value = "user_select")
     public JsonRequest<List<User>> lookAllUser() {
         return userService.lookUser(new User());
+    }
+
+    /**
+     * 按ID值批量查询用户数据
+     *
+     * @param ids ID值
+     * @return JSON
+     */
+    @Override
+    @Cacheable(value = "user_select", key = "#ids")
+    public JsonRequest<List<User>> lookUserById(String[] ids) {
+        List<User> users = userMapper.selectAllByIds(ids);
+        if (users.size() != ids.length) {
+            log.warn("待查询的用户ID与数据库中的数量不符!数据库:{},实际:{}", users.size(), ids.length);
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        log.info("已查询出{}条用户数据!", users.size());
+        return JsonRequest.success(users);
     }
 
     /**
@@ -161,7 +180,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"select_user", "security_userDetail"}, allEntries = true)
+    @CacheEvict(value = {"user_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> register(User user) {
         //根据用户名查询
         String name = user.getName();
@@ -195,7 +214,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"select_user", "security_userDetail"}, allEntries = true)
+    @CacheEvict(value = {"user_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> updateOneUser(User user) {
         //判断数据库中是否存在该用户
         List<User> users = userMapper.selectAllByIds(new String[]{user.getId()});
@@ -219,7 +238,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"select_user", "security_userDetail"}, allEntries = true)
+    @CacheEvict(value = {"user_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> deleteUser(String[] ids) {
         //判断数据库中是否存在该用户
         List<User> users = userMapper.selectAllByIds(ids);
@@ -256,33 +275,33 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         UserDetail userDetail = new UserDetail();
         userDetail.setUser(user);
         //查询该用户的角色信息
-        List<Role> roles = roleMapper.selectAllRoleById(new String[]{user.getRoleId()});
-        if (roles == null || roles.isEmpty()) {
+        JsonRequest<List<Role>> request = roleService.lookRoleById(new String[]{user.getRoleId()});
+        if (!request.getSuccess()) {
             log.error("用户{}尚未绑定角色信息!", username);
             throw new ServiceException(RequestException.LOGIN_ERROR);
         }
         //构造条件
         PermissionRole permissionRole = new PermissionRole();
-        permissionRole.setRoleId(roles.get(0).getId());
+        permissionRole.setRoleId(request.getData().get(0).getId());
         //通过角色ID查询对应的权限ID
-        List<PermissionRole> permissionRoles = permissionRoleMapper.selectAllPermissionRole(permissionRole);
-        if (permissionRoles == null || permissionRoles.isEmpty()) {
-            log.error("角色{}尚未绑定权限信息!", roles.get(0).getName());
+        JsonRequest<List<PermissionRole>> permissionRole1 = permissionRoleService.lookPermissionRole(permissionRole);
+        if (!permissionRole1.getSuccess()) {
+            log.error("角色{}尚未绑定权限信息!", request.getData().get(0).getName());
             throw new ServiceException(RequestException.LOGIN_ERROR);
         }
         //获取权限ID
         String[] permissionIds =
-                permissionRoles
+                permissionRole1.getData()
                         .stream()
                         .map(PermissionRole::getPermissionId)//取出权限ID
                         .toArray(String[]::new);//转换为数组
         //获取权限列表
-        List<Permission> permissions = permissionMapper.selectAllPermissionById(permissionIds);
-        if (permissions == null || permissions.isEmpty()) {
+        JsonRequest<List<Permission>> jsonRequest = permissionService.lookPermissionById(permissionIds);
+        if (!jsonRequest.getSuccess()) {
             log.error("未查询到任何权限信息!");
             throw new ServiceException(RequestException.LOGIN_ERROR);
         }
-        List<String> permissionList = permissions.stream()
+        List<String> permissionList = jsonRequest.getData().stream()
                 .map(Permission::getSign)//取出标识符
                 .collect(Collectors.toList());//转换为List集合
         //封装权限信息
@@ -312,7 +331,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @return 是否成功
      */
     @Override
-    @CacheEvict(value = {"select_user", "security_userDetail"}, allEntries = true)
+    @CacheEvict(value = {"user_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Boolean> avatarUpload(MultipartFile file, String userId) {
         User user = new User();
         user.setId(userId);

@@ -3,11 +3,11 @@ package com.chunfeng.service.impl;
 import com.chunfeng.dao.entity.Permission;
 import com.chunfeng.dao.entity.PermissionRole;
 import com.chunfeng.dao.entity.Role;
-import com.chunfeng.dao.mapper.PermissionMapper;
 import com.chunfeng.dao.mapper.RoleMapper;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.service.IPermissionRoleService;
+import com.chunfeng.service.IPermissionService;
 import com.chunfeng.service.IRoleService;
 import com.chunfeng.utils.SqlDateUtils;
 import com.chunfeng.utils.UIDCreateUtil;
@@ -56,7 +56,7 @@ public class RoleServiceImpl implements IRoleService {
      * 导入权限业务
      */
     @Autowired
-    private PermissionMapper permissionMapper;
+    private IPermissionService permissionService;
 
     /**
      * 分类筛选角色信息
@@ -83,8 +83,27 @@ public class RoleServiceImpl implements IRoleService {
      * @return JSON
      */
     @Override
+    @Cacheable(value = "role_select")
     public JsonRequest<List<Role>> lookAllRole() {
         return roleService.lookRole(new Role());
+    }
+
+    /**
+     * 根据ID值批量查询角色信息
+     *
+     * @param ids 角色ID
+     * @return JSON
+     */
+    @Override
+    @Cacheable(value = "role_select", key = "#ids")
+    public JsonRequest<List<Role>> lookRoleById(String[] ids) {
+        List<Role> roles = roleMapper.selectAllRoleById(ids);
+        if (roles.size() != ids.length) {
+            log.warn("待查询的角色ID与数据库中的数量不符!数据库:{},实际:{}", roles.size(), ids.length);
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        log.info("已查询出{}条角色数据!", roles.size());
+        return JsonRequest.success(roles);
     }
 
     /**
@@ -95,18 +114,23 @@ public class RoleServiceImpl implements IRoleService {
      */
     @Override
     @Cacheable(value = "role_select", key = "#roleId")
-    public JsonRequest<Role> lookRoleById(String roleId) {
+    public JsonRequest<Role> lookOneRole(String roleId) {
         //构造条件
         Role role = new Role();
         role.setId(roleId);
         //调用本地方法使其缓存生效
         JsonRequest<List<Role>> lookRole = roleService.lookRole(role);
-        //获得指定ID的角色信息
+        //判断角色是否存在
+        if (!lookRole.getSuccess()) {
+            log.warn("{}", lookRole.getMessage());
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        //获取单个权限
         Role role1 = lookRole.getData().get(0);
         //构造条件
         PermissionRole permissionRole = new PermissionRole();
-        permissionRole.setRoleId(role1.getId());
-        //查询
+        permissionRole.setRoleId(roleId);
+        //查询关系绑定的权限
         JsonRequest<List<PermissionRole>> lookPermissionRole = permissionRoleService.lookPermissionRole(permissionRole);
         //获得权限ID
         String[] permissionIds =
@@ -115,13 +139,13 @@ public class RoleServiceImpl implements IRoleService {
                         .map(PermissionRole::getPermissionId)
                         .toArray(String[]::new);
         // 最终获得权限列表
-        List<Permission> permissions = permissionMapper.selectAllPermissionById(permissionIds);
-        if (permissions.isEmpty()) {
-            log.error("未查询到任何权限列表!");
+        JsonRequest<List<Permission>> request = permissionService.lookPermissionById(permissionIds);
+        if (!request.getSuccess()) {
+            log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.NOT_FOUND);
         }
         //存入角色中
-        role1.setPermissionList(permissions);
+        role1.setPermissionList(request.getData());
         return JsonRequest.success(role1);
     }
 

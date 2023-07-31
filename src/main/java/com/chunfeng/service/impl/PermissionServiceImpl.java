@@ -1,13 +1,11 @@
 package com.chunfeng.service.impl;
 
 import com.chunfeng.dao.entity.Permission;
-import com.chunfeng.dao.entity.PermissionRouter;
-import com.chunfeng.dao.entity.Router;
 import com.chunfeng.dao.mapper.PermissionMapper;
-import com.chunfeng.dao.mapper.RouterMapper;
+import com.chunfeng.dao.mapper.PermissionRoleMapper;
+import com.chunfeng.dao.mapper.PermissionRouterMapper;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
-import com.chunfeng.service.IPermissionRouterService;
 import com.chunfeng.service.IPermissionService;
 import com.chunfeng.utils.SqlDateUtils;
 import com.chunfeng.utils.UIDCreateUtil;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 权限业务层实现
@@ -40,12 +37,6 @@ public class PermissionServiceImpl implements IPermissionService {
     private PermissionMapper permissionMapper;
 
     /**
-     * 路由数据层
-     */
-    @Autowired
-    private RouterMapper routerMapper;
-
-    /**
      * 解决Spring缓存内部调用失效
      */
     @Lazy
@@ -56,7 +47,13 @@ public class PermissionServiceImpl implements IPermissionService {
      * 导入关系业务
      */
     @Autowired
-    private IPermissionRouterService permissionRouterService;
+    private PermissionRoleMapper permissionRoleMapper;
+
+    /**
+     * 导入关系业务
+     */
+    @Autowired
+    private PermissionRouterMapper permissionRouterMapper;
 
     /**
      * 分类筛选权限信息
@@ -89,43 +86,22 @@ public class PermissionServiceImpl implements IPermissionService {
     }
 
     /**
-     * 根据ID值查询权限信息
+     * 根据ID值批量查询权限信息
      *
-     * @param permissionId 权限ID
+     * @param ids 权限ID
      * @return JSON
      */
     @Override
-    @Cacheable(value = "permission_select", key = "#permissionId")
-    public JsonRequest<Permission> lookPermissionById(String permissionId) {
-        //构造条件
-        Permission permission = new Permission();
-        permission.setId(permissionId);
-        //调用本地方法使其缓存生效
-        JsonRequest<List<Permission>> lookPermission = permissionService.lookPermission(permission);
-        //获得指定ID的权限信息
-        Permission permission1 = lookPermission.getData().get(0);
-        //构造条件
-        PermissionRouter permissionRouter = new PermissionRouter();
-        permissionRouter.setPermissionId(permission1.getId());
-        //查询路由
-        JsonRequest<List<PermissionRouter>> lookPermissionRouter = permissionRouterService.lookPermissionRouter(permissionRouter);
-        //获得权限ID
-        String[] routerId =
-                lookPermissionRouter.getData().
-                        stream()
-                        .map(PermissionRouter::getRouterId)
-                        .toArray(String[]::new);
-        // 最终获得路由列表
-        List<Router> routers = routerMapper.selectAllRouterById(routerId);
-        if (routers.isEmpty()) {
-            log.error("未查询到任何路由列表!");
+    @Cacheable(value = "permission_select", key = "#ids")
+    public JsonRequest<List<Permission>> lookPermissionById(String[] ids) {
+        List<Permission> permissions = permissionMapper.selectAllPermissionById(ids);
+        if (permissions.size() != ids.length) {
+            log.warn("待查询的权限ID与数据库中的数量不符!数据库:{},实际:{}", permissions.size(), ids.length);
             return JsonRequest.error(RequestException.NOT_FOUND);
         }
-        //存入权限中
-        permission1.setRouterList(routers);
-        return JsonRequest.success(permission1);
+        log.info("已查询出{}条权限数据!", permissions.size());
+        return JsonRequest.success(permissions);
     }
-
 
     /**
      * 新增一条权限信息
@@ -207,30 +183,25 @@ public class PermissionServiceImpl implements IPermissionService {
     @Override
     @CacheEvict(value = {"permission_select", "permission_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> deletePermission(String[] ids) {
-        List<Permission> permissions = permissionMapper.selectAllPermissionById(ids);
-        //替换ID
-        ids = permissions
-                .stream()
-                .filter(v -> !v.getIsDefault().equals(0))//剔除默认元素
-                .map(Permission::getId)//取出可删除的ID
-                .toArray(String[]::new);//转换成String数组
-        //替换原集合
-        permissions = permissions
-                .stream()
-                .filter(v -> !v.getIsDefault().equals(0))
-                .collect(Collectors.toList());
-        //剔除默认权限
-        if (permissions.size() != ids.length) {
-            log.error("删除权限信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", permissions.size(), ids.length);
-            return JsonRequest.error(RequestException.DELETE_ERROR);
-        }
         //判断ID是否为空
         if (ids.length == 0) {
             log.error("删除权限失败!原因:未选择任何权限");
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
+        Integer column = permissionRoleMapper.deletePermissionRoleByPer(ids);
+        //删除权限-角色关系
+        if (column < 1) {
+            log.error("删除权限-角色失败!");
+            return JsonRequest.error(RequestException.DELETE_ERROR);
+        }
+        //删除权限-路由关系
+        column = permissionRouterMapper.deletePermissionRouterByPer(ids);
+        if (column < 1) {
+            log.error("删除权限-路由失败!");
+            return JsonRequest.error(RequestException.DELETE_ERROR);
+        }
         //正式删除
-        Integer column = permissionMapper.deletePermissionById(ids);
+        column = permissionMapper.deletePermissionById(ids);
         if (column < 1) {
             log.error("删除权限失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);

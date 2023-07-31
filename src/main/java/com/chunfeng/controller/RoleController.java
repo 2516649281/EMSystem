@@ -76,10 +76,10 @@ public class RoleController {
             @ApiResponse(code = 200, message = "查询成功!")
     })
     @PreAuthorize("hasAnyAuthority('sys:role:select','sys:per:select')")
-    public JsonRequest<Role> lookRoleById(
+    public JsonRequest<Role> lookOneRole(
             @ApiParam(value = "角色ID", required = true)
             @RequestParam String roleId) {
-        return roleService.lookRoleById(roleId);
+        return roleService.lookOneRole(roleId);
     }
 
     /**

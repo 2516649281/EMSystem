@@ -29,6 +29,15 @@ public interface IProblemService {
      */
     JsonRequest<List<Problem>> lookAllProblem();
 
+
+    /**
+     * 根据ID值批量查询题库信息
+     *
+     * @param ids 题库ID
+     * @return JSON
+     */
+    JsonRequest<List<Problem>> lookProblemById(String[] ids);
+
     /**
      * 新增一条题库信息
      *

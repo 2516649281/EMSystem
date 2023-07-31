@@ -35,6 +35,22 @@
         </where>
         ;
     </select>
+    <!--按条件批量查询符合条件的个数-->
+    <select id="selectAllProblemExamCount" resultType="java.lang.Integer">
+        select COUNT(id)
+        from problem_exam
+        <where>
+            <foreach collection="pes" item="id" open="(" separator="and" close=")">
+                <if test="id.problemId!=null and id.problemId!=''">
+                    problem_id=#{id.problemId}
+                </if>
+                <if test="id.examId!=null and id.examId!=''">
+                    and exam_id=#{id.examId}
+                </if>
+            </foreach>
+        </where>
+        ;
+    </select>
     <!--插入一条关系数据-->
     <insert id="insertProblemExam">
         insert into problem_exam (id, exam_id, problem_id, create_user, create_time)

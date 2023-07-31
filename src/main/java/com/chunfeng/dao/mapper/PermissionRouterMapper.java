@@ -39,12 +39,20 @@ public interface PermissionRouterMapper {
     List<PermissionRouter> selectAllPermissionRouterById(String[] ids);
 
     /**
+     * 按条件批量查询符合条件的个数
+     *
+     * @param permissionRouters 条件
+     * @return 个数
+     */
+    Integer selectAllPermissionRouterCount(@Param("prt") List<PermissionRouter> permissionRouters);
+
+    /**
      * 批量插入关系信息
      *
      * @param permissionRouters 关系信息
      * @return 影响行数
      */
-    Integer insertPermissionRouter(@Param("prs") List<PermissionRouter> permissionRouters);
+    Integer insertPermissionRouter(@Param("prt") List<PermissionRouter> permissionRouters);
 
     /**
      * 根据关系ID批量修改关系数据
@@ -52,7 +60,7 @@ public interface PermissionRouterMapper {
      * @param permissionRouters 关系数据
      * @return 影响行数
      */
-    Integer updatePermissionRouterById(@Param("prs") List<PermissionRouter> permissionRouters);
+    Integer updatePermissionRouterById(@Param("prt") List<PermissionRouter> permissionRouters);
 
     /**
      * 根据关系ID批量解绑关系信息
@@ -61,4 +69,12 @@ public interface PermissionRouterMapper {
      * @return 影响行数
      */
     Integer deletePermissionRouterById(String[] ids);
+
+    /**
+     * 根据权限ID解绑关系信息
+     *
+     * @param ids 条件集合
+     * @return 影响行数
+     */
+    Integer deletePermissionRouterByPer(@Param("ids") String[] ids);
 }

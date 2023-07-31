@@ -89,6 +89,25 @@ public class ProblemServiceImpl implements IProblemService {
         return problemService.lookProblem(new Problem());
     }
 
+
+    /**
+     * 根据ID值批量查询题库信息
+     *
+     * @param ids 题库ID
+     * @return JSON
+     */
+    @Override
+    @Cacheable(value = "problem_select", key = "#ids")
+    public JsonRequest<List<Problem>> lookProblemById(String[] ids) {
+        List<Problem> problems = problemMapper.selectAllProblemById(ids);
+        if (problems.size() != ids.length) {
+            log.warn("待查询的题库ID与数据库中的数量不符!数据库:{},实际:{}", problems.size(), ids.length);
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        log.info("已查询出{}条题库数据!", problems.size());
+        return JsonRequest.success(problems);
+    }
+
     /**
      * 新增一条题库信息
      *

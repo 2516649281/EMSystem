@@ -13,7 +13,6 @@ import java.util.List;
  * 2023/7/16
  */
 public interface ProblemExamMapper {
-
     /**
      * 条件查询关系信息
      *
@@ -29,6 +28,14 @@ public interface ProblemExamMapper {
      * @return 关系列表
      */
     List<ProblemExam> selectAllProblemExamById(String[] ids);
+
+    /**
+     * 按条件批量查询符合条件的个数
+     *
+     * @param problemExams 条件
+     * @return 个数
+     */
+    Integer selectAllProblemExamCount(@Param("pes") List<ProblemExam> problemExams);
 
     /**
      * 批量插入关系信息

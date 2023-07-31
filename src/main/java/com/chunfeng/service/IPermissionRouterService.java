@@ -30,6 +30,14 @@ public interface IPermissionRouterService {
     JsonRequest<List<PermissionRouter>> lookAllPermissionRouter();
 
     /**
+     * 根据ID值批量查询关系信息
+     *
+     * @param ids 关系ID
+     * @return JSON
+     */
+    JsonRequest<List<PermissionRouter>> lookPermissionRouterById(String[] ids);
+
+    /**
      * 批量绑定关系信息
      *
      * @param permissionRouters 关系信息

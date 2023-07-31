@@ -73,6 +73,24 @@ public class FeedBackServiceImpl implements IFeedBackService {
     }
 
     /**
+     * 根据ID值批量查询反馈信息
+     *
+     * @param ids 反馈ID
+     * @return JSON
+     */
+    @Override
+    @Cacheable(value = "feedBack_select", key = "#ids")
+    public JsonRequest<List<FeedBack>> lookFeedBackById(String[] ids) {
+        List<FeedBack> feedBacks = feedBackMapper.selectAllFeedBackById(ids);
+        if (feedBacks.size() != ids.length) {
+            log.warn("待查询的反馈ID与数据库中的数量不符!数据库:{},实际:{}", feedBacks.size(), ids.length);
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        log.info("已查询出{}条反馈数据!", feedBacks.size());
+        return JsonRequest.success(feedBacks);
+    }
+
+    /**
      * 新增一条反馈信息
      *
      * @param feedBack 反馈信息

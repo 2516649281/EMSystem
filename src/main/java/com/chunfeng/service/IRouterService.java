@@ -30,6 +30,22 @@ public interface IRouterService {
     JsonRequest<List<Router>> lookAllRouter();
 
     /**
+     * 根据ID值批量查询路由信息
+     *
+     * @param ids ID值
+     * @return JSON
+     */
+    JsonRequest<List<Router>> lookRouterById(String[] ids);
+
+    /**
+     * 查询一条路由信息
+     *
+     * @param routerId 路由ID
+     * @return JSON
+     */
+    JsonRequest<Router> lookOneRouter(String routerId);
+
+    /**
      * 新增一条路由信息
      *
      * @param router 路由信息

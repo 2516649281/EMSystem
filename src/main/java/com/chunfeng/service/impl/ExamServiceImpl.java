@@ -90,6 +90,24 @@ public class ExamServiceImpl implements IExamService {
     }
 
     /**
+     * 根据ID值批量查询试卷信息
+     *
+     * @param ids 试卷ID
+     * @return JSON
+     */
+    @Override
+    @Cacheable(value = "exam_select", key = "#ids")
+    public JsonRequest<List<Exam>> lookExamById(String[] ids) {
+        List<Exam> exams = examMapper.selectAllExamById(ids);
+        if (exams.size() != ids.length) {
+            log.warn("待查询的试卷ID与数据库中的数量不符!数据库:{},实际:{}", exams.size(), ids.length);
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        log.info("已查询出{}条试卷数据!", exams.size());
+        return JsonRequest.success(exams);
+    }
+
+    /**
      * 新增一条试卷信息
      *
      * @param exam 试卷信息

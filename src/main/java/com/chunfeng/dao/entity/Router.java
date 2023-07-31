@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 路由实体
@@ -53,6 +54,11 @@ public class Router implements Serializable {
      */
     @ApiModelProperty(value = "路由类型(0后端,1前端)", allowableValues = "0,1", allowEmptyValue = true)
     private Integer type;
+    /**
+     * 权限列表
+     */
+    @ApiModelProperty(value = "权限列表", allowEmptyValue = true)
+    private List<Permission> permissionList;
     /**
      * 创建人
      */

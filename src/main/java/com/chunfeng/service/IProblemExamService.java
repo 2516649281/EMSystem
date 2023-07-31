@@ -29,6 +29,15 @@ public interface IProblemExamService {
      */
     JsonRequest<List<ProblemExam>> lookAllProblemExam();
 
+
+    /**
+     * 根据ID值批量查询关系信息
+     *
+     * @param ids 关系ID
+     * @return JSON
+     */
+    JsonRequest<List<ProblemExam>> lookProblemExamById(String[] ids);
+
     /**
      * 批量绑定关系信息
      *

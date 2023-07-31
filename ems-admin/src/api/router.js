@@ -17,6 +17,19 @@ export function getRouterInfo(router) {
 }
 
 /**
+ * 获取一条路由信息
+ * @param {*} id  ID值
+ * @returns 数据
+ */
+export function getRouterById(routerId) {
+  return request({
+    url: "/router/one",
+    method: "get",
+    params: routerId,
+  });
+}
+
+/**
  * 添加路由信息
  * @param {*} router  条件查询
  * @returns 数据
@@ -53,5 +66,40 @@ export function deleteRouter(ids) {
     url: "/router",
     method: "delete",
     data: ids,
+  });
+}
+
+//获取路由绑定
+export function getPermissionRouter(obj) {
+  return request({
+    url: "/prt/select",
+    method: "get",
+    params: obj,
+  });
+}
+
+/**
+ * 设置路由绑定
+ * @param {*} obj
+ * @returns
+ */
+export function setPermissionRouter(obj) {
+  return request({
+    url: "/prt",
+    method: "post",
+    data: obj,
+  });
+}
+
+/**
+ * 删除路由绑定
+ * @param {*} obj
+ * @returns
+ */
+export function deletePermissionRouter(obj) {
+  return request({
+    url: "/prt",
+    method: "delete",
+    data: obj,
   });
 }

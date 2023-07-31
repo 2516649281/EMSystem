@@ -67,8 +67,27 @@ public class SubjectServiceImpl implements ISubjectService {
      * @return JSON
      */
     @Override
+    @Cacheable(value = "subject_select")
     public JsonRequest<List<Subject>> lookAllSubject() {
         return subjectService.lookSubject(new Subject());
+    }
+
+    /**
+     * 根据ID值查询科目信息
+     *
+     * @param ids 科目ID
+     * @return JSON
+     */
+    @Override
+    @Cacheable(value = "subject_select", key = "#ids")
+    public JsonRequest<List<Subject>> lookOneSubject(String[] ids) {
+        List<Subject> subjects = subjectMapper.selectAllSubjectById(ids);
+        if (subjects.size() != ids.length) {
+            log.warn("待查询的科目ID与数据库中的数量不符!数据库:{},实际:{}", subjects.size(), ids.length);
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        log.info("已查询出{}条科目数据!", subjects.size());
+        return JsonRequest.success(subjects);
     }
 
     /**

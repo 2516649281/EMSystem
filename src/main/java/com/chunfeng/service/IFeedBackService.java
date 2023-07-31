@@ -1,6 +1,7 @@
 package com.chunfeng.service;
 
 import com.chunfeng.dao.entity.FeedBack;
+import com.chunfeng.dao.entity.FeedBack;
 import com.chunfeng.result.JsonRequest;
 
 import java.util.List;
@@ -28,6 +29,14 @@ public interface IFeedBackService {
      * @return JSON
      */
     JsonRequest<List<FeedBack>> lookAllFeedBack();
+
+    /**
+     * 根据ID值批量查询反馈信息
+     *
+     * @param ids 反馈ID
+     * @return JSON
+     */
+    JsonRequest<List<FeedBack>> lookFeedBackById(String[] ids);
 
     /**
      * 新增一条反馈信息
