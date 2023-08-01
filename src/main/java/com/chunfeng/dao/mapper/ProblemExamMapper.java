@@ -59,5 +59,21 @@ public interface ProblemExamMapper {
      * @param ids 选择的关系ID
      * @return 影响行数
      */
-    Integer deleteProblemExamById(String[] ids);
+    Integer deleteProblemExamById(@Param("ids") String[] ids);
+
+    /**
+     * 根据题库ID批量解绑关系信息
+     *
+     * @param ids 选择的题库ID
+     * @return 影响行数
+     */
+    Integer deleteProblemExamByPro(@Param("ids") String[] ids);
+
+    /**
+     * 根据试卷ID批量解绑关系信息
+     *
+     * @param ids 选择的试卷ID
+     * @return 影响行数
+     */
+    Integer deleteProblemExamByExam(@Param("ids") String[] ids);
 }

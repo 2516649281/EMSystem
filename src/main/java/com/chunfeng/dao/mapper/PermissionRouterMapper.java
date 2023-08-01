@@ -73,8 +73,16 @@ public interface PermissionRouterMapper {
     /**
      * 根据权限ID解绑关系信息
      *
-     * @param ids 条件集合
+     * @param ids 权限ID
      * @return 影响行数
      */
     Integer deletePermissionRouterByPer(@Param("ids") String[] ids);
+
+    /**
+     * 根据权限ID解绑关系信息
+     *
+     * @param rid 路由ID
+     * @return 影响行数
+     */
+    Integer deletePermissionRouterByRid(@Param("ids") String[] rid);
 }

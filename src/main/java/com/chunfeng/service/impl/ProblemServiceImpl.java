@@ -1,6 +1,7 @@
 package com.chunfeng.service.impl;
 
 import com.chunfeng.dao.entity.Problem;
+import com.chunfeng.dao.mapper.ProblemExamMapper;
 import com.chunfeng.dao.mapper.ProblemMapper;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
@@ -29,7 +30,6 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-@Transactional
 public class ProblemServiceImpl implements IProblemService {
 
     /**
@@ -37,6 +37,12 @@ public class ProblemServiceImpl implements IProblemService {
      */
     @Autowired
     private ProblemMapper problemMapper;
+
+    /**
+     * 关系数据层
+     */
+    @Autowired
+    private ProblemExamMapper problemExamMapper;
 
     /**
      * 文件工具类
@@ -181,8 +187,14 @@ public class ProblemServiceImpl implements IProblemService {
         //删除文件内容
         Arrays.stream(ids)
                 .forEach(id -> fileMangerUtils.fileDelete(id + ".txt"));
+        //删除关系
+        Integer column = problemExamMapper.deleteProblemExamByPro(ids);
+        if (column < 1) {
+            log.error("删除关系失败!");
+            return JsonRequest.error(RequestException.DELETE_ERROR);
+        }
         //删除数据库内容
-        Integer column = problemMapper.deleteProblemById(ids);
+        column = problemMapper.deleteProblemById(ids);
         if (column < 1) {
             log.error("删除题库失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);

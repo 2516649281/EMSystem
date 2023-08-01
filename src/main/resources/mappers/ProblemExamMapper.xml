@@ -89,4 +89,22 @@
             #{id}
         </foreach>
     </delete>
+    <!--根据题库ID批量解绑关系信息-->
+    <delete id="deleteProblemExamByPro">
+        delete
+        from problem_exam
+        problem_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--根据试卷ID批量解绑关系信息-->
+    <delete id="deleteProblemExamByExam">
+        delete
+        from problem_exam
+        exam_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

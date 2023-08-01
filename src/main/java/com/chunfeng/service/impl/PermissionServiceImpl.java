@@ -28,7 +28,6 @@ import java.util.List;
  */
 @Service
 @Slf4j
-@Transactional
 public class PermissionServiceImpl implements IPermissionService {
     /**
      * 权限数据层

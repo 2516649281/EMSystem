@@ -31,7 +31,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -47,7 +46,6 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-@Transactional
 public class UserServiceImpl implements IUserService, UserDetailsService {
     /**
      * 用户数据层注入

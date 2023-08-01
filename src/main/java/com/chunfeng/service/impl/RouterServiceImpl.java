@@ -3,6 +3,7 @@ package com.chunfeng.service.impl;
 import com.chunfeng.dao.entity.Permission;
 import com.chunfeng.dao.entity.PermissionRouter;
 import com.chunfeng.dao.entity.Router;
+import com.chunfeng.dao.mapper.PermissionRouterMapper;
 import com.chunfeng.dao.mapper.RouterMapper;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
@@ -30,7 +31,6 @@ import java.util.List;
  */
 @Service
 @Slf4j
-@Transactional
 public class RouterServiceImpl implements IRouterService {
 
     /**
@@ -38,6 +38,12 @@ public class RouterServiceImpl implements IRouterService {
      */
     @Autowired
     private RouterMapper routerMapper;
+
+    /**
+     * 关系数据层
+     */
+    @Autowired
+    private PermissionRouterMapper permissionRouterMapper;
 
     /**
      * 解决Spring缓存内部调用失效
@@ -215,7 +221,14 @@ public class RouterServiceImpl implements IRouterService {
             log.error("删除路由信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", routers.size(), ids.length);
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
-        Integer column = routerMapper.deleteRouterById(ids);
+        //删除原有绑定的关系
+        Integer column = permissionRouterMapper.deletePermissionRouterByRid(ids);
+        if (column < 1) {
+            log.error("删除关系失败!");
+            return JsonRequest.error(RequestException.DELETE_ERROR);
+        }
+        //删除本体
+        column = routerMapper.deleteRouterById(ids);
         if (column < 1) {
             log.error("删除路由失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);

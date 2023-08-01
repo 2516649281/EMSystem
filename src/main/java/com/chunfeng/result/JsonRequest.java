@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 
@@ -17,6 +18,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @ApiModel(value = "统一响应类", description = "用于传给前端的统一JSON格式")
+@Slf4j
 public class JsonRequest<T> implements Serializable {
     /**
      * 序列化字段

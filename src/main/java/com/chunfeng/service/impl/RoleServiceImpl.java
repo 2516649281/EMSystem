@@ -3,6 +3,7 @@ package com.chunfeng.service.impl;
 import com.chunfeng.dao.entity.Permission;
 import com.chunfeng.dao.entity.PermissionRole;
 import com.chunfeng.dao.entity.Role;
+import com.chunfeng.dao.mapper.PermissionRoleMapper;
 import com.chunfeng.dao.mapper.RoleMapper;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
@@ -30,7 +31,6 @@ import java.util.List;
  */
 @Service
 @Slf4j
-@Transactional
 public class RoleServiceImpl implements IRoleService {
 
     /**
@@ -38,6 +38,12 @@ public class RoleServiceImpl implements IRoleService {
      */
     @Autowired
     private RoleMapper roleMapper;
+
+    /**
+     * 关系数据层
+     */
+    @Autowired
+    private PermissionRoleMapper permissionRoleMapper;
 
     /**
      * 解决Spring缓存内部调用失效
@@ -214,7 +220,14 @@ public class RoleServiceImpl implements IRoleService {
             log.error("删除角色信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", roles.size(), ids.length);
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
-        Integer column = roleMapper.deleteRoleById(ids);
+        //删除关系
+        Integer column = permissionRoleMapper.deletePermissionRoleByRole(ids);
+        if (column < 1) {
+            log.error("删除关系失败!");
+            return JsonRequest.error(RequestException.DELETE_ERROR);
+        }
+        //删除本体
+        column = roleMapper.deleteRoleById(ids);
         if (column < 1) {
             log.error("删除角色失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);

@@ -2,6 +2,7 @@ package com.chunfeng.service.impl;
 
 import com.chunfeng.dao.entity.Exam;
 import com.chunfeng.dao.mapper.ExamMapper;
+import com.chunfeng.dao.mapper.ProblemExamMapper;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.service.IExamService;
@@ -29,7 +30,6 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-@Transactional
 public class ExamServiceImpl implements IExamService {
 
     /**
@@ -37,6 +37,12 @@ public class ExamServiceImpl implements IExamService {
      */
     @Autowired
     private ExamMapper examMapper;
+
+    /**
+     * 关系数据层
+     */
+    @Autowired
+    private ProblemExamMapper problemExamMapper;
 
     /**
      * 文件工具类
@@ -180,8 +186,13 @@ public class ExamServiceImpl implements IExamService {
         //删除文件内容
         Arrays.stream(ids)
                 .forEach(id -> fileMangerUtils.fileDelete(id + ".txt"));
+        Integer column = problemExamMapper.deleteProblemExamByExam(ids);
+        if (column < 1) {
+            log.error("删除关系失败!");
+            return JsonRequest.error(RequestException.DELETE_ERROR);
+        }
         //删除数据库内容
-        Integer column = examMapper.deleteExamById(ids);
+        column = examMapper.deleteExamById(ids);
         if (column < 1) {
             log.error("删除试卷失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);

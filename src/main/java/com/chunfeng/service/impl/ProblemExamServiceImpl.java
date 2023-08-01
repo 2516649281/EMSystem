@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-@Transactional
 public class ProblemExamServiceImpl implements IProblemExamService {
 
     /**

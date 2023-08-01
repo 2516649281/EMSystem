@@ -100,4 +100,13 @@
             #{id}
         </foreach>
     </delete>
+    <delete id="deletePermissionRoleByRole">
+        delete
+        from permission_role
+        where
+        role_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>
