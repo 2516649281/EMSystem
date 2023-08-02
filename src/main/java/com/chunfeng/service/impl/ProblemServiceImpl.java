@@ -15,7 +15,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -188,13 +187,9 @@ public class ProblemServiceImpl implements IProblemService {
         Arrays.stream(ids)
                 .forEach(id -> fileMangerUtils.fileDelete(id + ".txt"));
         //删除关系
-        Integer column = problemExamMapper.deleteProblemExamByPro(ids);
-        if (column < 1) {
-            log.error("删除关系失败!");
-            return JsonRequest.error(RequestException.DELETE_ERROR);
-        }
+        problemExamMapper.deleteProblemExamByPro(ids);
         //删除数据库内容
-        column = problemMapper.deleteProblemById(ids);
+        Integer column = problemMapper.deleteProblemById(ids);
         if (column < 1) {
             log.error("删除题库失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);

@@ -47,6 +47,14 @@ public interface PermissionRouterMapper {
     Integer selectAllPermissionRouterCount(@Param("prt") List<PermissionRouter> permissionRouters);
 
     /**
+     * 根据路由ID查询关系
+     *
+     * @param ids 路由ID
+     * @return 关系
+     */
+    List<PermissionRouter> selectAllByPermissionRouterByRouter(@Param("ids") String[] ids);
+
+    /**
      * 批量插入关系信息
      *
      * @param permissionRouters 关系信息

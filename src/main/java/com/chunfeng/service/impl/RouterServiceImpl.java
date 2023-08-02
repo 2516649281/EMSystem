@@ -18,7 +18,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -222,13 +221,9 @@ public class RouterServiceImpl implements IRouterService {
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         //删除原有绑定的关系
-        Integer column = permissionRouterMapper.deletePermissionRouterByRid(ids);
-        if (column < 1) {
-            log.error("删除关系失败!");
-            return JsonRequest.error(RequestException.DELETE_ERROR);
-        }
+        permissionRouterMapper.deletePermissionRouterByRid(ids);
         //删除本体
-        column = routerMapper.deleteRouterById(ids);
+        Integer column = routerMapper.deleteRouterById(ids);
         if (column < 1) {
             log.error("删除路由失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);

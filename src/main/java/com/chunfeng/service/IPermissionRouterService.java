@@ -38,6 +38,14 @@ public interface IPermissionRouterService {
     JsonRequest<List<PermissionRouter>> lookPermissionRouterById(String[] ids);
 
     /**
+     * 根据路由ID批量查询关系信息
+     *
+     * @param ids 路由ID
+     * @return JSON
+     */
+    JsonRequest<List<PermissionRouter>> lookPermissionRouterByRouter(String[] ids);
+
+    /**
      * 批量绑定关系信息
      *
      * @param permissionRouters 关系信息
@@ -60,4 +68,12 @@ public interface IPermissionRouterService {
      * @return JSON
      */
     JsonRequest<Integer> deletePermissionRouter(String[] ids);
+
+    /**
+     * 通过路由ID解绑关系信息
+     *
+     * @param ids 路由ID
+     * @return JSON
+     */
+    JsonRequest<Integer> deletePermissionRouterByRouter(String[] ids);
 }

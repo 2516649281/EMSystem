@@ -2,7 +2,6 @@
  * 所有有关权限的API接口
  */
 import request from "@/utils/request";
-import qs from "qs";
 
 /**
  * 条件获取权限信息
@@ -86,7 +85,7 @@ export function setPermissionRouter(obj) {
  */
 export function deletePermissionRouter(obj) {
   return request({
-    url: "/prt",
+    url: "/prt/router",
     method: "delete",
     data: obj,
   });

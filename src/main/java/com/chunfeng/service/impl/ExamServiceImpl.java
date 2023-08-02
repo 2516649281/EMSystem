@@ -15,7 +15,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -191,6 +190,8 @@ public class ExamServiceImpl implements IExamService {
             log.error("删除关系失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
+        //删除关系数据
+        problemExamMapper.deleteProblemExamByExam(ids);
         //删除数据库内容
         column = examMapper.deleteExamById(ids);
         if (column < 1) {

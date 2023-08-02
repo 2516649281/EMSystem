@@ -15,6 +15,9 @@
             <if test="method!='' and method!=null">
                 and method =#{method}
             </if>
+            <if test="value!='' and value!=null">
+                and value=#{value}
+            </if>
             <if test="type!='' and type!=null">
                 and type=#{type}
             </if>

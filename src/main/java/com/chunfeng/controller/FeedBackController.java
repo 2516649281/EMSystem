@@ -40,7 +40,6 @@ public class FeedBackController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
-    @PreAuthorize("hasAuthority('sys:feed:select')")
     public JsonRequest<List<FeedBack>> lookFeedBack(
             @ApiParam(value = "条件", required = true)
                     FeedBack feedBack) {
@@ -58,7 +57,6 @@ public class FeedBackController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
-    @PreAuthorize("hasAuthority('sys:feed:select')")
     public JsonRequest<List<FeedBack>> lookAllFeedBack() {
         return feedBackService.lookAllFeedBack();
     }
@@ -75,7 +73,6 @@ public class FeedBackController {
             @ApiResponse(code = 502, message = "添加失败!"),
             @ApiResponse(code = 200, message = "添加成功!")
     })
-    @PreAuthorize("hasAuthority('user:feed:insert')")
     public JsonRequest<Integer> addOneFeedBack(
             @ApiParam(value = "待添加的反馈信息", required = true)
             @RequestBody FeedBack feedBack) {
@@ -94,7 +91,6 @@ public class FeedBackController {
             @ApiResponse(code = 504, message = "删除失败!"),
             @ApiResponse(code = 200, message = "删除成功!")
     })
-    @PreAuthorize("hasAuthority('sys:feed:delete')")
     public JsonRequest<Integer> deleteFeedBack(
             @ApiParam(value = "待修改的反馈信息ID", required = true)
             @RequestBody String[] ids) {

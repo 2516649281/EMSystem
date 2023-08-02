@@ -96,6 +96,7 @@ public class TokenFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
         AntPathMatcher pathMatcher = new AntPathMatcher();
         //遍历并判断是否包含排除路径
-        return Stream.of(excludeUrlProperties.getExcludeUrl()).anyMatch(x -> pathMatcher.match(x, uri));
+        return Stream.of(excludeUrlProperties.getExcludeUrl())
+                .anyMatch(x -> pathMatcher.match(x, uri));
     }
 }

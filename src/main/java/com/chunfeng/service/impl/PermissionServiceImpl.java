@@ -15,7 +15,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -94,8 +93,8 @@ public class PermissionServiceImpl implements IPermissionService {
     @Cacheable(value = "permission_select", key = "#ids")
     public JsonRequest<List<Permission>> lookPermissionById(String[] ids) {
         List<Permission> permissions = permissionMapper.selectAllPermissionById(ids);
-        if (permissions.size() != ids.length) {
-            log.warn("待查询的权限ID与数据库中的数量不符!数据库:{},实际:{}", permissions.size(), ids.length);
+        if (permissions.isEmpty()) {
+            log.warn("未找到任何权限信息");
             return JsonRequest.error(RequestException.NOT_FOUND);
         }
         log.info("已查询出{}条权限数据!", permissions.size());
@@ -187,20 +186,12 @@ public class PermissionServiceImpl implements IPermissionService {
             log.error("删除权限失败!原因:未选择任何权限");
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
-        Integer column = permissionRoleMapper.deletePermissionRoleByPer(ids);
         //删除权限-角色关系
-        if (column < 1) {
-            log.error("删除权限-角色失败!");
-            return JsonRequest.error(RequestException.DELETE_ERROR);
-        }
+        permissionRoleMapper.deletePermissionRoleByPer(ids);
         //删除权限-路由关系
-        column = permissionRouterMapper.deletePermissionRouterByPer(ids);
-        if (column < 1) {
-            log.error("删除权限-路由失败!");
-            return JsonRequest.error(RequestException.DELETE_ERROR);
-        }
+        permissionRouterMapper.deletePermissionRouterByPer(ids);
         //正式删除
-        column = permissionMapper.deletePermissionById(ids);
+        Integer column = permissionMapper.deletePermissionById(ids);
         if (column < 1) {
             log.error("删除权限失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);

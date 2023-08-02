@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 权限路由控制(路由判断)
@@ -23,6 +24,7 @@ import java.util.List;
 @Component
 @Slf4j
 public class PermissionRouterControllerHandler implements AccessDecisionManager {
+
     /**
      * 判断是否有权访问
      *
@@ -42,16 +44,16 @@ public class PermissionRouterControllerHandler implements AccessDecisionManager 
         }
         // 获取当前用户拥有的权限
         List<String> permission = ((UserDetail) principal).getPermission();
-        //判断逻辑
-        configAttributes
-                .forEach(v -> {
-                    boolean match = permission.stream()
-                            .anyMatch(s -> s.equals(v.getAttribute()));
-                    if (!match) {
-                        log.warn("非法访问!");
-                        throw new ServiceException(RequestException.UNAUTHORIZED);
-                    }
-                });
+        //求交集
+        List<ConfigAttribute> list = configAttributes.stream()
+                .filter(v -> permission.contains(v.getAttribute()))//获取相同内容
+                .collect(Collectors.toList());//收集并转换为集合
+        // 交集为空,则非法授权
+        if (list.isEmpty()) {
+            log.error("非法授权!");
+            throw new ServiceException(RequestException.UNAUTHORIZED);
+        }
+        log.info("通过授权!");
     }
 
     /**

@@ -7,6 +7,7 @@ import com.chunfeng.dao.entity.Role;
 import com.chunfeng.dao.entity.User;
 import com.chunfeng.dao.mapper.UserMapper;
 import com.chunfeng.dao.security.UserDetail;
+import com.chunfeng.note.ExcludeMethods;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.result.exception.ServiceException;
@@ -25,7 +26,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -150,6 +150,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @return JSON
      */
     @Override
+    @ExcludeMethods
     public JsonRequest<String> login(String name, String password) {
         //获取UserDetail对象
         UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(name, password);
@@ -262,6 +263,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      */
     @Override
     @Cacheable(value = "security_userDetail", key = "#username")
+    @ExcludeMethods
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //根据用户名查询用户信息是否存在
         User user = userMapper.selectAllByName(username);
@@ -315,6 +317,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      * @return 文件响应流
      */
     @Override
+    @ExcludeMethods
     public ResponseEntity<Resource> avatarDownload(String userId) {
         User user = getUserInfo(userId);
         String avatar = user.getAvatar();
@@ -358,14 +361,14 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     /**
      * 用户退出登录
      *
+     * @param token 令牌
      * @return JSON
      */
     @Override
-    public JsonRequest<Boolean> logout() {
-        //获取用户ID
-        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        UserDetail principal = (UserDetail) authentication.getPrincipal();
-        String id = principal.getUser().getId();
+    @ExcludeMethods
+    public JsonRequest<Boolean> logout(String token) {
+        //获取token中的ID
+        String id = TokenUtils.checkToken(token).get("user").toString();
         //删除Redis
         boolean b = redisClientsUtils.remove("login:" + id);
         if (!b) {

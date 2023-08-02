@@ -13,7 +13,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,6 +87,24 @@ public class PermissionRouterServiceImpl implements IPermissionRouterService {
             return JsonRequest.error(RequestException.NOT_FOUND);
         }
         log.info("已查询出{}条关系数据!", permissionRouters.size());
+        return JsonRequest.success(permissionRouters);
+    }
+
+    /**
+     * 根据路由ID批量查询关系信息
+     *
+     * @param ids 路由ID
+     * @return JSON
+     */
+    @Override
+    @Cacheable(value = "permissionRouter_select", key = "#ids")
+    public JsonRequest<List<PermissionRouter>> lookPermissionRouterByRouter(String[] ids) {
+        List<PermissionRouter> permissionRouters = permissionRouterMapper.selectAllByPermissionRouterByRouter(ids);
+        if (permissionRouters == null || permissionRouters.isEmpty()) {
+            log.warn("未找到任何关系信息!");
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        log.info("已找到{}条关系信息!", permissionRouters.size());
         return JsonRequest.success(permissionRouters);
     }
 
@@ -174,6 +191,24 @@ public class PermissionRouterServiceImpl implements IPermissionRouterService {
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         Integer column = permissionRouterMapper.deletePermissionRouterById(ids);
+        if (column < 1) {
+            log.error("删除关系失败!");
+            return JsonRequest.error(RequestException.DELETE_ERROR);
+        }
+        log.info("已删除{}条关系信息!", ids.length);
+        return JsonRequest.success(column);
+    }
+
+    /**
+     * 通过路由ID解绑关系信息
+     *
+     * @param ids 路由ID
+     * @return JSON
+     */
+    @Override
+    @CacheEvict(value = {"permissionRouter_select", "router_select"}, allEntries = true)
+    public JsonRequest<Integer> deletePermissionRouterByRouter(String[] ids) {
+        Integer column = permissionRouterMapper.deletePermissionRouterByRid(ids);
         if (column < 1) {
             log.error("删除关系失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);

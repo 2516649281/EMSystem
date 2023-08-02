@@ -60,7 +60,16 @@
                 </if>
             </foreach>
         </where>
-        ;
+    </select>
+    <!--根据路由ID查询关系-->
+    <select id="selectAllByPermissionRouterByRouter" resultType="com.chunfeng.dao.entity.PermissionRouter"
+            resultMap="permissionRouterMap">
+        select id, permission_id, router_id
+        from permission_router
+        where router_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </select>
     <!--插入一条关系数据-->
     <insert id="insertPermissionRouter" parameterType="com.chunfeng.dao.entity.PermissionRouter">
@@ -114,6 +123,7 @@
     <delete id="deletePermissionRouterByRid">
         delete
         from permission_router
+        where
         router_id in
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}

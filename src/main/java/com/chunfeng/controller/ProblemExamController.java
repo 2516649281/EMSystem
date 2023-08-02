@@ -113,4 +113,22 @@ public class ProblemExamController {
             @RequestBody String[] ids) {
         return problemExamService.deleteProblemExam(ids);
     }
+
+    /**
+     * 根据试卷ID解绑关系
+     *
+     * @param ids 试卷ID
+     * @return JSON
+     */
+    @DeleteMapping("/exam")
+    @ApiOperation(value = "根据试卷ID解绑关系")
+    @ApiResponses({
+            @ApiResponse(code = 504, message = "删除失败!"),
+            @ApiResponse(code = 200, message = "删除成功!")
+    })
+    public JsonRequest<Integer> deleteProblemExamByExam(
+            @ApiParam(value = "试卷ID", required = true)
+            @RequestBody String[] ids) {
+        return problemExamService.deleteProblemExamByExam(ids);
+    }
 }

@@ -40,7 +40,6 @@ public class PermissionRouterController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:router:select','sys:per:select')")
     public JsonRequest<List<PermissionRouter>> lookPermissionRouter(
             @ApiParam(value = "条件", required = true)
                     PermissionRouter permissionRouter) {
@@ -58,7 +57,6 @@ public class PermissionRouterController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:router:select','sys:per:select')")
     public JsonRequest<List<PermissionRouter>> lookAllPermissionRouter() {
         return permissionRouterService.lookAllPermissionRouter();
     }
@@ -75,7 +73,6 @@ public class PermissionRouterController {
             @ApiResponse(code = 502, message = "添加失败!"),
             @ApiResponse(code = 200, message = "添加成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:router:insert','sys:per:insert')")
     public JsonRequest<Integer> addOnePermissionRouter(
             @ApiParam(value = "待绑定的关系信息", required = true)
             @RequestBody List<PermissionRouter> permissionRouters) {
@@ -94,7 +91,6 @@ public class PermissionRouterController {
             @ApiResponse(code = 503, message = "修改失败!"),
             @ApiResponse(code = 200, message = "修改成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:router:update','sys:per:update')")
     public JsonRequest<Integer> updateOnePermissionRouter(
             @ApiParam(value = "待修改的关系信息", required = true)
             @RequestBody List<PermissionRouter> permissionRouters) {
@@ -113,10 +109,28 @@ public class PermissionRouterController {
             @ApiResponse(code = 504, message = "删除失败!"),
             @ApiResponse(code = 200, message = "删除成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:router:delete','sys:per:delete')")
     public JsonRequest<Integer> deletePermissionRouter(
             @ApiParam(value = "待解绑的关系ID", required = true)
             @RequestBody String[] ids) {
         return permissionRouterService.deletePermissionRouter(ids);
+    }
+
+
+    /**
+     * 通过路由ID解绑关系信息
+     *
+     * @param ids 路由ID
+     * @return JSON
+     */
+    @DeleteMapping("/router")
+    @ApiOperation(value = "通过路由ID解绑关系信息")
+    @ApiResponses({
+            @ApiResponse(code = 504, message = "删除失败!"),
+            @ApiResponse(code = 200, message = "删除成功!")
+    })
+    public JsonRequest<Integer> deletePermissionRouterByRouter(
+            @ApiParam(value = "路由ID", required = true)
+            @RequestBody String[] ids) {
+        return permissionRouterService.deletePermissionRouterByRouter(ids);
     }
 }

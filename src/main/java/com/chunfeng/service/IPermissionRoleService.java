@@ -1,7 +1,6 @@
 package com.chunfeng.service;
 
 import com.chunfeng.dao.entity.PermissionRole;
-import com.chunfeng.dao.entity.PermissionRole;
 import com.chunfeng.result.JsonRequest;
 
 import java.util.List;
@@ -61,4 +60,12 @@ public interface IPermissionRoleService {
      * @return JSON
      */
     JsonRequest<Integer> deletePermissionRole(String[] ids);
+
+    /**
+     * 通过角色解绑关系信息
+     *
+     * @param ids 权限ID
+     * @return JSON
+     */
+    JsonRequest<Integer> deletePermissionRoleByRole(String[] ids);
 }

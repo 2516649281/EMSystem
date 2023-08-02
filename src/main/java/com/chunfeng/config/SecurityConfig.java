@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -79,16 +81,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // 允许匿名访问
                 .authorizeRequests()
-                // //动态权限设置
-                // .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
-                //     @Override
-                //     public <O extends FilterSecurityInterceptor> O postProcess(O o) {
-                //         o.setAccessDecisionManager(permissionRouterControllerHandler);
-                //         o.setSecurityMetadataSource(permissionRouterSetHandler);
-                //         return o;
-                //     }
-                // })
-                .antMatchers(excludeUrlProperties.getExcludeUrl()).permitAll()
+                //动态权限设置
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                        o.setAccessDecisionManager(permissionRouterControllerHandler);
+                        o.setSecurityMetadataSource(permissionRouterSetHandler);
+                        return o;
+                    }
+                })
                 // 其他请求必须授权
                 .anyRequest().authenticated();
         //拦截器配置

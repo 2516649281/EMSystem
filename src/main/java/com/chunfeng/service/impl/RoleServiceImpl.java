@@ -18,7 +18,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -197,6 +196,7 @@ public class RoleServiceImpl implements IRoleService {
         //日志信息
         role.setUpdateUser(SqlDateUtils.currentUserId);
         role.setUpdateTime(SqlDateUtils.date);
+
         Integer column = roleMapper.updateRoleById(role);
         if (column < 1) {
             log.error("修改ID为{}的角色信息失败!", role.getId());
@@ -226,6 +226,8 @@ public class RoleServiceImpl implements IRoleService {
             log.error("删除关系失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
+        //删除关系数据
+        permissionRoleMapper.deletePermissionRoleByRole(ids);
         //删除本体
         column = roleMapper.deleteRoleById(ids);
         if (column < 1) {

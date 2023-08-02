@@ -93,7 +93,8 @@ public interface IUserService {
     /**
      * 用户退出登录
      *
+     * @param token 令牌
      * @return JSON
      */
-    JsonRequest<Boolean> logout();
+    JsonRequest<Boolean> logout(String token);
 }

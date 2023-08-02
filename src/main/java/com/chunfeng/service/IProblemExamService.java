@@ -61,4 +61,13 @@ public interface IProblemExamService {
      * @return JSON
      */
     JsonRequest<Integer> deleteProblemExam(String[] ids);
+
+
+    /**
+     * 根据试卷ID解绑关系
+     *
+     * @param ids 试卷ID
+     * @return JSON
+     */
+    JsonRequest<Integer> deleteProblemExamByExam(String[] ids);
 }

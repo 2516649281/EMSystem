@@ -60,11 +60,12 @@ export function deleteUser(ids) {
  * 用户退出登录
  * @returns 数据
  */
-export function logout() {
-  return request({
-    url: "/user/logout",
-    method: "get",
-  });
+export function logout(token) {
+    return request({
+        url: "/user/logout",
+        method: "get",
+        params: token,
+    });
 }
 
 //获取头像
@@ -79,9 +80,9 @@ export function avatar(userId) {
 
 export function setAvatar(userId, img) {
   return request({
-    url: "/user/avatar",
-    method: "get",
-    params: userId,
-    data: {file: img},
+      url: "/user/avatar",
+      method: "get",
+      params: userId,
+      data: {file: img},
   });
 }

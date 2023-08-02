@@ -10,21 +10,21 @@
       </el-form-item>
       <el-form-item>
         <el-button
-          type="primary"
-          @click="search(selectForm)"
-          :icon="searchLoading ? 'el-icon-loading' : 'el-icon-search'"
+            type="primary"
+            @click="search(selectForm)"
+            :icon="searchLoading ? 'el-icon-loading' : 'el-icon-search'"
         >查询
         </el-button>
         <el-button
-          type="danger"
-          @click="deleteRouter(ids)"
-          :icon="deleteLoading ? 'el-icon-loading' : 'el-icon-delete'"
+            type="danger"
+            @click="deleteRouter(ids)"
+            :icon="deleteLoading ? 'el-icon-loading' : 'el-icon-delete'"
         >批量删除
         </el-button>
         <el-button
-          type="success"
-          @click="addDialogVisible = true"
-          icon="el-icon-plus"
+            type="success"
+            @click="addDialogVisible = true"
+            icon="el-icon-plus"
         >添加路由
         </el-button>
       </el-form-item>
@@ -71,14 +71,14 @@
           </template>
           <!-- 类型特殊列 -->
           <el-tag
-            :type="scope.row.type | statusFilter"
-            v-else-if="table.value === 'type'"
+              :type="scope.row.type | statusFilter"
+              v-else-if="table.value === 'type'"
           >{{ scope.row.type === 0 ? "后端" : "前端" }}
           </el-tag>
           <!-- 请求方式特殊列 -->
           <el-tag
-            :type="scope.row.method | methodFilter"
-            v-else-if="table.value === 'method'"
+              :type="scope.row.method | methodFilter"
+              v-else-if="table.value === 'method'"
           >{{ scope.row.method }}
           </el-tag>
           <!-- 是否默认特殊列 -->
@@ -95,15 +95,15 @@
       <el-table-column label="操作" align="center" width="220">
         <template slot-scope="scope">
           <el-button
-            @click="showUpdate(scope.row)"
-            type="primary"
-            icon="el-icon-edit"
+              @click="showUpdate(scope.row)"
+              type="primary"
+              icon="el-icon-edit"
           >修改
           </el-button>
           <el-button
-            type="danger"
-            @click="deleteRouter([scope.row.id])"
-            icon="el-icon-delete"
+              type="danger"
+              @click="deleteRouter([scope.row.id])"
+              icon="el-icon-delete"
           >删除
           </el-button>
         </template>
@@ -150,27 +150,24 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="权限" prop="permission">
-          <el-checkbox-group
-            v-model="oldPermissionIds"
-            multiple
-            placeholder="请选择必需的权限"
-          >
-            <el-checkbox
-              v-for="item in permissions"
-              :key="item.id"
-              :label="item.id"
+          <el-select v-model="oldPermissionIds" multiple placeholder="请选择">
+            <el-option
+                v-for="item in permissions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
             >
               {{ item.name }}
-            </el-checkbox>
-          </el-checkbox-group>
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="updateDialogVisible = false">取 消</el-button>
         <el-button
-          type="primary"
-          @click="updateRouter(oldRouter)"
-          :icon="editLoading ? 'el-icon-loading' : ''"
+            type="primary"
+            @click="updateRouter(oldRouter)"
+            :icon="editLoading ? 'el-icon-loading' : ''"
         >确 定
         </el-button>
       </div>
@@ -218,9 +215,9 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
         <el-button
-          type="primary"
-          @click="addRouter(newRouter)"
-          :icon="editLoading ? 'el-icon-loading' : ''"
+            type="primary"
+            @click="addRouter(newRouter)"
+            :icon="editLoading ? 'el-icon-loading' : ''"
         >确 定
         </el-button>
       </div>
@@ -399,15 +396,6 @@ export default {
     },
     //修改路由信息
     updateRouter(newRouter) {
-      //判断是否为默认路由
-      if (newRouter.isDefault === 0) {
-        this.$message({
-          showClose: true,
-          message: "待修改的路由为默认路由,不允许修改!",
-          type: "error",
-        });
-        return;
-      }
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
           this.editLoading = true;
@@ -429,16 +417,10 @@ export default {
     //修改关系
     updatePermissionRouter(id) {
       var del = [];
-      //获取关系ID
-      getPermissionRouter({routerId: id}).then((response) => {
-        if (response.data.length !== 0) {
-          //首先删除所有关系
-          var prId = response.data.map((v) => {
-            return v.id;
-          });
-          deletePermissionRouter(prId);
-        }
-      });
+      //删除关系
+      if (this.oldPermissionIds.length !== 0) {
+        deletePermissionRouter([id]);
+      }
       //构造条件
       del = this.oldPermissionIds.map((v) => {
         var obj = {

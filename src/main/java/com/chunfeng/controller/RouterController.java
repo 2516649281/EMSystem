@@ -40,7 +40,6 @@ public class RouterController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:router:select')")
     public JsonRequest<List<Router>> lookRouter(
             @ApiParam(value = "条件", required = true)
                     Router router) {
@@ -58,7 +57,6 @@ public class RouterController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:router:select')")
     public JsonRequest<List<Router>> lookAllRouter() {
         return routerService.lookAllRouter();
     }
@@ -75,7 +73,6 @@ public class RouterController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:router:select')")
     public JsonRequest<Router> lookOneRouter(
             @RequestParam String routerId) {
         return routerService.lookOneRouter(routerId);
@@ -93,7 +90,6 @@ public class RouterController {
             @ApiResponse(code = 502, message = "添加失败!"),
             @ApiResponse(code = 200, message = "添加成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:router:insert')")
     public JsonRequest<Integer> addOneRouter(
             @ApiParam(value = "待添加的路由信息", required = true)
             @RequestBody Router router) {
@@ -112,7 +108,6 @@ public class RouterController {
             @ApiResponse(code = 503, message = "修改失败!"),
             @ApiResponse(code = 200, message = "修改成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:router:update')")
     public JsonRequest<Integer> updateOneRouter(
             @ApiParam(value = "待修改的路由信息", required = true)
             @RequestBody Router router) {
@@ -131,7 +126,6 @@ public class RouterController {
             @ApiResponse(code = 504, message = "删除失败!"),
             @ApiResponse(code = 200, message = "删除成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:router:delete')")
     public JsonRequest<Integer> deleteRouter(
             @ApiParam(value = "待删除的路由ID", required = true)
             @RequestBody String[] ids) {

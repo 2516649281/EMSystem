@@ -32,11 +32,31 @@ public class TransactionalConfig {
     @Autowired
     private DataSourceTransactionManager transactionManager;
 
+    /**
+     * 排除切入点
+     */
+    @Pointcut("!@annotation(com.chunfeng.note.ExcludeMethods)")
+    private void excludeMethods() {
+    }
 
     /**
-     * 切入点
+     * 排除切入点
+     */
+    @Pointcut("!execution(* com.chunfeng.service.impl.*.look*(..)))")
+    private void lookMethods() {
+    }
+
+    /**
+     * 业务切入点
      */
     @Pointcut("execution(* com.chunfeng.service.impl.*.*(..))")
+    private void serviceMethods() {
+    }
+
+    /**
+     * 最终切入点
+     */
+    @Pointcut("serviceMethods()&&lookMethods()&&excludeMethods()")
     private void method() {
     }
 
@@ -54,14 +74,14 @@ public class TransactionalConfig {
         TransactionStatus status = transactionManager.getTransaction(definition);
         log.info("事务处理器初始化完成!");
         //执行逻辑
-        Object proceed = null;
+        Object proceed;
         try {
             proceed = pjp.proceed();
         } catch (Throwable throwable) {
-            log.error("方法发生异常,事务回滚触发!");
+            log.error("方法发生异常,事务回滚触发!原因:{}", throwable.getLocalizedMessage());
             //回滚事务
             transactionManager.rollback(status);
-            throwable.printStackTrace();
+            return null;
         }
         //获取返回值
         JsonRequest<?> result;
@@ -74,9 +94,11 @@ public class TransactionalConfig {
         }
         //将返回值转换为实际的
         result = (JsonRequest<?>) proceed;
+        //判断JSON数据是否错误
         if (!result.getSuccess()) {
             log.error("方法执行出错,事务回滚触发!");
             transactionManager.rollback(status);
+            return proceed;
         }
         log.info("方法执行成功,提交事务触发!");
         // 提交事务

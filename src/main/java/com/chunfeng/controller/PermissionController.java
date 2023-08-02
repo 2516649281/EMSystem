@@ -40,7 +40,6 @@ public class PermissionController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:per:select')")
     public JsonRequest<List<Permission>> lookPermission(
             @ApiParam(value = "条件", required = true)
                     Permission permission) {
@@ -58,7 +57,6 @@ public class PermissionController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:per:select')")
     public JsonRequest<List<Permission>> lookAllPermission() {
         return permissionService.lookAllPermission();
     }
@@ -75,7 +73,6 @@ public class PermissionController {
             @ApiResponse(code = 502, message = "添加失败!"),
             @ApiResponse(code = 200, message = "添加成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:per:insert')")
     public JsonRequest<Integer> addOnePermission(
             @ApiParam(value = "待添加的权限信息", required = true)
             @RequestBody Permission permission) {
@@ -94,7 +91,6 @@ public class PermissionController {
             @ApiResponse(code = 503, message = "修改失败!"),
             @ApiResponse(code = 200, message = "修改成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:per:update')")
     public JsonRequest<Integer> updateOnePermission(
             @ApiParam(value = "待修改的权限信息", required = true)
             @RequestBody Permission permission) {
@@ -113,7 +109,6 @@ public class PermissionController {
             @ApiResponse(code = 504, message = "删除失败!"),
             @ApiResponse(code = 200, message = "删除成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:per:delete')")
     public JsonRequest<Integer> deletePermission(
             @ApiParam(value = "待修改的权限ID", required = true)
             @RequestBody String[] ids) {

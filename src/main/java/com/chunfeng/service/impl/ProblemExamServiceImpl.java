@@ -13,7 +13,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -73,7 +72,7 @@ public class ProblemExamServiceImpl implements IProblemExamService {
     }
 
     /**
-     * 根据ID值批量查询角色信息
+     * 根据ID值批量查询关系信息
      *
      * @param ids 角色ID
      * @return JSON
@@ -83,10 +82,10 @@ public class ProblemExamServiceImpl implements IProblemExamService {
     public JsonRequest<List<ProblemExam>> lookProblemExamById(String[] ids) {
         List<ProblemExam> problemExams = problemExamMapper.selectAllProblemExamById(ids);
         if (problemExams.size() != ids.length) {
-            log.warn("待查询的角色ID与数据库中的数量不符!数据库:{},实际:{}", problemExams.size(), ids.length);
+            log.warn("待查询的关系ID与数据库中的数量不符!数据库:{},实际:{}", problemExams.size(), ids.length);
             return JsonRequest.error(RequestException.NOT_FOUND);
         }
-        log.info("已查询出{}条角色数据!", problemExams.size());
+        log.info("已查询出{}条关系数据!", problemExams.size());
         return JsonRequest.success(problemExams);
     }
 
@@ -176,6 +175,24 @@ public class ProblemExamServiceImpl implements IProblemExamService {
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         log.info("已删除{}条关系信息!", ids.length);
+        return JsonRequest.success(column);
+    }
+
+    /**
+     * 根据试卷ID解绑关系
+     *
+     * @param ids 试卷ID
+     * @return JSON
+     */
+    @Override
+    @CacheEvict(value = {"problemExam_select"}, allEntries = true)
+    public JsonRequest<Integer> deleteProblemExamByExam(String[] ids) {
+        Integer column = problemExamMapper.deleteProblemExamByExam(ids);
+        if (column < 1) {
+            log.error("删除关系失败!");
+            return JsonRequest.error(RequestException.DELETE_ERROR);
+        }
+        log.info("已删除{}条关系数据!", ids.length);
         return JsonRequest.success(column);
     }
 }

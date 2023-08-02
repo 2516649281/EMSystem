@@ -93,6 +93,7 @@
     <delete id="deleteProblemExamByPro">
         delete
         from problem_exam
+        where
         problem_id in
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
@@ -102,6 +103,7 @@
     <delete id="deleteProblemExamByExam">
         delete
         from problem_exam
+        where
         exam_id in
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}

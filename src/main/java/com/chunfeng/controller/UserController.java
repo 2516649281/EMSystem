@@ -7,7 +7,6 @@ import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -82,7 +81,6 @@ public class UserController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:user:select','user:user:select')")
     public JsonRequest<List<User>> lookUser(
             @ApiParam(value = "条件", required = true)
                     User user) {
@@ -100,7 +98,6 @@ public class UserController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
-    @PreAuthorize("hasAuthority('sys:user:select')")
     public JsonRequest<List<User>> lookAllUser() {
         return userService.lookAllUser();
     }
@@ -117,7 +114,6 @@ public class UserController {
             @ApiResponse(code = 503, message = "修改失败!"),
             @ApiResponse(code = 200, message = "修改成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:user:update','user:user:update')")
     public JsonRequest<Integer> updateOneUser(
             @ApiParam(value = "待修改的用户数据", required = true)
             @RequestBody User user) {
@@ -136,7 +132,6 @@ public class UserController {
             @ApiResponse(code = 504, message = "删除失败!"),
             @ApiResponse(code = 200, message = "删除成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:user:delete','user:user:delete')")
     public JsonRequest<Integer> deleteUser(
             @ApiParam(value = "待删除的用户ID", required = true)
             @RequestBody String[] ids) {
@@ -146,6 +141,7 @@ public class UserController {
     /**
      * 用户退出登录
      *
+     * @param token 令牌
      * @return JSON
      */
     @GetMapping("/logout")
@@ -153,8 +149,10 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "退出失败!"),
             @ApiResponse(code = 200, message = "退出成功!")})
-    public JsonRequest<Boolean> logout() {
-        return userService.logout();
+    public JsonRequest<Boolean> logout(
+            @ApiParam(value = "登录的token", required = true)
+            @RequestParam String token) {
+        return userService.logout(token);
     }
 
     /**
@@ -169,7 +167,6 @@ public class UserController {
             @ApiResponse(code = 404, message = "没有找到任何数据!"),
             @ApiResponse(code = 200, message = "查询成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:user:select','user:user:select')")
     public ResponseEntity<Resource> avatarDownload(
             @ApiParam(value = "用户ID", required = true)
             @RequestParam String userId) {
@@ -188,7 +185,6 @@ public class UserController {
             @ApiResponse(code = 503, message = "修改失败!"),
             @ApiResponse(code = 200, message = "修改成功!")
     })
-    @PreAuthorize("hasAnyAuthority('sys:user:update','user:user:update')")
     public JsonRequest<Boolean> avatarUpload(
             @ApiParam(value = "头像文件", required = true)
             @RequestBody MultipartFile file,

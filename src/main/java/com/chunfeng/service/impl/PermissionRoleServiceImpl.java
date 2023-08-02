@@ -13,7 +13,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -180,6 +179,24 @@ public class PermissionRoleServiceImpl implements IPermissionRoleService {
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         Integer column = permissionRoleMapper.deletePermissionRoleById(ids);
+        if (column < 1) {
+            log.error("删除关系失败!");
+            return JsonRequest.error(RequestException.DELETE_ERROR);
+        }
+        log.info("已删除{}条关系信息!", ids.length);
+        return JsonRequest.success(column);
+    }
+
+    /**
+     * 通过角色解绑关系信息
+     *
+     * @param ids 权限ID
+     * @return JSON
+     */
+    @Override
+    @CacheEvict(value = {"permissionRole_select", "role_select"}, allEntries = true)
+    public JsonRequest<Integer> deletePermissionRoleByRole(String[] ids) {
+        Integer column = permissionRoleMapper.deletePermissionRoleByRole(ids);
         if (column < 1) {
             log.error("删除关系失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);

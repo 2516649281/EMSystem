@@ -98,8 +98,8 @@ export function setPermissionRouter(obj) {
  */
 export function deletePermissionRouter(obj) {
   return request({
-    url: "/prt",
-    method: "delete",
-    data: obj,
+      url: "/prt/router",
+      method: "delete",
+      data: obj,
   });
 }
