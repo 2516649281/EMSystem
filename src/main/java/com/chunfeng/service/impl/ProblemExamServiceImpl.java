@@ -133,10 +133,10 @@ public class ProblemExamServiceImpl implements IProblemExamService {
     public JsonRequest<Integer> updateProblemExam(List<ProblemExam> problemExams) {
         //获取ID值
         String[] ids = problemExams.stream().map(ProblemExam::getId).toArray(String[]::new);
-        List<ProblemExam> problemExamList = problemExamMapper.selectAllProblemExamById(ids);
+        JsonRequest<List<ProblemExam>> request = problemExamService.lookProblemExamById(ids);
         //判断是否成功
-        if (problemExamList.size() != problemExams.size()) {
-            log.warn("数据库数据与待查找数据不一致!数据库:{},传入:{}", problemExamList.size(), problemExams.size());
+        if (!request.getSuccess()) {
+            log.warn("{}", request.getMessage());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
         //加入日志
@@ -164,9 +164,9 @@ public class ProblemExamServiceImpl implements IProblemExamService {
     @Override
     @CacheEvict(value = {"problemExam_select"}, allEntries = true)
     public JsonRequest<Integer> deleteProblemExam(String[] ids) {
-        List<ProblemExam> problemExams = problemExamMapper.selectAllProblemExamById(ids);
-        if (problemExams.size() != ids.length) {
-            log.error("删除关系信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", problemExams.size(), ids.length);
+        JsonRequest<List<ProblemExam>> request = problemExamService.lookProblemExamById(ids);
+        if (!request.getSuccess()) {
+            log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         Integer column = problemExamMapper.deleteProblemExamById(ids);

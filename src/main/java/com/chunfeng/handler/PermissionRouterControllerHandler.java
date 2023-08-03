@@ -16,6 +16,9 @@ import java.util.stream.Collectors;
 
 /**
  * 权限路由控制(路由判断)
+ * <p>
+ * 此类是SpringSecurity动态授权的核心逻辑处理类，需要通过{@link com.chunfeng.handler.PermissionRouterSetHandler}
+ * 进行配置后，通过返回的配置对象与用于当前用户拥有的权限进行比较，从而判断用户是否有权
  *
  * @author by 春风能解释
  * <p>
@@ -31,7 +34,6 @@ public class PermissionRouterControllerHandler implements AccessDecisionManager 
      * @param authentication   权限对象
      * @param object           当前路由
      * @param configAttributes 已配置的权限配置
-     * @throws AccessDeniedException               如果访问被拒绝(未拥有对应权限)
      * @throws InsufficientAuthenticationException 访问拒绝,未拥有充足的权限
      */
     @Override

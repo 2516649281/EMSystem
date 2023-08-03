@@ -5,6 +5,13 @@ import lombok.Getter;
 
 /**
  * 请求异常的枚举
+ * <p>
+ * 用于枚举业务层所有的异常(可扩展)，一个枚举包含两个部分，状态码+消息:
+ * <br>
+ * <ul>
+ * <li>错误的唯一标识，可以是自定义的，也可以是WEB规定的，可参阅{@link org.springframework.http.HttpStatus}</li>
+ * <li>消息用于向客户端或服务端描述问题的原因或具体情况，可根据实际业务需要进行设置</li>
+ * </ul>
  *
  * @author by 春风能解释
  * <p>

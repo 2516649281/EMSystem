@@ -119,9 +119,9 @@ public class FeedBackServiceImpl implements IFeedBackService {
     @Override
     @CacheEvict(value = {"feedBack_select"}, allEntries = true)
     public JsonRequest<Integer> deleteFeedBack(String[] ids) {
-        List<FeedBack> feedBacks = feedBackMapper.selectAllFeedBackById(ids);
-        if (feedBacks.size() != ids.length) {
-            log.error("删除反馈信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", feedBacks.size(), ids.length);
+        JsonRequest<List<FeedBack>> request = feedBackService.lookFeedBackById(ids);
+        if (!request.getSuccess()) {
+            log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         Integer column = feedBackMapper.deleteFeedBackById(ids);

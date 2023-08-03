@@ -176,7 +176,8 @@ public class UserController {
     /**
      * 头像上传
      *
-     * @param file 头像文件
+     * @param file   头像文件
+     * @param userId 用户ID
      * @return 是否成功
      */
     @PostMapping("/upload")

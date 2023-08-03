@@ -154,10 +154,10 @@ public class PermissionRouterServiceImpl implements IPermissionRouterService {
         String[] ids = permissionRouters.stream()
                 .map(PermissionRouter::getId)
                 .toArray(String[]::new);
-        List<PermissionRouter> permissionRouters1 = permissionRouterMapper.selectAllPermissionRouterById(ids);
+        JsonRequest<List<PermissionRouter>> request = permissionRouterService.lookPermissionRouterById(ids);
         //判断关系数据是否一致
-        if (permissionRouters1.size() != permissionRouters.size()) {
-            log.warn("数据库中未找到任何信息!");
+        if (!request.getSuccess()) {
+            log.warn("{}", request.getMessage());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
         //封装日志
@@ -185,9 +185,10 @@ public class PermissionRouterServiceImpl implements IPermissionRouterService {
     @Override
     @CacheEvict(value = {"permissionRouter_select", "router_select"}, allEntries = true)
     public JsonRequest<Integer> deletePermissionRouter(String[] ids) {
-        List<PermissionRouter> permissionRouters = permissionRouterMapper.selectAllPermissionRouterById(ids);
-        if (permissionRouters.size() != ids.length) {
-            log.error("删除关系信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", permissionRouters.size(), ids.length);
+        JsonRequest<List<PermissionRouter>> request = permissionRouterService.lookPermissionRouterById(ids);
+        //判断是否成功
+        if (!request.getSuccess()) {
+            log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         Integer column = permissionRouterMapper.deletePermissionRouterById(ids);

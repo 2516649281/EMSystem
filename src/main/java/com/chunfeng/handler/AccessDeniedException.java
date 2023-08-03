@@ -14,6 +14,8 @@ import java.io.IOException;
 
 /**
  * 授权拦截器
+ * <p>
+ * SpringSecurity的自定义组件，用于向前端返回统一的有关授权异常的JSON格式
  *
  * @author by 春风能解释
  * <p>

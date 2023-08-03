@@ -6,6 +6,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * CORS跨域配置
+ * <p>
+ * 用于配置浏览器的跨域保护机制
  *
  * @author by 春风能解释
  * <p>

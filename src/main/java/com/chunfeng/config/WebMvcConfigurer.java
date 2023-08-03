@@ -5,7 +5,9 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 /**
- * API文档配置
+ * 静态配置
+ * <p>
+ * 用于配置静态映射l
  *
  * @author 春风能解释
  * 2023/7/17

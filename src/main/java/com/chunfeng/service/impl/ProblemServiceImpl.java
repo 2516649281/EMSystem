@@ -149,10 +149,10 @@ public class ProblemServiceImpl implements IProblemService {
     @Override
     @CacheEvict(value = {"problem_select"}, allEntries = true)
     public JsonRequest<Integer> updateOneProblem(Problem problem) {
-        List<Problem> problems = problemMapper.selectAllProblemById(new String[]{problem.getId()});
+        JsonRequest<List<Problem>> request = problemService.lookProblemById(new String[]{problem.getId()});
         //判断是否成功
-        if (problems.isEmpty()) {
-            log.warn("数据库中不存在ID为{}的题库信息!", problem.getId());
+        if (!request.getSuccess()) {
+            log.warn("{}", request.getMessage());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
         //修改文件内容
@@ -178,9 +178,9 @@ public class ProblemServiceImpl implements IProblemService {
     @Override
     @CacheEvict(value = {"problem_select"}, allEntries = true)
     public JsonRequest<Integer> deleteProblem(String[] ids) {
-        List<Problem> problems = problemMapper.selectAllProblemById(ids);
-        if (problems.size() != ids.length) {
-            log.error("删除题库信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", problems.size(), ids.length);
+        JsonRequest<List<Problem>> request = problemService.lookProblemById(ids);
+        if (!request.getSuccess()) {
+            log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         //删除文件内容

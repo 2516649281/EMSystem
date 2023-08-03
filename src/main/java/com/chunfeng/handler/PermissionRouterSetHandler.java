@@ -4,7 +4,6 @@ import com.chunfeng.dao.entity.Permission;
 import com.chunfeng.dao.entity.PermissionRouter;
 import com.chunfeng.dao.entity.Router;
 import com.chunfeng.note.OtherMethods;
-import com.chunfeng.properties.ExcludeUrlProperties;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.result.exception.ServiceException;
@@ -25,6 +24,9 @@ import java.util.List;
 
 /**
  * 动态权限配置(路由设置)
+ * <p>
+ * 此类是SpringSecurity动态授权的核心配置类，用户每发一次都会经过此拦截器，
+ * 拦截器根据路由与数据库中进行比较，从而生成用户的权限对象
  *
  * @author by 春风能解释
  * <p>

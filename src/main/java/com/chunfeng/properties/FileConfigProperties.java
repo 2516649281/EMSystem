@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * 文件配置
+ * <p>
+ * 用于统计文件上传的数据，统一管理文件配置
  *
  * @author by 春风能解释
  * <p>

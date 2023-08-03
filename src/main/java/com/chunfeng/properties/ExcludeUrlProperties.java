@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * 拦截器配置键
+ * <p>
+ * 此配置用于存放需要匿名通过拦截的路径，例如静态资源和登录注册路由
  *
  * @author by 春风能解释
  * <p>

@@ -103,12 +103,15 @@
           <el-input v-model="oldRole.name" clearable></el-input>
         </el-form-item>
         <el-form-item label="权限列表">
-          <el-transfer
-            v-model="permissionIds"
-            :data="perList"
-            :titles="['未拥有', '已拥有']"
-            :button-texts="['撤权', '授权']"
-          ></el-transfer>
+          <el-select v-model="oldPermissionIds" multiple placeholder="请选择">
+            <el-option
+              v-for="item in permissions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -152,10 +155,10 @@ import {
   updateRole,
   deleteRole,
   setPermissionRole,
-  getPermissionRole,
-  deletePermissionRole,
+  deletePermissionRoleByRole,
   getRoleInfo,
   addRole,
+  getRoleById,
 } from "@/api/role";
 import {getPermissions} from "@/api/table";
 
@@ -173,7 +176,6 @@ export default {
       newRole: {},
       ids: [],
       roleList: null,
-      perList: [],
       roleRules: {
         name: [{required: true, message: "角色名不得为空!", trigger: "blur"}],
       },
@@ -202,7 +204,7 @@ export default {
   },
   created() {
     this.fetchData();
-    this.initPermission();
+    this.getPermission();
     this.getExcel();
   },
   methods: {
@@ -224,7 +226,7 @@ export default {
     },
     //获取权限
     getPermission() {
-      getPermissionInfo().then((response) => {
+      getPermissions().then((response) => {
         this.permissions = response.data;
       });
     },
@@ -252,50 +254,55 @@ export default {
     updateRole(newRole) {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          // //判断是否为默认角色
-          // if (
-          //   (newRole.id === "0") |
-          //   (newRole.id === "232b9005ab8a466495ca0b1f741e5adc")
-          // ) {
-          //   this.$message({
-          //     showClose: true,
-          //     message: "不得修改默认角色!",
-          //     type: "error",
-          //   });
-          //   return;
-          // }
+          //判断是否为默认角色
+          if (
+            (newRole.id === "0") |
+            (newRole.id === "232b9005ab8a466495ca0b1f741e5adc")
+          ) {
+            this.$message({
+              showClose: true,
+              message: "不得修改默认角色!",
+              type: "error",
+            });
+            return;
+          }
           this.editLoading = true;
           // 修改本体
-          updateRole(newRole);
-          //修改关系
-          //1.删除所有已授权内容
-          if (this.oldPermissionIds.length !== 0) {
-            deletePermissionRole(this.oldPermissionIds);
-          }
-          //构造条件
-          var pr = this.permissionIds.map((v) => {
-            var obj = {};
-            obj["roleId"] = newRole.id;
-            obj["permissionId"] = v;
-            return obj;
+          updateRole(newRole).then((response) => {
+            if (response.success) {
+              this.updatePermissionRole(newRole.id);
+            }
           });
-          if (pr.length !== 0) {
-            //2.添加新的权限
-            setPermissionRole(pr).then((response) => {
-              if (response.success) {
-                this.$message({
-                  showClose: true,
-                  message: "修改角色成功!",
-                  type: "success",
-                });
-                this.updateDialogVisible = false;
-                this.fetchData();
-              }
-            });
-          }
+          this.updateDialogVisible = false;
           this.editLoading = false;
         } else {
           return false;
+        }
+      });
+    },
+    //修改关系
+    updatePermissionRole(id) {
+      var del = [];
+      //删除关系
+      if (this.oldPermissionIds.length !== 0) {
+        deletePermissionRoleByRole([id]);
+      }
+      //构造条件
+      del = this.oldPermissionIds.map((v) => {
+        var obj = {
+          permissionId: v,
+          roleId: id,
+        };
+        return obj;
+      });
+      //直接添加
+      setPermissionRole(del).then((response) => {
+        if (response.success) {
+          this.$message({
+            showClose: true,
+            message: "修改角色成功!",
+            type: "success",
+          });
         }
       });
     },
@@ -363,20 +370,6 @@ export default {
       });
       return newObj;
     },
-    //初始化权限列表
-    initPermission() {
-      getPermissions().then((response) => {
-        var list = response.data;
-        const data = [];
-        list.forEach((v) => {
-          data.push({
-            key: v.id,
-            label: `${v.name} ${v.sign}`,
-          });
-        });
-        this.perList = data;
-      });
-    },
     //多选逻辑
     selectTable(val) {
       //获取ID
@@ -387,22 +380,14 @@ export default {
     },
     //显示修改窗
     showUpdate(oldRole) {
-      //获取已获得的
-      getPermissionRole({roleId: oldRole.id}).then((response) => {
-        //权限ID
-        var ids = response.data.map((v) => {
-          return v.permissionId;
-        });
-        //实体ID
-        var idsA = response.data.map((v) => {
+      //获取已绑定的权限ID
+      getRoleById({roleId: oldRole.id}).then((response) => {
+        this.oldPermissionIds = response.data.permissionList.map((v) => {
           return v.id;
         });
-        //保存实体ID
-        this.oldPermissionIds = idsA;
-        this.permissionIds = ids;
       });
-      this.oldRole = oldRole;
       this.updateDialogVisible = true;
+      this.oldRole = oldRole;
     },
   },
 };

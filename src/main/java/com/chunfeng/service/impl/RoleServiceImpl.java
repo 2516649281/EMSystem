@@ -187,10 +187,10 @@ public class RoleServiceImpl implements IRoleService {
     @Override
     @CacheEvict(value = {"role_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> updateOneRole(Role role) {
-        List<Role> roles = roleMapper.selectAllRoleById(new String[]{role.getId()});
+        JsonRequest<List<Role>> request = roleService.lookRoleById(new String[]{role.getId()});
         //判断是否成功
-        if (roles.isEmpty()) {
-            log.warn("数据库中不存在ID为{}的角色信息!", role.getId());
+        if (!request.getSuccess()) {
+            log.warn("{}", request.getMessage());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
         //日志信息
@@ -215,9 +215,9 @@ public class RoleServiceImpl implements IRoleService {
     @Override
     @CacheEvict(value = {"role_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> deleteRole(String[] ids) {
-        List<Role> roles = roleMapper.selectAllRoleById(ids);
-        if (roles.size() != ids.length) {
-            log.error("删除角色信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", roles.size(), ids.length);
+        JsonRequest<List<Role>> request = roleService.lookRoleById(ids);
+        if (request.getSuccess()) {
+            log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         //删除关系

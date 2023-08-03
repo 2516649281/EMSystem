@@ -26,6 +26,8 @@ import java.util.stream.Stream;
 
 /**
  * token拦截器
+ * <p>
+ * SpringSecurity拦截器链的扩展，用于对token进行判断和检验，从而完成前后端分离的登录认证
  *
  * @author by 春风能解释
  * <p>
@@ -89,7 +91,6 @@ public class TokenFilter extends OncePerRequestFilter {
      *
      * @param request 请求
      * @return 返回true以排除请求
-     * @throws ServletException servlet异常
      */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {

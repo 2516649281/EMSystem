@@ -36,8 +36,9 @@ public class TokenUtils {
     /**
      * 创建token的方法
      *
-     * @param t 任意类型
-     * @return token
+     * @param t   对象
+     * @param <T> 类型
+     * @return token字符串
      */
     public static <T> String createToken(T t) {
         String token = Jwts.builder()

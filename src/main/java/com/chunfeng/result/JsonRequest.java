@@ -10,6 +10,14 @@ import java.io.Serializable;
 
 /**
  * JSON返回类
+ * <p>
+ * 此类用于向前端返回统一的JSON格式，具体分以下几个部分:
+ * <ul>
+ *     <li>status:状态码，错误的唯一标识，可以是自定义的，也可以是WEB规定的，可参阅{@link org.springframework.http.HttpStatus}</li>
+ *      <li>message:消息，向客户端或服务端描述错误的原因</li>
+ *      <li>success:是否成功，描述一个请求是否成功，也用于客户端或服务端判断</li>
+ *      <li>data:具体的数据，整个请求的核心，可存放任意类型的数据，需要配合泛型</li>
+ * </ul>
  *
  * @author by 春风能解释
  * <p>

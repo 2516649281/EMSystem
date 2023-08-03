@@ -5,6 +5,7 @@ import com.chunfeng.dao.entity.PermissionRouter;
 import com.chunfeng.dao.entity.Router;
 import com.chunfeng.dao.mapper.PermissionRouterMapper;
 import com.chunfeng.dao.mapper.RouterMapper;
+import com.chunfeng.properties.SystemProperties;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.service.IPermissionRouterService;
@@ -50,6 +51,12 @@ public class RouterServiceImpl implements IRouterService {
     @Lazy
     @Autowired
     private IRouterService routerService;
+
+    /**
+     * 导入系统配置
+     */
+    @Autowired
+    private SystemProperties systemProperties;
 
     /**
      * 导入关系业务
@@ -188,11 +195,21 @@ public class RouterServiceImpl implements IRouterService {
     @Override
     @CacheEvict(value = {"router_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> updateOneRouter(Router router) {
-        List<Router> routers = routerMapper.selectAllRouterById(new String[]{router.getId()});
-        //判断是否成功
-        if (routers.isEmpty()) {
-            log.warn("数据库中不存在ID为{}的路由信息!", router.getId());
-            return JsonRequest.error(RequestException.UPDATE_ERROR);
+        //配置控制
+        if (systemProperties.getIsOpenDefaultDataProtect()) {
+            JsonRequest<List<Router>> request = routerService.lookRouterById(new String[]{router.getId()});
+            //判断是否成功
+            if (!request.getSuccess()) {
+                log.warn("数据库中不存在ID为{}的路由信息!", router.getId());
+                return JsonRequest.error(RequestException.UPDATE_ERROR);
+            }
+            //获取路由
+            Router router1 = request.getData().get(0);
+            //判断是否为默认路由
+            if (router1.getIsDefault().equals(0)) {
+                log.warn("ID为{}的权限为默认路由,不允许修改!", router.getId());
+                return JsonRequest.error(RequestException.UPDATE_ERROR);
+            }
         }
         //日志信息
         router.setUpdateUser(SqlDateUtils.currentUserId);
@@ -215,9 +232,24 @@ public class RouterServiceImpl implements IRouterService {
     @Override
     @CacheEvict(value = {"router_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> deleteRouter(String[] ids) {
-        List<Router> routers = routerMapper.selectAllRouterById(ids);
-        if (routers.size() != ids.length) {
-            log.error("删除路由信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", routers.size(), ids.length);
+        // 配置控制
+        if (systemProperties.getIsOpenDefaultDataProtect()) {
+            //获取路由列表
+            JsonRequest<List<Router>> request = routerService.lookRouterById(ids);
+            if (!request.getSuccess()) {
+                log.error("删除路由失败!原因:未找到任何路由");
+                return JsonRequest.error(RequestException.NOT_FOUND);
+            }
+            //排除默认的路由
+            ids = request.getData()
+                    .stream()
+                    .filter(v -> v.getIsDefault() != 0)//获取非默认路由
+                    .map(Router::getId)//提取ID值
+                    .toArray(String[]::new);
+        }
+        //判断ID是否为空
+        if (ids.length == 0) {
+            log.error("删除路由失败!原因:不得删除默认路由!");
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         //删除原有绑定的关系

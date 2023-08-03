@@ -7,6 +7,8 @@ import lombok.Setter;
 
 /**
  * 业务层异常超类
+ * <p>
+ * 此异常为自定义异常的超类，用于描述各类业务异常，仅作容器使用，可配合RequestException使用，详情请见{@link com.chunfeng.result.RequestException}
  *
  * @author by 春风能解释
  * <p>

@@ -4,6 +4,7 @@ import com.chunfeng.dao.entity.Permission;
 import com.chunfeng.dao.mapper.PermissionMapper;
 import com.chunfeng.dao.mapper.PermissionRoleMapper;
 import com.chunfeng.dao.mapper.PermissionRouterMapper;
+import com.chunfeng.properties.SystemProperties;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.service.IPermissionService;
@@ -40,6 +41,12 @@ public class PermissionServiceImpl implements IPermissionService {
     @Lazy
     @Autowired
     private IPermissionService permissionService;
+
+    /**
+     * 导入系统配置
+     */
+    @Autowired
+    private SystemProperties systemProperties;
 
     /**
      * 导入关系业务
@@ -144,21 +151,21 @@ public class PermissionServiceImpl implements IPermissionService {
     @Override
     @CacheEvict(value = {"permission_select", "permission_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> updateOnePermission(Permission permission) {
-        List<Permission> permissions = permissionMapper.selectAllPermissionById(new String[]{permission.getId()});
-        //判断是否成功
-        if (permissions.isEmpty()) {
-            log.warn("数据库中不存在ID为{}的权限信息!", permission.getId());
-            return JsonRequest.error(RequestException.UPDATE_ERROR);
-        }
-        //获取权限
-        Permission permission1 = permissions.get(0);
-        //判断是否为默认权限
-        if (permission1.getIsDefault().equals(0)) {
-            log.warn("ID为{}的权限为默认权限,不得修改标识符!", permission1.getId());
-            //不允许修改标识符
-            permission.setSign(permission1.getSign());
-            //不允许修改状态
-            permission.setIsDefault(permission1.getIsDefault());
+        //配置控制
+        if (systemProperties.getIsOpenDefaultDataProtect()) {
+            JsonRequest<List<Permission>> request = permissionService.lookPermissionById(new String[]{permission.getId()});
+            //判断是否成功
+            if (!request.getSuccess()) {
+                log.warn("{}}", request.getMessage());
+                return JsonRequest.error(RequestException.UPDATE_ERROR);
+            }
+            //获取权限
+            Permission permission1 = request.getData().get(0);
+            //判断是否为默认权限
+            if (permission1.getIsDefault().equals(0)) {
+                log.warn("ID为{}的权限为默认权限,不得修改标识符!", permission1.getId());
+                return JsonRequest.error(RequestException.UPDATE_ERROR);
+            }
         }
         //日志信息
         permission.setUpdateUser(SqlDateUtils.currentUserId);
@@ -181,10 +188,25 @@ public class PermissionServiceImpl implements IPermissionService {
     @Override
     @CacheEvict(value = {"permission_select", "permission_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> deletePermission(String[] ids) {
-        //判断ID是否为空
-        if (ids.length == 0) {
-            log.error("删除权限失败!原因:未选择任何权限");
-            return JsonRequest.error(RequestException.DELETE_ERROR);
+        //配置控制
+        if (systemProperties.getIsOpenDefaultDataProtect()) {
+            //获取权限列表
+            JsonRequest<List<Permission>> request = permissionService.lookPermissionById(ids);
+            if (!request.getSuccess()) {
+                log.error("删除权限失败!原因:{}", request.getMessage());
+                return JsonRequest.error(RequestException.NOT_FOUND);
+            }
+            //排除默认的权限
+            ids = request.getData()
+                    .stream()
+                    .filter(v -> v.getIsDefault() != 0)//获取非默认权限
+                    .map(Permission::getId)//提取ID值
+                    .toArray(String[]::new);
+            //判断ID是否为空
+            if (ids.length == 0) {
+                log.error("删除权限失败!原因:不得删除默认权限!");
+                return JsonRequest.error(RequestException.DELETE_ERROR);
+            }
         }
         //删除权限-角色关系
         permissionRoleMapper.deletePermissionRoleByPer(ids);

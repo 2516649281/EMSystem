@@ -17,6 +17,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Swagger全局配置
+ * <p>
+ * 用于配置Swagger API自动生成工具的配置
+ *
+ * @author by 春风能解释
+ * <p>
+ * 2023/7/14
  */
 @Configuration
 @EnableSwagger2

@@ -13,7 +13,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -79,7 +78,7 @@ public class SubjectServiceImpl implements ISubjectService {
      */
     @Override
     @Cacheable(value = "subject_select", key = "#ids")
-    public JsonRequest<List<Subject>> lookOneSubject(String[] ids) {
+    public JsonRequest<List<Subject>> lookSubjectById(String[] ids) {
         List<Subject> subjects = subjectMapper.selectAllSubjectById(ids);
         if (subjects.size() != ids.length) {
             log.warn("待查询的科目ID与数据库中的数量不符!数据库:{},实际:{}", subjects.size(), ids.length);
@@ -121,10 +120,10 @@ public class SubjectServiceImpl implements ISubjectService {
     @Override
     @CacheEvict(value = {"subject_select"}, allEntries = true)
     public JsonRequest<Integer> updateOneSubject(Subject subject) {
-        List<Subject> subjects = subjectMapper.selectAllSubjectById(new String[]{subject.getId()});
+        JsonRequest<List<Subject>> request = subjectService.lookSubjectById(new String[]{subject.getId()});
         //判断是否成功
-        if (subjects.isEmpty()) {
-            log.warn("数据库中不存在ID为{}的科目信息!", subject.getId());
+        if (!request.getSuccess()) {
+            log.warn("{}", request.getMessage());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
         //日志信息
@@ -148,9 +147,9 @@ public class SubjectServiceImpl implements ISubjectService {
     @Override
     @CacheEvict(value = {"subject_select"}, allEntries = true)
     public JsonRequest<Integer> deleteSubject(String[] ids) {
-        List<Subject> subjects = subjectMapper.selectAllSubjectById(ids);
-        if (subjects.size() != ids.length) {
-            log.error("删除科目信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", subjects.size(), ids.length);
+        JsonRequest<List<Subject>> request = subjectService.lookSubjectById(ids);
+        if (!request.getSuccess()) {
+            log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         Integer column = subjectMapper.deleteSubjectById(ids);

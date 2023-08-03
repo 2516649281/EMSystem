@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Swagger核心配置键
+ * <p>
+ * 用于存放Swagger的配置，仅在开发环境下使用，生产环境下务必将[是否启用]改为false
  *
  * @author by 春风能解释
  * <p>

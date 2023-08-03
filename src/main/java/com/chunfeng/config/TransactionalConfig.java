@@ -15,6 +15,8 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 /**
  * 全局事务处理
+ * <p>
+ * 用于配置Spring事务机制，该配置采用了AOP切面编程思想
  *
  * @author by 春风能解释
  * <p>

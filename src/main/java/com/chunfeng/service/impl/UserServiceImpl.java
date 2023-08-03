@@ -2,7 +2,6 @@ package com.chunfeng.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.chunfeng.dao.entity.Permission;
-import com.chunfeng.dao.entity.PermissionRole;
 import com.chunfeng.dao.entity.Role;
 import com.chunfeng.dao.entity.User;
 import com.chunfeng.dao.mapper.UserMapper;
@@ -216,9 +215,9 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     @CacheEvict(value = {"user_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> updateOneUser(User user) {
         //判断数据库中是否存在该用户
-        List<User> users = userMapper.selectAllByIds(new String[]{user.getId()});
-        if (users.isEmpty()) {
-            log.error("ID为{}的用户不存在!", user.getId());
+        JsonRequest<List<User>> request = userService.lookUserById(new String[]{user.getId()});
+        if (!request.getSuccess()) {
+            log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.NOT_FOUND);
         }
         Integer column = userMapper.updateUserById(user);
@@ -240,9 +239,9 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     @CacheEvict(value = {"user_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> deleteUser(String[] ids) {
         //判断数据库中是否存在该用户
-        List<User> users = userMapper.selectAllByIds(ids);
-        if (ids.length != users.size()) {
-            log.error("删除角色信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", users.size(), ids.length);
+        JsonRequest<List<User>> request = userService.lookUserById(ids);
+        if (!request.getSuccess()) {
+            log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         Integer column = userMapper.deleteUserById(ids);
@@ -275,35 +274,17 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         UserDetail userDetail = new UserDetail();
         userDetail.setUser(user);
         //查询该用户的角色信息
-        JsonRequest<List<Role>> request = roleService.lookRoleById(new String[]{user.getRoleId()});
+        JsonRequest<Role> request = roleService.lookOneRole(user.getRoleId());
         if (!request.getSuccess()) {
             log.error("用户{}尚未绑定角色信息!", username);
             throw new ServiceException(RequestException.LOGIN_ERROR);
         }
-        //构造条件
-        PermissionRole permissionRole = new PermissionRole();
-        permissionRole.setRoleId(request.getData().get(0).getId());
-        //通过角色ID查询对应的权限ID
-        JsonRequest<List<PermissionRole>> permissionRole1 = permissionRoleService.lookPermissionRole(permissionRole);
-        if (!permissionRole1.getSuccess()) {
-            log.error("角色{}尚未绑定权限信息!", request.getData().get(0).getName());
-            throw new ServiceException(RequestException.LOGIN_ERROR);
-        }
-        //获取权限ID
-        String[] permissionIds =
-                permissionRole1.getData()
-                        .stream()
-                        .map(PermissionRole::getPermissionId)//取出权限ID
-                        .toArray(String[]::new);//转换为数组
         //获取权限列表
-        JsonRequest<List<Permission>> jsonRequest = permissionService.lookPermissionById(permissionIds);
-        if (!jsonRequest.getSuccess()) {
-            log.error("未查询到任何权限信息!");
-            throw new ServiceException(RequestException.LOGIN_ERROR);
-        }
-        List<String> permissionList = jsonRequest.getData().stream()
-                .map(Permission::getSign)//取出标识符
-                .collect(Collectors.toList());//转换为List集合
+        List<Permission> permissions = request.getData().getPermissionList();
+        //提取权限标识
+        List<String> permissionList = permissions.stream()
+                .map(Permission::getSign)
+                .collect(Collectors.toList());
         //封装权限信息
         userDetail.setPermission(permissionList);
         return userDetail;

@@ -148,10 +148,10 @@ public class ExamServiceImpl implements IExamService {
     @Override
     @CacheEvict(value = {"exam_select"}, allEntries = true)
     public JsonRequest<Integer> updateOneExam(Exam exam) {
-        List<Exam> exams = examMapper.selectAllExamById(new String[]{exam.getId()});
+        JsonRequest<List<Exam>> request = examService.lookExamById(new String[]{exam.getId()});
         //判断是否成功
-        if (exams.isEmpty()) {
-            log.warn("数据库中不存在ID为{}的试卷信息!", exam.getId());
+        if (!request.getSuccess()) {
+            log.warn("{}", request.getSuccess());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
         //修改文件内容
@@ -177,9 +177,9 @@ public class ExamServiceImpl implements IExamService {
     @Override
     @CacheEvict(value = {"exam_select"}, allEntries = true)
     public JsonRequest<Integer> deleteExam(String[] ids) {
-        List<Exam> exams = examMapper.selectAllExamById(ids);
-        if (exams.size() != ids.length) {
-            log.error("删除试卷信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", exams.size(), ids.length);
+        JsonRequest<List<Exam>> request = examService.lookExamById(ids);
+        if (!request.getSuccess()) {
+            log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         //删除文件内容

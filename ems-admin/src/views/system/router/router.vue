@@ -10,21 +10,21 @@
       </el-form-item>
       <el-form-item>
         <el-button
-            type="primary"
-            @click="search(selectForm)"
-            :icon="searchLoading ? 'el-icon-loading' : 'el-icon-search'"
+          type="primary"
+          @click="search(selectForm)"
+          :icon="searchLoading ? 'el-icon-loading' : 'el-icon-search'"
         >查询
         </el-button>
         <el-button
-            type="danger"
-            @click="deleteRouter(ids)"
-            :icon="deleteLoading ? 'el-icon-loading' : 'el-icon-delete'"
+          type="danger"
+          @click="deleteRouter(ids)"
+          :icon="deleteLoading ? 'el-icon-loading' : 'el-icon-delete'"
         >批量删除
         </el-button>
         <el-button
-            type="success"
-            @click="addDialogVisible = true"
-            icon="el-icon-plus"
+          type="success"
+          @click="addDialogVisible = true"
+          icon="el-icon-plus"
         >添加路由
         </el-button>
       </el-form-item>
@@ -71,14 +71,14 @@
           </template>
           <!-- 类型特殊列 -->
           <el-tag
-              :type="scope.row.type | statusFilter"
-              v-else-if="table.value === 'type'"
+            :type="scope.row.type | statusFilter"
+            v-else-if="table.value === 'type'"
           >{{ scope.row.type === 0 ? "后端" : "前端" }}
           </el-tag>
           <!-- 请求方式特殊列 -->
           <el-tag
-              :type="scope.row.method | methodFilter"
-              v-else-if="table.value === 'method'"
+            :type="scope.row.method | methodFilter"
+            v-else-if="table.value === 'method'"
           >{{ scope.row.method }}
           </el-tag>
           <!-- 是否默认特殊列 -->
@@ -95,15 +95,15 @@
       <el-table-column label="操作" align="center" width="220">
         <template slot-scope="scope">
           <el-button
-              @click="showUpdate(scope.row)"
-              type="primary"
-              icon="el-icon-edit"
+            @click="showUpdate(scope.row)"
+            type="primary"
+            icon="el-icon-edit"
           >修改
           </el-button>
           <el-button
-              type="danger"
-              @click="deleteRouter([scope.row.id])"
-              icon="el-icon-delete"
+            type="danger"
+            @click="deleteRouter([scope.row.id])"
+            icon="el-icon-delete"
           >删除
           </el-button>
         </template>
@@ -149,15 +149,14 @@
             <el-radio :label="0" border>后端</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="权限" prop="permission">
+        <el-form-item label="权限列表">
           <el-select v-model="oldPermissionIds" multiple placeholder="请选择">
             <el-option
-                v-for="item in permissions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
+              v-for="item in permissions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
             >
-              {{ item.name }}
             </el-option>
           </el-select>
         </el-form-item>
@@ -165,9 +164,9 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="updateDialogVisible = false">取 消</el-button>
         <el-button
-            type="primary"
-            @click="updateRouter(oldRouter)"
-            :icon="editLoading ? 'el-icon-loading' : ''"
+          type="primary"
+          @click="updateRouter(oldRouter)"
+          :icon="editLoading ? 'el-icon-loading' : ''"
         >确 定
         </el-button>
       </div>
@@ -215,9 +214,9 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
         <el-button
-            type="primary"
-            @click="addRouter(newRouter)"
-            :icon="editLoading ? 'el-icon-loading' : ''"
+          type="primary"
+          @click="addRouter(newRouter)"
+          :icon="editLoading ? 'el-icon-loading' : ''"
         >确 定
         </el-button>
       </div>
@@ -235,7 +234,7 @@ import {
   getRouterById,
   setPermissionRouter,
 } from "@/api/router";
-import {deletePermissionRouter, getPermissionRouter} from "@/api/permission";
+import {deletePermissionRouter} from "@/api/permission";
 
 export default {
   filters: {
@@ -282,14 +281,7 @@ export default {
         type: [
           {
             required: true,
-            message: "请选择类型",
-            trigger: "change",
-          },
-        ],
-        permissions: [
-          {
-            required: true,
-            message: "请选择权限",
+            message: "请选择类型!",
             trigger: "change",
           },
         ],

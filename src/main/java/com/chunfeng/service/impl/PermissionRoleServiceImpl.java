@@ -173,9 +173,9 @@ public class PermissionRoleServiceImpl implements IPermissionRoleService {
     @CacheEvict(value = {"permissionRole_select", "role_select"}, allEntries = true)
     public JsonRequest<Integer> deletePermissionRole(String[] ids) {
         //判断关系是否存在
-        List<PermissionRole> permissionRoles = permissionRoleMapper.selectAllPermissionRoleById(ids);
-        if (permissionRoles.size() != ids.length) {
-            log.error("删除关系信息时,数据库的数据与实际待删除数据不一致!数据库:{},实际:{}", permissionRoles.size(), ids.length);
+        JsonRequest<List<PermissionRole>> request = permissionRoleService.lookPermissionRoleById(ids);
+        if (!request.getSuccess()) {
+            log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         Integer column = permissionRoleMapper.deletePermissionRoleById(ids);

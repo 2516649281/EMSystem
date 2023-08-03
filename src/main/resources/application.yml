@@ -109,3 +109,8 @@ springfox:
     version: 1.0
   #开启详细日志
 debug: false
+#应用系统配置
+system:
+  config:
+    #是否开启默认数据保护机制
+    is-open-default-data-protect: true

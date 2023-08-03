@@ -23,9 +23,9 @@ export function getRoleInfo(role) {
  */
 export function getRoleById(roleId) {
   return request({
-    url: `/role`,
-    method: "get",
-    params: roleId,
+      url: `/role/one`,
+      method: "get",
+      params: roleId,
   });
 }
 
@@ -96,10 +96,10 @@ export function setPermissionRole(obj) {
  * @param {*} obj
  * @returns
  */
-export function deletePermissionRole(obj) {
-  return request({
-    url: "/pr",
-    method: "delete",
-    data: obj,
-  });
+export function deletePermissionRoleByRole(obj) {
+    return request({
+        url: "/pr/role",
+        method: "delete",
+        data: obj,
+    });
 }

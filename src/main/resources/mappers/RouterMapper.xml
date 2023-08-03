@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.chunfeng.dao.mapper.RouterMapper">
+    <!--字段映射-->
+    <resultMap id="routerMap" type="com.chunfeng.dao.entity.Router">
+        <result column="is_default" property="isDefault"/>
+    </resultMap>
     <!--条件查询路由信息-->
-    <select id="selectAllRouter" resultType="com.chunfeng.dao.entity.Router">
+    <select id="selectAllRouter" resultType="com.chunfeng.dao.entity.Router" resultMap="routerMap">
         select id, name,value,method,type,is_default
         from router
         <where>
@@ -28,7 +32,7 @@
         ;
     </select>
     <!--根据ID查询路由-->
-    <select id="selectAllRouterById" resultType="com.chunfeng.dao.entity.Router">
+    <select id="selectAllRouterById" resultType="com.chunfeng.dao.entity.Router" resultMap="routerMap">
         select id, name,value,method,type
         from router
         <where>

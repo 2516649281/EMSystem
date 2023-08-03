@@ -19,6 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 /**
  * SpringSecurity全局配置
+ * <p>
+ * SpringSecurity框架的核心配置类，用于配置SpringSecurity基本的权限、拦截处理、授权管理等配置
  *
  * @author by 春风能解释
  * <p>

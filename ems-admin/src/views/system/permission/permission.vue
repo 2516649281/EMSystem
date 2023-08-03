@@ -274,15 +274,15 @@ export default {
     },
     //修改权限信息
     updatePermission(newPermission) {
-      // //判断是否为默认权限
-      // if (newPermission.isDefault === 0) {
-      //   this.$message({
-      //     showClose: true,
-      //     message: "待修改的权限为默认权限,不允许修改!",
-      //     type: "error",
-      //   });
-      //   return;
-      // }
+      //判断是否为默认权限
+      if (newPermission.isDefault === 0) {
+        this.$message({
+          showClose: true,
+          message: "待修改的权限为默认权限,不允许修改!",
+          type: "error",
+        });
+        return;
+      }
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
           this.editLoading = true;
