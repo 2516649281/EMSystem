@@ -1,6 +1,8 @@
 package com.chunfeng.config;
 
-import com.chunfeng.handler.*;
+import com.chunfeng.handler.PermissionRouterControllerHandler;
+import com.chunfeng.handler.PermissionRouterSetHandler;
+import com.chunfeng.handler.TokenFilter;
 import com.chunfeng.properties.ExcludeUrlProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +32,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Slf4j
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    /**
-     * 授权过滤器
-     */
-    @Autowired
-    private AccessDeniedException accessDeniedException;
-
-    /**
-     * 认证过滤器
-     */
-    @Autowired
-    private AuthenticationException authenticationException;
 
     /**
      * token拦截器
@@ -96,9 +86,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
         //拦截器配置
         http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
-        http.exceptionHandling()
-                .accessDeniedHandler(accessDeniedException)//授权异常处理
-                .authenticationEntryPoint(authenticationException);//认证异常处理
         http.cors();//允许跨域
         log.info("SpringSecurity-http核心已成功配置!");
     }

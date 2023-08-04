@@ -12,6 +12,15 @@ import java.util.Map;
 
 /**
  * 全局异常处理器
+ * <p>
+ * 此类用于处理大部分异常信息的响应,经过了这个类的处理,返回的格式将统一变为
+ * <p>
+ * {<p>
+ * "success": false,<p>
+ * "message": "信息!",<p>
+ * "status": 状态<p>
+ * }<p>
+ * 此响应类可参照{@link com.chunfeng.result.JsonRequest}的字段
  *
  * @author by 春风能解释
  * <p>
