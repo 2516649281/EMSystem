@@ -1,5 +1,6 @@
 package com.chunfeng.result;
 
+import com.chunfeng.result.exception.ServiceException;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -107,6 +108,12 @@ public class JsonRequest<T> implements Serializable {
      * @return JSON
      */
     public static <T> JsonRequest<T> error(Exception e) {
+        //如果是已定义的异常
+        if (e instanceof ServiceException) {
+            ServiceException exception = (ServiceException) e;
+            return new JsonRequest<>(exception.getStatus(), e.getMessage(), false);
+        }
+        //其他的未知异常
         return new JsonRequest<>(500, e.getLocalizedMessage(), false);
     }
 }

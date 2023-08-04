@@ -39,3 +39,11 @@ export function getRouters() {
     method: "get",
   });
 }
+
+//题目
+export function getProblems() {
+    return request({
+        url: "/pro",
+        method: "get",
+    });
+}

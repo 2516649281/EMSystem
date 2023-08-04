@@ -5,7 +5,6 @@ import com.chunfeng.result.JsonRequest;
 import com.chunfeng.service.IRoleService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,7 +41,7 @@ public class RoleController {
     })
     public JsonRequest<List<Role>> lookRole(
             @ApiParam(value = "条件", required = true)
-                    Role role) {
+            Role role) {
         return roleService.lookRole(role);
     }
 

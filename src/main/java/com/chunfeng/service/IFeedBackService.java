@@ -1,7 +1,6 @@
 package com.chunfeng.service;
 
 import com.chunfeng.dao.entity.FeedBack;
-import com.chunfeng.dao.entity.FeedBack;
 import com.chunfeng.result.JsonRequest;
 
 import java.util.List;

@@ -1,19 +1,17 @@
 package com.chunfeng.config;
 
 import com.chunfeng.properties.SwaggerProperties;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Swagger全局配置
@@ -25,8 +23,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * 2023/7/14
  */
 @Configuration
-@EnableSwagger2
-@ConditionalOnClass(Docket.class)
+@EnableOpenApi
 public class SwaggerConfig {
 
     /**
@@ -47,8 +44,10 @@ public class SwaggerConfig {
                 .groupName(swaggerProperties.getGroupName())
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
+                .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
+                //排除默认错误界面
+                .paths(PathSelectors.regex("(?!/error.*).*"))
                 .build();
     }
 
@@ -59,9 +58,13 @@ public class SwaggerConfig {
      */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
+                //标题
                 .title(swaggerProperties.getTitle())
+                //内容，包含作者的信息
                 .contact(new Contact(swaggerProperties.getAuthor(), swaggerProperties.getUrl(), swaggerProperties.getEmail()))
+                //描述信息
                 .description(swaggerProperties.getDescription())
+                //版本号
                 .version(swaggerProperties.getVersion())
                 .build();
     }

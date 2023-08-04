@@ -83,7 +83,7 @@ public class UserController {
     })
     public JsonRequest<List<User>> lookUser(
             @ApiParam(value = "条件", required = true)
-                    User user) {
+            User user) {
         return userService.lookUser(user);
     }
 

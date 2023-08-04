@@ -151,7 +151,7 @@ public class ExamServiceImpl implements IExamService {
         JsonRequest<List<Exam>> request = examService.lookExamById(new String[]{exam.getId()});
         //判断是否成功
         if (!request.getSuccess()) {
-            log.warn("{}", request.getSuccess());
+            log.warn("{}", request.getMessage());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
         //修改文件内容

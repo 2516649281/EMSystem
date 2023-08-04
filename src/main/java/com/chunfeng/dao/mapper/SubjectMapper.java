@@ -1,6 +1,5 @@
 package com.chunfeng.dao.mapper;
 
-import com.chunfeng.dao.entity.PermissionRole;
 import com.chunfeng.dao.entity.Subject;
 
 import java.util.List;

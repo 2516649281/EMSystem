@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 /**
  * 静态配置
  * <p>
- * 用于配置静态映射l
+ * 用于配置静态映射
  *
  * @author 春风能解释
  * 2023/7/17
@@ -26,10 +26,8 @@ public class WebMvcConfigurer extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/**").addResourceLocations(
                 "classpath:/static/");
         //添加API映射
-        registry.addResourceHandler("swagger-ui.html", "doc.html").addResourceLocations(
-                "classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations(
-                "classpath:/META-INF/resources/webjars/");
+        registry.addResourceHandler("/swagger-ui/**").addResourceLocations(
+                "classpath:/META-INF/resources/webjars/springfox-swagger-ui/");
         super.addResourceHandlers(registry);
     }
 
