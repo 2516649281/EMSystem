@@ -47,7 +47,7 @@ public enum RequestException {
     /**
      * 未知异常
      */
-    UNKNOWN_EXCEPTION(500, "系统错误,请联系网站管理员!"),
+    UNKNOWN_EXCEPTION(500, "未知错误,请联系网站管理员!"),
     /**
      * 查询数据时遇到问题
      */

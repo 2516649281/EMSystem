@@ -99,7 +99,6 @@ public class JsonRequest<T> implements Serializable {
         return new JsonRequest<>(e.getStatus(), e.getMessage(), false);
     }
 
-
     /**
      * 全局异常处理
      *

@@ -75,6 +75,7 @@ handle:
       #错误路径
       - '/error'
       #静态资源
+      - '/favicon.ico'
       - '/swagger-ui/**'
       - '/doc.html'
       - '/webjars/**'
