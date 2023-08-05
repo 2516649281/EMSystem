@@ -51,7 +51,7 @@ export const constantRoutes = [
         path: "index",
         name: "index",
         component: () => import("@/views/index/index"),
-          meta: {title: "主页", icon: "el-icon-s-home"},
+        meta: {title: "主页", icon: "el-icon-s-home"},
       },
     ],
   },
@@ -60,32 +60,31 @@ export const constantRoutes = [
     path: "/system",
     component: Layout,
     redirect: "/system/user",
-    name: "system",
-      meta: {title: "系统管理", icon: "el-icon-setting"},
+    meta: {title: "系统管理", icon: "el-icon-setting"},
     children: [
       {
-        path: "/user",
+        path: "/system/user",
         name: "user",
         component: () => import("@/views/system/user/user"),
-          meta: {title: "管理用户信息", icon: "el-icon-user"},
+        meta: {title: "管理用户信息", icon: "el-icon-user"},
       },
       {
-        path: "/role",
+        path: "/system/role",
         name: "role",
         component: () => import("@/views/system/role/role"),
-          meta: {title: "管理角色信息", icon: "el-icon-star-off"},
+        meta: {title: "管理角色信息", icon: "el-icon-star-off"},
       },
       {
-        path: "/per",
+        path: "/system/per",
         name: "permission",
         component: () => import("@/views/system/permission/permission"),
-          meta: {title: "管理权限信息", icon: "el-icon-medal"},
+        meta: {title: "管理权限信息", icon: "el-icon-medal"},
       },
       {
-        path: "/router",
+        path: "/system/router",
         name: "router",
         component: () => import("@/views/system/router/router"),
-          meta: {title: "管理路由信息", icon: "el-icon-guide"},
+        meta: {title: "管理路由信息", icon: "el-icon-guide"},
       },
     ],
   },
@@ -93,38 +92,44 @@ export const constantRoutes = [
     path: "/op",
     component: Layout,
     redirect: "/op/subject",
-    name: "op",
-      meta: {title: "教学管理", icon: "el-icon-school"},
+    meta: {title: "教学管理", icon: "el-icon-school"},
     children: [
       {
-          path: "/subject",
-          name: "subject",
+        path: "/op/subject",
+        name: "subject",
         component: () => import("@/views/op/subject/subject"),
-          meta: {title: "管理科目信息", icon: "el-icon-user"},
+        meta: {title: "管理科目信息", icon: "el-icon-user"},
       },
-        {
-            path: "/pro",
-            name: "problem",
-            component: () => import("@/views/op/problem/problem"),
-            meta: {title: "管理题目信息", icon: "el-icon-notebook-2"},
-        },
-        {
-            path: "/addPro",
-            name: "addProblem",
-            component: () => import("@/views/op/problem/addProblem"),
-            meta: {title: "添加题目信息", icon: "el-icon-notebook-2"},
-            hidden: true,
-        },
+      {
+        path: "/op/pro",
+        name: "problem",
+        component: () => import("@/views/op/problem/problem"),
+        meta: {title: "管理题目信息", icon: "el-icon-notebook-2"},
+      },
+      {
+        path: "/addPro",
+        name: "addProblem",
+        component: () => import("@/views/op/problem/addProblem"),
+        meta: {title: "添加题目信息", icon: "el-icon-notebook-2"},
+        hidden: true,
+      },
+      {
+        path: "/upPro",
+        name: "updateProblem",
+        component: () => import("@/views/op/problem/updateProblem"),
+        meta: {title: "修改题目信息", icon: "el-icon-notebook-2"},
+        hidden: true,
+      },
     ],
   },
   // 404 page must be placed at the end !!!
-    {path: "*", redirect: "/404", hidden: true},
+  {path: "*", redirect: "/404", hidden: true},
 ];
 
 const createRouter = () =>
   new Router({
     // mode: 'history', // require service support
-      scrollBehavior: () => ({y: 0}),
+    scrollBehavior: () => ({y: 0}),
     routes: constantRoutes,
   });
 

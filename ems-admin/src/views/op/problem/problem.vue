@@ -3,36 +3,36 @@
     <el-form :inline="true" :model="selectForm" class="demo-form-inline">
       <el-form-item label="题目名">
         <el-input
-            v-model="selectForm.name"
-            placeholder="题目名"
-            clearable
+          v-model="selectForm.name"
+          placeholder="题目名"
+          clearable
         ></el-input>
       </el-form-item>
       <el-form-item label="选择科目">
         <el-select
-            v-model="selectForm.subjectId"
-            clearable
-            placeholder="选择科目"
+          v-model="selectForm.subjectId"
+          clearable
+          placeholder="选择科目"
         >
           <el-option
-              :label="subject.name"
-              :value="subject.id"
-              v-for="subject in subjectList"
-              :key="subject.id"
+            :label="subject.name"
+            :value="subject.id"
+            v-for="subject in subjectList"
+            :key="subject.id"
           ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
         <el-button
-            type="primary"
-            @click="search(selectForm)"
-            :icon="searchLoading ? 'el-icon-loading' : 'el-icon-search'"
+          type="primary"
+          @click="search(selectForm)"
+          :icon="searchLoading ? 'el-icon-loading' : 'el-icon-search'"
         >查询
         </el-button>
         <el-button
-            type="danger"
-            @click="deleteProblem(ids)"
-            :icon="deleteLoading ? 'el-icon-loading' : 'el-icon-delete'"
+          type="danger"
+          @click="deleteProblem(ids)"
+          :icon="deleteLoading ? 'el-icon-loading' : 'el-icon-delete'"
         >批量删除
         </el-button>
         <el-button type="success" @click="addProblem" icon="el-icon-plus"
@@ -41,11 +41,11 @@
       </el-form-item>
       <el-form-item>
         <download-excel
-            class="export-excel-wrapper"
-            :data="list"
-            :fields="column"
-            :header="title"
-            :name="`${title}.xls`"
+          class="export-excel-wrapper"
+          :data="list"
+          :fields="column"
+          :header="title"
+          :name="`${title}.xls`"
         >
           <el-button icon="el-icon-printer" type="warning"
           >导出Excel表格
@@ -54,109 +54,66 @@
       </el-form-item>
     </el-form>
     <el-table
-        v-loading="listLoading"
-        :data="list"
-        element-loading-text="Loading"
-        border
-        fit
-        highlight-current-row
-        @selection-change="selectTable"
-        height="500"
+      v-loading="listLoading"
+      :data="list"
+      element-loading-text="Loading"
+      border
+      fit
+      highlight-current-row
+      @selection-change="selectTable"
+      height="500"
     >
       <el-table-column
-          type="selection"
-          width="30"
-          align="center"
+        type="selection"
+        width="30"
+        align="center"
       ></el-table-column>
       <el-table-column
-          align="center"
-          v-for="table in tableColumn"
-          :key="table.$index"
-          :width="table.width"
-          :label="table.name"
+        align="center"
+        v-for="table in tableColumn"
+        :key="table.$index"
+        :width="table.width"
+        :label="table.name"
+        show-overflow-tooltip
       >
         <template slot-scope="scope">
           <!-- ID特殊列 -->
           <template v-if="table.value === 'id'"
           >{{ scope.$index + 1 }}
           </template>
+          <!-- 类型特殊列 -->
+          <el-tag
+            :type="scope.row.type | typeFilter"
+            v-else-if="table.value === 'type'"
+          >{{ scope.row.type === 0 ? "客观题" : "主观题" }}
+          </el-tag>
           <template v-else>{{ scope.row[table.value] }}</template>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="220">
         <template slot-scope="scope">
           <el-button
-              @click="showUpdate(scope.row)"
-              type="primary"
-              icon="el-icon-edit"
+            @click="updateProblem(scope.row)"
+            type="primary"
+            icon="el-icon-edit"
           >修改
           </el-button>
           <el-button
-              type="danger"
-              @click="deleteProblem([scope.row.id])"
-              icon="el-icon-delete"
+            type="danger"
+            @click="deleteProblem([scope.row.id])"
+            icon="el-icon-delete"
           >删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
-    <!-- 修改弹窗 -->
-    <el-dialog
-        title="修改题目"
-        :visible.sync="updateDialogVisible"
-        label-position="left"
-        center
-    >
-      <el-form
-          :model="oldProblem"
-          :rules="problemRules"
-          status-icon
-          ref="ruleForm"
-          label-width="20%"
-      >
-        <el-form-item label="题目名" prop="name">
-          <el-input v-model="oldProblem.name" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="昵称" prop="nickName">
-          <el-input v-model="oldProblem.nickName" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="科目" prop="subject">
-          <el-select
-              v-model="oldProblem.subjectId"
-              clearable
-              placeholder="选择科目"
-          >
-            <el-option
-                :label="subject.name"
-                :value="subject.id"
-                v-for="subject in subjectList"
-                :key="subject.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="电子邮箱" prop="email">
-          <el-input v-model="oldProblem.email" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="电话" prop="phone">
-          <el-input v-model="oldProblem.phone" clearable></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="updateDialogVisible = false">取 消</el-button>
-        <el-button
-            type="primary"
-            @click="updateProblem(oldProblem)"
-            :icon="editLoading ? 'el-icon-loading' : ''"
-        >确 定
-        </el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import {getProblems, getSubjects} from "@/api/table";
-import {deleteProblem, getInfo, updateProblem,} from "@/api/problem";
+import {deleteProblem, getInfo} from "@/api/problem";
+import {setProblem} from "./public";
 
 export default {
   filters: {
@@ -166,6 +123,13 @@ export default {
         1: "danger",
       };
       return statusMap[status];
+    },
+    typeFilter(type) {
+      const typeMap = {
+        0: "success",
+        1: "primary",
+      };
+      return typeMap[type];
     },
   },
   data() {
@@ -199,8 +163,8 @@ export default {
           width: 110,
         },
         {
-          name: "type",
-          value: "类型",
+          name: "类型",
+          value: "type",
           width: 110,
         },
         {
@@ -286,36 +250,14 @@ export default {
       });
       this.column = map;
     },
-    //显示修改窗
-    showUpdate(oldProblem) {
-      this.updateDialogVisible = true;
-      this.oldProblem = oldProblem;
-    },
     //跳转到添加页面
     addProblem() {
       this.$router.push("/addPro");
     },
     //修改题目信息
-    updateProblem(newProblem) {
-      this.$refs["ruleForm"].validate((valid) => {
-        if (valid) {
-          this.editLoading = true;
-          updateProblem(newProblem).then((response) => {
-            if (response.success) {
-              this.$message({
-                showClose: true,
-                message: "修改题目成功!",
-                type: "success",
-              });
-              this.updateDialogVisible = false;
-              this.fetchData();
-            }
-            this.editLoading = false;
-          });
-        } else {
-          return false;
-        }
-      });
+    updateProblem(oldProblem) {
+      setProblem(oldProblem);
+      this.$router.push("/upPro");
     },
     //删除题目
     deleteProblem(ids) {

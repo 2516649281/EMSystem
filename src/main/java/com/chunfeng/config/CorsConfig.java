@@ -1,5 +1,8 @@
 package com.chunfeng.config;
 
+import com.chunfeng.properties.SystemProperties;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -14,7 +17,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * 2023/7/30
  */
 @Component
+@Slf4j
 public class CorsConfig implements WebMvcConfigurer {
+
+    /**
+     * 导入系统配置
+     */
+    @Autowired
+    private SystemProperties systemProperties;
+
     /**
      * 跨域配置
      *
@@ -22,14 +33,18 @@ public class CorsConfig implements WebMvcConfigurer {
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry
-                //允许的路径
-                .addMapping("/**")
-                //允许的方法
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
-                //允许的请求头
-                .allowedHeaders("*")
-                //允许的请求源
-                .allowedOrigins("*");
+        Boolean config = systemProperties.getIsOpenCorsConfig();
+        if (config) {
+            registry
+                    //允许的路径
+                    .addMapping("/**")
+                    //允许的方法
+                    .allowedMethods("GET", "POST", "PUT", "DELETE")
+                    //允许的请求头
+                    .allowedHeaders("*")
+                    //允许的请求源
+                    .allowedOrigins("*");
+        }
+        log.info("跨域处理器初始化完成!状态:{}", config ? "开启" : "关闭");
     }
 }

@@ -67,6 +67,7 @@
         :key="table.$index"
         :width="table.width"
         :label="table.name"
+        show-overflow-tooltip
       >
         <template slot-scope="scope">
           <!-- ID特殊列 -->
@@ -171,7 +172,7 @@
 
 <script>
 import {getRoles, getUsers} from "@/api/table";
-import {updateUser, deleteUser, getInfo} from "@/api/user";
+import {deleteUser, getInfo, updateUser} from "@/api/user";
 import {mapGetters} from "vuex";
 
 export default {

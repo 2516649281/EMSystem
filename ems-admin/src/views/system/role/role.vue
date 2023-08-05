@@ -63,6 +63,7 @@
         :key="table.$index"
         :width="table.width"
         :label="table.name"
+        show-overflow-tooltip
       >
         <template slot-scope="scope">
           <!-- ID特殊列 -->
@@ -150,17 +151,16 @@
 </template>
 
 <script>
-import {getRoles} from "@/api/table";
+import {getPermissions, getRoles} from "@/api/table";
 import {
-  updateRole,
-  deleteRole,
-  setPermissionRole,
-  deletePermissionRoleByRole,
-  getRoleInfo,
   addRole,
+  deletePermissionRoleByRole,
+  deleteRole,
   getRoleById,
+  getRoleInfo,
+  setPermissionRole,
+  updateRole,
 } from "@/api/role";
-import {getPermissions} from "@/api/table";
 
 export default {
   data() {

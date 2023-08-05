@@ -10,21 +10,21 @@
       </el-form-item>
       <el-form-item>
         <el-button
-            type="primary"
-            @click="search(selectForm)"
-            :icon="searchLoading ? 'el-icon-loading' : 'el-icon-search'"
+          type="primary"
+          @click="search(selectForm)"
+          :icon="searchLoading ? 'el-icon-loading' : 'el-icon-search'"
         >查询
         </el-button>
         <el-button
-            type="danger"
-            @click="deletePermission(ids)"
-            :icon="deleteLoading ? 'el-icon-loading' : 'el-icon-delete'"
+          type="danger"
+          @click="deletePermission(ids)"
+          :icon="deleteLoading ? 'el-icon-loading' : 'el-icon-delete'"
         >批量删除
         </el-button>
         <el-button
-            type="success"
-            @click="addDialogVisible = true"
-            icon="el-icon-plus"
+          type="success"
+          @click="addDialogVisible = true"
+          icon="el-icon-plus"
         >添加权限
         </el-button>
       </el-form-item>
@@ -63,6 +63,7 @@
         :key="table.$index"
         :width="table.width"
         :label="table.name"
+        show-overflow-tooltip
       >
         <template slot-scope="scope">
           <!-- ID特殊列 -->
@@ -83,15 +84,15 @@
       <el-table-column label="操作" align="center" width="220">
         <template slot-scope="scope">
           <el-button
-              @click="showUpdate(scope.row)"
-              type="primary"
-              icon="el-icon-edit"
+            @click="showUpdate(scope.row)"
+            type="primary"
+            icon="el-icon-edit"
           >修改
           </el-button>
           <el-button
-              type="danger"
-              @click="deletePermission([scope.row.id])"
-              icon="el-icon-delete"
+            type="danger"
+            @click="deletePermission([scope.row.id])"
+            icon="el-icon-delete"
           >删除
           </el-button>
         </template>
@@ -121,9 +122,9 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="updateDialogVisible = false">取 消</el-button>
         <el-button
-            type="primary"
-            @click="updatePermission(oldPermission)"
-            :icon="editLoading ? 'el-icon-loading' : ''"
+          type="primary"
+          @click="updatePermission(oldPermission)"
+          :icon="editLoading ? 'el-icon-loading' : ''"
         >确 定
         </el-button>
       </div>
@@ -151,9 +152,9 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
         <el-button
-            type="primary"
-            @click="addPermission(newPermission)"
-            :icon="editLoading ? 'el-icon-loading' : ''"
+          type="primary"
+          @click="addPermission(newPermission)"
+          :icon="editLoading ? 'el-icon-loading' : ''"
         >确 定
         </el-button>
       </div>
@@ -162,13 +163,8 @@
 </template>
 
 <script>
-import {getRouters, getPermissions} from "@/api/table";
-import {
-  addPermission,
-  updatePermission,
-  deletePermission,
-  getPermissionInfo,
-} from "@/api/permission";
+import {getPermissions, getRouters} from "@/api/table";
+import {addPermission, deletePermission, getPermissionInfo, updatePermission,} from "@/api/permission";
 
 export default {
   filters: {

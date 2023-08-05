@@ -63,6 +63,7 @@
         :key="table.$index"
         :width="table.width"
         :label="table.name"
+        show-overflow-tooltip
       >
         <template slot-scope="scope">
           <!-- ID特殊列 -->
@@ -225,15 +226,8 @@
 </template>
 
 <script>
-import {getRouters, getPermissions} from "@/api/table";
-import {
-  addRouter,
-  updateRouter,
-  deleteRouter,
-  getRouterInfo,
-  getRouterById,
-  setPermissionRouter,
-} from "@/api/router";
+import {getPermissions, getRouters} from "@/api/table";
+import {addRouter, deleteRouter, getRouterById, getRouterInfo, setPermissionRouter, updateRouter,} from "@/api/router";
 import {deletePermissionRouter} from "@/api/permission";
 
 export default {
@@ -275,7 +269,7 @@ export default {
         value: [
           {required: true, message: "路由值不得为空!", trigger: "blur"},
         ],
-        value: [
+        method: [
           {required: true, message: "请求方式不得为空!", trigger: "change"},
         ],
         type: [
@@ -297,17 +291,17 @@ export default {
         {
           name: "编号",
           value: "id",
-          width: 110,
+          width: 115,
         },
         {
           name: "路由名",
           value: "name",
-          width: 110,
+          width: 115,
         },
         {
           name: "路由值",
           value: "value",
-          width: 200,
+          width: 115,
         },
         {
           name: "请求方式",
@@ -317,12 +311,12 @@ export default {
         {
           name: "类型",
           value: "type",
-          width: 110,
+          width: 115,
         },
         {
           name: "是否默认",
           value: "isDefault",
-          width: 110,
+          width: 115,
         },
       ],
     };

@@ -25,7 +25,7 @@ export function addProblem(problem) {
   return request({
     url: "/pro",
     method: "post",
-    params: problem,
+    data: problem,
   });
 }
 

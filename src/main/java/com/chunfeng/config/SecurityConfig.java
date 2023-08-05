@@ -4,6 +4,7 @@ import com.chunfeng.handler.PermissionRouterControllerHandler;
 import com.chunfeng.handler.PermissionRouterSetHandler;
 import com.chunfeng.handler.TokenFilter;
 import com.chunfeng.properties.ExcludeUrlProperties;
+import com.chunfeng.properties.SystemProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -58,6 +59,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private PermissionRouterSetHandler permissionRouterSetHandler;
 
     /**
+     * 导入系统配置
+     */
+    @Autowired
+    private SystemProperties systemProperties;
+
+    /**
      * http核心配置
      *
      * @param http http对象
@@ -86,7 +93,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
         //拦截器配置
         http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
-        http.cors();//允许跨域
+        if (systemProperties.getIsOpenCorsConfig()) {
+            http.cors();//允许跨域
+        }
         log.info("SpringSecurity-http核心已成功配置!");
     }
 
