@@ -45,7 +45,8 @@ CREATE TABLE `problem`
 (
     `id`          VARCHAR(48) PRIMARY KEY COMMENT '主键',
     `type`        INT         NOT NULL DEFAULT 1 COMMENT '类型(0客观题,1主观题)',
-    `subject`     VARCHAR(48) NOT NULL COMMENT '科目',
+    `subject_id` VARCHAR(48) NOT NULL COMMENT '科目',
+    `gradle_id`  VARCHAR(48) NOT NULL COMMENT '年级',
     `file_path`   VARCHAR(64) NOT NULL COMMENT '存放路径',
     `create_user` VARCHAR(48) NOT NULL COMMENT '创建用户',
     `update_user` VARCHAR(48) COMMENT '修改用户',
@@ -110,6 +111,16 @@ CREATE TABLE `subject`
     `update_time` DATETIME COMMENT '修改时间'
 ) COMMENT '科目表';
 
+CREATE TABLE `gradle`
+(
+    `id`          VARCHAR(48) PRIMARY KEY COMMENT '主键',
+    `name`        VARCHAR(32) NOT NULL COMMENT '年级名',
+    `create_user` VARCHAR(48) NOT NULL COMMENT '创建用户',
+    `update_user` VARCHAR(48) COMMENT '修改用户',
+    `create_time` DATETIME    NOT NULL COMMENT '创建时间',
+    `update_time` DATETIME COMMENT '修改时间'
+) comment '年级表';
+
 CREATE TABLE `exam`
 (
     `id`          VARCHAR(48) PRIMARY KEY COMMENT '主键',
@@ -157,7 +168,8 @@ INSERT INTO `permission`
 VALUES ('33272c92c164408e8ca33e6cdd2b72c9', '反馈信息新增', 'user:feed:insert', 0, '0', NULL, '2023-07-22 11:25:36',
         NULL);
 INSERT INTO `permission`
-VALUES ( '376612e5d41347d6871d7e2216cc678b', '反馈信息查看', 'sys:feed:select', 0, '0', '785ae2df8ce14b638770a781bcb2c313'
+VALUES ( '376612e5d41347d6871d7e2216cc678b', '反馈信息查看', 'sys:feed:select', 0, '0'
+       , '785ae2df8ce14b638770a781bcb2c313'
        , '2023-07-22 11:25:36'
        , '2023-07-29 09:59:05');
 INSERT INTO `permission`
@@ -413,7 +425,8 @@ VALUES ('ff8672cd1bbd493a9ffde6660ccc8e49', 'ddb4596c59fb4f63a2a6c5fee80dd7e5', 
 INSERT INTO `role`
 VALUES ('0', '普通用户', 'localUser', '785ae2df8ce14b638770a781bcb2c313', '2023-07-21 17:55:48', '2023-07-28 16:07:35');
 INSERT INTO `role`
-VALUES ('232b9005ab8a466495ca0b1f741e5adc', '超级管理员', '785ae2df8ce14b638770a781bcb2c313', '0', '2023-07-22 11:40:01',
+VALUES ('232b9005ab8a466495ca0b1f741e5adc', '超级管理员', '785ae2df8ce14b638770a781bcb2c313', '0',
+        '2023-07-22 11:40:01',
         '2023-07-30 08:16:29');
 
 -- 科目表
@@ -450,7 +463,8 @@ VALUES ('675bd7b98de6455195b0938eb1ec73c9', 'user3', '$2a$10$sEaAZqlkUXmHJ4hlWDH
         '测试3', '0', 1, '2486915783@qq.com', '15479634587', '0', 0, 'localUser', NULL, '2023-07-28 08:02:56', NULL);
 INSERT INTO `user`
 VALUES ('7f76d86b777942649136f062e774d3f9', 'root1', '$2a$10$EWGButendp1R6sDd0Zwc4u/0aaoTFv7t.NxQhxdvMKxsOF.TsoraG',
-        '超级管理员2', '0', 1, '2548936475@qq.com', '15784639458', '232b9005ab8a466495ca0b1f741e5adc', 0, 'localUser', NULL,
+        '超级管理员2', '0', 1, '2548936475@qq.com', '15784639458', '232b9005ab8a466495ca0b1f741e5adc', 0, 'localUser',
+        NULL,
         '2023-07-29 11:26:37', NULL);
 INSERT INTO `user`
 VALUES ('d0651a7d27834111845b3865b4c932a5', 'user2', '$2a$10$HEi62MXckXC75lDbBx2T0uF6h5H6.gTUg9a9b4UcNfDFmHoEDqLfi',

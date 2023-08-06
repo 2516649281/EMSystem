@@ -52,5 +52,5 @@ public interface ProblemMapper {
      * @param ids 选择的题目ID
      * @return 影响行数
      */
-    Integer deleteProblemById(@Param("id") String[] ids);
+    Integer deleteProblemById(@Param("ids") String[] ids);
 }

@@ -64,6 +64,11 @@ public class Problem implements Serializable {
     @ApiModelProperty(value = "科目")
     private String subjectId;
     /**
+     * 年级
+     */
+    @ApiModelProperty(value = "年级ID")
+    private String gradleId;
+    /**
      * 存放路径
      */
     @ApiModelProperty(value = "存放路径", hidden = true)

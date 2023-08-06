@@ -6,39 +6,33 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
- * 角色实体
+ * 年级实体
  *
  * @author by 春风能解释
  * <p>
- * 2023/7/11
+ * 2023/8/6
  */
 @Data
 @NoArgsConstructor
-@ApiModel(value = "角色实体类", description = "用于存储角色信息")
-public class Role implements Serializable {
+@ApiModel(value = "年级实体类", description = "用于存储年级数据的实体")
+public class Gradle implements Serializable {
     /**
      * 序列化字段
      */
     @ApiModelProperty(value = "序列化字段", hidden = true)
-    private static final long serialVersionUID = 2474682772541255777L;
+    private static final long serialVersionUID = -3676131659474593648L;
     /**
-     * 角色ID
+     * 主键
      */
-    @ApiModelProperty(value = "角色ID", allowEmptyValue = true)
+    @ApiModelProperty(value = "年级ID")
     private String id;
     /**
-     * 角色名
+     * 年级名
      */
-    @ApiModelProperty(value = "角色名")
+    @ApiModelProperty(value = "年级名")
     private String name;
-    /**
-     * 权限列表
-     */
-    @ApiModelProperty(value = "权限列表")
-    private List<Permission> permissionList;
     /**
      * 创建人
      */

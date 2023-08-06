@@ -81,6 +81,10 @@
           <template v-if="table.value === 'id'"
           >{{ scope.$index + 1 }}
           </template>
+          <!-- 选项特殊列 -->
+          <template v-else-if="table.value === 'options'"
+          >{{ scope.row.options !== null ? scope.row.options : "NULL" }}
+          </template>
           <!-- 类型特殊列 -->
           <el-tag
             :type="scope.row.type | typeFilter"
@@ -268,16 +272,6 @@ export default {
           type: "warning",
         });
         return;
-      }
-      for (let i = 0; i < ids.length; i++) {
-        if (ids[i] === this.id) {
-          this.$message({
-            showClose: true,
-            message: "我删我自己?不能哦!",
-            type: "error",
-          });
-          return;
-        }
       }
       this.$confirm("此操作将永久删除该题目,是否继续?(真的很久)", "警告", {
         confirmButtonText: "删除",

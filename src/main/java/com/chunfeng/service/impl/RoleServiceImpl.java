@@ -138,11 +138,7 @@ public class RoleServiceImpl implements IRoleService {
         //查询关系绑定的权限
         JsonRequest<List<PermissionRole>> lookPermissionRole = permissionRoleService.lookPermissionRole(permissionRole);
         //获得权限ID
-        String[] permissionIds =
-                lookPermissionRole.getData().
-                        stream()
-                        .map(PermissionRole::getPermissionId)
-                        .toArray(String[]::new);
+        String[] permissionIds = lookPermissionRole.getData().stream().map(PermissionRole::getPermissionId).toArray(String[]::new);
         // 最终获得权限列表
         JsonRequest<List<Permission>> request = permissionService.lookPermissionById(permissionIds);
         if (!request.getSuccess()) {
@@ -196,7 +192,6 @@ public class RoleServiceImpl implements IRoleService {
         //日志信息
         role.setUpdateUser(SqlDateUtils.currentUserId);
         role.setUpdateTime(SqlDateUtils.date);
-
         Integer column = roleMapper.updateRoleById(role);
         if (column < 1) {
             log.error("修改ID为{}的角色信息失败!", role.getId());

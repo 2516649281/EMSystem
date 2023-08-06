@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * 全局文件操作类
@@ -37,17 +39,15 @@ public class FileMangerUtils<T> {
      * @return 文件路径
      */
     public String fileWriter(String fileName, T obj) {
-        ObjectOutputStream ois = null;
+        ObjectOutputStream ois;
         try {
             //初始化序列化对象
-            ois = new ObjectOutputStream(
-                    new FileOutputStream(fileConfigProperties.getUrl() + fileName)
-            );
+            ois = new ObjectOutputStream(Files.newOutputStream(Paths.get(fileConfigProperties.getUrl() + fileName)));
             //写入文件
             ois.writeObject(obj);
         } catch (Exception e) {
             log.error("写入文件{}失败!", fileName);
-            e.printStackTrace();
+            throw new ServiceException(RequestException.FILE_ERROR);
         }
         //释放资源
         close(null, ois);
@@ -63,12 +63,13 @@ public class FileMangerUtils<T> {
      */
     public void fileUpdate(String fileName, T obj) {
         File file = new File(fileConfigProperties.getUrl() + fileName);
-        //如果文件存在则执行
-        if (file.exists()) {
-            String path = fileWriter(fileName, obj);
-            log.info("文件{}修改完成!", path);
+        //如果文件不存在
+        if (!file.exists()) {
+            log.warn("文件{}不存在!", fileName);
+            throw new ServiceException(RequestException.FILE_ERROR);
         }
-        log.warn("文件{}不存在!", fileName);
+        String path = fileWriter(fileName, obj);
+        log.info("文件{}修改完成!", path);
     }
 
     /**
@@ -79,16 +80,15 @@ public class FileMangerUtils<T> {
      */
     public T fileLook(String fileName) {
         //读文件
-        ObjectInputStream ois = null;
-        T obj = null;
+        ObjectInputStream ois;
+        T obj;
         try {
-            ois = new ObjectInputStream(
-                    new FileInputStream(fileConfigProperties.getUrl() + fileName));
+            ois = new ObjectInputStream(Files.newInputStream(Paths.get(fileConfigProperties.getUrl() + fileName)));
             //转换为指定对象
             obj = (T) ois.readObject();
         } catch (Exception exception) {
             log.error("文件{}读取失败!", fileName);
-            exception.printStackTrace();
+            throw new ServiceException(RequestException.FILE_ERROR);
         }
         log.info("文件{}已成功读取!", fileName);
         //释放资源
@@ -162,7 +162,7 @@ public class FileMangerUtils<T> {
             file.transferTo(new File(fileConfigProperties.getUrl() + fileName));
         } catch (IOException ioException) {
             log.error("头像上传失败!");
-            ioException.printStackTrace();
+            throw new ServiceException(RequestException.FILE_ERROR);
         }
         log.info("文件{}上传成功!", fileName);
         return true;
@@ -187,7 +187,7 @@ public class FileMangerUtils<T> {
             }
         } catch (IOException ioException) {
             log.error("释放资源失败!");
-            ioException.printStackTrace();
+            throw new ServiceException(RequestException.FILE_ERROR);
         }
     }
 }

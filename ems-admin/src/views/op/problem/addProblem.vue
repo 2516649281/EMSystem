@@ -30,13 +30,9 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button @click="addOptions(options.length)"
-        >新增选项
-        </el-button>
-      </el-form-item
-      >
-      <template v-if="newProblem.type === 0"
-      >
+        <el-button @click="addOptions(options.length)">新增选项</el-button>
+      </el-form-item>
+      <template v-if="newProblem.type === 0">
         <el-form-item
           v-for="item in options"
           :label="'选项' + item.index"
@@ -46,8 +42,7 @@
           <el-input v-model="item.text"></el-input>
           <el-button @click.prevent="removeProblem(item)">删除</el-button>
         </el-form-item>
-      </template
-      >
+      </template>
       <el-form-item label="答案" prop="answer">
         <el-input v-model="newProblem.answer" prop="answer"></el-input>
       </el-form-item>
@@ -66,8 +61,7 @@
         <el-button @click="returnTable">返回上级</el-button>
         <el-button type="primary" @click="addProblem(newProblem)"
         >提交
-        </el-button
-        >
+        </el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -128,12 +122,16 @@ export default {
     addProblem(problem) {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          var map = new Map();
-          this.options.forEach((v) => {
-            map.set(v.index, v.text);
-          });
-          problem.options = JSON.stringify(Object.fromEntries(map));
-          console.log(problem);
+          //选择题处理逻辑
+          if (problem.type === 0) {
+            var map = new Map();
+            this.options.forEach((v) => {
+              map.set(v.index, v.text);
+            });
+            problem.options = JSON.stringify(Object.fromEntries(map));
+          } else {
+            problem.options = null;
+          }
           addProblem(problem).then((Response) => {
             if (Response.success) {
               this.$message({
@@ -141,6 +139,7 @@ export default {
                 message: "添加题目成功!",
                 type: "success",
               });
+              this.returnTable();
             }
           });
         } else {

@@ -101,6 +101,12 @@ export const constantRoutes = [
         meta: {title: "管理科目信息", icon: "el-icon-user"},
       },
       {
+        path: "/op/gradle",
+        name: "gradle",
+        component: () => import("@/views/op/gradle/gradle"),
+        meta: {title: "管理年级信息", icon: "el-icon-collection-tag"},
+      },
+      {
         path: "/op/pro",
         name: "problem",
         component: () => import("@/views/op/problem/problem"),

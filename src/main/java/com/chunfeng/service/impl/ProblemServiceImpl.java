@@ -155,8 +155,6 @@ public class ProblemServiceImpl implements IProblemService {
             log.warn("{}", request.getMessage());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
-        //修改文件内容
-        fileMangerUtils.fileUpdate(problem.getId(), problem);
         //日志信息
         problem.setUpdateUser(SqlDateUtils.currentUserId);
         problem.setUpdateTime(SqlDateUtils.date);
@@ -165,6 +163,8 @@ public class ProblemServiceImpl implements IProblemService {
             log.error("修改ID为{}的题库信息失败!", problem.getId());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
+        //修改文件内容
+        fileMangerUtils.fileUpdate(problem.getId() + ".txt", problem);
         log.info("ID为{}的题库信息修改成功!", problem.getId());
         return JsonRequest.success(column);
     }
@@ -183,9 +183,6 @@ public class ProblemServiceImpl implements IProblemService {
             log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
-        //删除文件内容
-        Arrays.stream(ids)
-                .forEach(id -> fileMangerUtils.fileDelete(id + ".txt"));
         //删除关系
         problemExamMapper.deleteProblemExamByPro(ids);
         //删除数据库内容
@@ -194,6 +191,9 @@ public class ProblemServiceImpl implements IProblemService {
             log.error("删除题库失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
+        //删除文件内容
+        Arrays.stream(ids)
+                .forEach(id -> fileMangerUtils.fileDelete(id + ".txt"));
         log.info("已删除{}条题库信息!", ids.length);
         return JsonRequest.success(column);
     }

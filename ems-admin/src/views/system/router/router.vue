@@ -263,7 +263,9 @@ export default {
       permissionRouters: [],
       oldPermissionIds: [],
       oldRouter: {},
-      newRouter: {},
+      newRouter: {
+        isDefault: 1,
+      },
       routerRules: {
         name: [{required: true, message: "路由名不得为空!", trigger: "blur"}],
         value: [

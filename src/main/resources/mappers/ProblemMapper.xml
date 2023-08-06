@@ -4,13 +4,14 @@
     <!--字段映射-->
     <resultMap id="problemMap" type="com.chunfeng.dao.entity.Problem">
         <result column="subject_id" property="subjectId"/>
+        <result column="gradle_id" property="gradleId"/>
         <result column="file_path" property="filePath"/>
     </resultMap>
     <!--条件查询题目-->
     <select id="selectAllProblem" resultType="com.chunfeng.dao.entity.Problem"
             parameterType="com.chunfeng.dao.entity.Problem"
             resultMap="problemMap">
-        select id, type, subject_id,file_path
+        select id, type, subject_id,gradle_id,file_path
         from problem
         <where>
             <if test="id!='' and id!=null">
@@ -22,11 +23,14 @@
             <if test="subjectId!='' and subjectId!=null">
                 and subject_id=#{subjectId}
             </if>
+            <if test="gradleId!='' and gradleId!=null">
+                and gradle_id=#{gradleId}
+            </if>
         </where>
     </select>
     <!--根据ID查询题目-->
     <select id="selectAllProblemById" resultType="com.chunfeng.dao.entity.Problem" resultMap="problemMap">
-        select id, type, subject_id,file_path
+        select id, type, subject_id,gradle_id,file_path
         from problem
         <where>
             id in
@@ -38,8 +42,8 @@
     </select>
     <!--插入一条题目数据-->
     <insert id="insertProblem">
-        insert into problem (id, type, subject_id, file_path, create_user, create_time)
-        values (#{id}, #{type}, #{subjectId}, #{filePath}, #{createUser}, #{createTime});
+        insert into problem (id, type, subject_id, gradle_id, file_path, create_user, create_time)
+        values (#{id}, #{type}, #{subjectId}, #{gradleId}, #{filePath}, #{createUser}, #{createTime});
     </insert>
     <!--根据题目ID修改一条题目数据-->
     <update id="updateProblemById">
@@ -50,6 +54,9 @@
             </if>
             <if test="subjectId!='' and subjectId!=null">
                 ,subject_id=#{subjectId}
+            </if>
+            <if test="gradleId!='' and gradleId!=null">
+                ,gradle_id=#{gradleId}
             </if>
             <if test="filePath!=null and filePath!=''">
                 ,file_path=#{filePath}

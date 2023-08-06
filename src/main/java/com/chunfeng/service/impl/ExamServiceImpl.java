@@ -154,8 +154,6 @@ public class ExamServiceImpl implements IExamService {
             log.warn("{}", request.getMessage());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
-        //修改文件内容
-        fileMangerUtils.fileUpdate(exam.getId(), exam);
         //日志信息
         exam.setUpdateUser(SqlDateUtils.currentUserId);
         exam.setUpdateTime(SqlDateUtils.date);
@@ -164,6 +162,8 @@ public class ExamServiceImpl implements IExamService {
             log.error("修改ID为{}的试卷信息失败!", exam.getId());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
+        //修改文件内容
+        fileMangerUtils.fileUpdate(exam.getId() + ".txt", exam);
         log.info("ID为{}的试卷信息修改成功!", exam.getId());
         return JsonRequest.success(column);
     }
@@ -182,9 +182,6 @@ public class ExamServiceImpl implements IExamService {
             log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
-        //删除文件内容
-        Arrays.stream(ids)
-                .forEach(id -> fileMangerUtils.fileDelete(id + ".txt"));
         Integer column = problemExamMapper.deleteProblemExamByExam(ids);
         if (column < 1) {
             log.error("删除关系失败!");
@@ -198,6 +195,9 @@ public class ExamServiceImpl implements IExamService {
             log.error("删除试卷失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
+        //删除文件内容
+        Arrays.stream(ids)
+                .forEach(id -> fileMangerUtils.fileDelete(id + ".txt"));
         log.info("已删除{}条试卷信息!", ids.length);
         return JsonRequest.success(column);
     }
