@@ -1,6 +1,7 @@
 package com.chunfeng.dao.mapper;
 
 import com.chunfeng.dao.entity.Gradle;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public interface GradleMapper {
      * @param ids 年级ID
      * @return 年级列表
      */
-    List<Gradle> selectAllGradleById(String[] ids);
+    List<Gradle> selectAllGradleById(@Param("ids") String[] ids);
 
     /**
      * 插入一条年级信息
@@ -50,5 +51,5 @@ public interface GradleMapper {
      * @param ids 选择的年级ID
      * @return 影响行数
      */
-    Integer deleteGradleById(String[] ids);
+    Integer deleteGradleById(@Param("ids") String[] ids);
 }

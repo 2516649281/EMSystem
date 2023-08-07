@@ -21,14 +21,13 @@ public interface ProblemMapper {
      */
     List<Problem> selectAllProblem(Problem problem);
 
-
     /**
      * 根据ID查询题目
      *
      * @param ids 题目ID
      * @return 题目列表
      */
-    List<Problem> selectAllProblemById(String[] ids);
+    List<Problem> selectAllProblemById(@Param("ids") String[] ids);
 
     /**
      * 插入一条题目数据

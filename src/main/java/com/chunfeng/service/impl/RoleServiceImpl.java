@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 角色业务层实现
@@ -136,11 +137,17 @@ public class RoleServiceImpl implements IRoleService {
         PermissionRole permissionRole = new PermissionRole();
         permissionRole.setRoleId(roleId);
         //查询关系绑定的权限
-        JsonRequest<List<PermissionRole>> lookPermissionRole = permissionRoleService.lookPermissionRole(permissionRole);
+        JsonRequest<List<PermissionRole>> lookPermissionRole = permissionRoleService
+                .lookPermissionRole(permissionRole);
         //获得权限ID
-        String[] permissionIds = lookPermissionRole.getData().stream().map(PermissionRole::getPermissionId).toArray(String[]::new);
+        String[] permissionIds = lookPermissionRole
+                .getData()
+                .stream()
+                .map(PermissionRole::getPermissionId)
+                .toArray(String[]::new);
         // 最终获得权限列表
-        JsonRequest<List<Permission>> request = permissionService.lookPermissionById(permissionIds);
+        JsonRequest<List<Permission>> request = permissionService
+                .lookPermissionById(permissionIds);
         if (!request.getSuccess()) {
             log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.NOT_FOUND);
@@ -183,7 +190,8 @@ public class RoleServiceImpl implements IRoleService {
     @Override
     @CacheEvict(value = {"role_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> updateOneRole(Role role) {
-        JsonRequest<List<Role>> request = roleService.lookRoleById(new String[]{role.getId()});
+        JsonRequest<List<Role>> request = roleService
+                .lookRoleById(new String[]{role.getId()});
         //判断是否成功
         if (!request.getSuccess()) {
             log.warn("{}", request.getMessage());
@@ -192,6 +200,34 @@ public class RoleServiceImpl implements IRoleService {
         //日志信息
         role.setUpdateUser(SqlDateUtils.currentUserId);
         role.setUpdateTime(SqlDateUtils.date);
+        //首先删除所有绑定的权限信息
+        JsonRequest<Integer> request1 = permissionRoleService
+                .deletePermissionRoleByRole(new String[]{role.getId()});
+        //是否成功
+        if (!request1.getSuccess()) {
+            log.error("删除关系信息失败!");
+            return JsonRequest.error(RequestException.UPDATE_ERROR);
+        }
+        //收集提供的条件
+        List<PermissionRole> permissionRoleList = role
+                .getPermissionList()//获取权限列表
+                .stream()
+                .map(v -> {
+                    PermissionRole permissionRole = new PermissionRole();
+                    permissionRole.setRoleId(role.getId());//角色ID
+                    permissionRole.setPermissionId(v.getId());//权限ID
+                    return permissionRole;
+                })//构造条件
+                .collect(Collectors.toList());//转换成集合
+        //再将新绑定的关系添加到数据库
+        JsonRequest<Integer> request2 = permissionRoleService
+                .addPermissionRole(permissionRoleList);
+        //是否成功
+        if (!request2.getSuccess()) {
+            log.error("添加关系信息失败!");
+            return JsonRequest.error(RequestException.UPDATE_ERROR);
+        }
+        //最后再修改本体
         Integer column = roleMapper.updateRoleById(role);
         if (column < 1) {
             log.error("修改ID为{}的角色信息失败!", role.getId());
@@ -216,7 +252,8 @@ public class RoleServiceImpl implements IRoleService {
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
         //删除关系
-        Integer column = permissionRoleMapper.deletePermissionRoleByRole(ids);
+        Integer column = permissionRoleMapper
+                .deletePermissionRoleByRole(ids);
         if (column < 1) {
             log.error("删除关系失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);

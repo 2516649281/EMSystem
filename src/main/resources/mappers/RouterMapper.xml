@@ -33,7 +33,7 @@
     </select>
     <!--根据ID查询路由-->
     <select id="selectAllRouterById" resultType="com.chunfeng.dao.entity.Router" resultMap="routerMap">
-        select id, name,value,method,type
+        select id, name,value,method,type,is_default
         from router
         <where>
             id in

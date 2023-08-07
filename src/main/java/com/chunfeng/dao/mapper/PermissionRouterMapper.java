@@ -76,7 +76,7 @@ public interface PermissionRouterMapper {
      * @param ids 选择的关系ID
      * @return 影响行数
      */
-    Integer deletePermissionRouterById(String[] ids);
+    Integer deletePermissionRouterById(@Param("ids") String[] ids);
 
     /**
      * 根据权限ID解绑关系信息

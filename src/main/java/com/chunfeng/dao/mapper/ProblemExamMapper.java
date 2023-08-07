@@ -27,7 +27,7 @@ public interface ProblemExamMapper {
      * @param ids 关系ID
      * @return 关系列表
      */
-    List<ProblemExam> selectAllProblemExamById(String[] ids);
+    List<ProblemExam> selectAllProblemExamById(@Param("ids") String[] ids);
 
     /**
      * 按条件批量查询符合条件的个数

@@ -39,6 +39,14 @@ public interface IExamService {
     JsonRequest<List<Exam>> lookExamById(String[] ids);
 
     /**
+     * 根据ID值查询试卷信息
+     *
+     * @param examId 试卷ID
+     * @return JSON
+     */
+    JsonRequest<Exam> lookOneExam(String examId);
+
+    /**
      * 新增一条试卷信息
      *
      * @param exam 试卷信息

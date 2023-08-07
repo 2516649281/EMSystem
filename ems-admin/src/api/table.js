@@ -42,8 +42,16 @@ export function getRouters() {
 
 //题目
 export function getProblems() {
-    return request({
-        url: "/pro",
-        method: "get",
-    });
+  return request({
+    url: "/pro",
+    method: "get",
+  });
+}
+
+//年级
+export function getGrades() {
+  return request({
+    url: "/gradle",
+    method: "get",
+  });
 }

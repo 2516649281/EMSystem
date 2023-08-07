@@ -36,7 +36,7 @@ public interface PermissionRoleMapper {
      * @param ids 关系ID
      * @return 关系列表
      */
-    List<PermissionRole> selectAllPermissionRoleById(String[] ids);
+    List<PermissionRole> selectAllPermissionRoleById(@Param("ids") String[] ids);
 
     /**
      * 批量插入关系信息
@@ -60,7 +60,7 @@ public interface PermissionRoleMapper {
      * @param ids 选择的关系ID
      * @return 影响行数
      */
-    Integer deletePermissionRoleById(String[] ids);
+    Integer deletePermissionRoleById(@Param("ids") String[] ids);
 
     /**
      * 根据权限ID解绑关系信息

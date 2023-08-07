@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 路由业务层实现
@@ -211,9 +212,35 @@ public class RouterServiceImpl implements IRouterService {
                 return JsonRequest.error(RequestException.UPDATE_ERROR);
             }
         }
+        //首先删除路由绑定的权限信息
+        JsonRequest<Integer> request = permissionRouterService.deletePermissionRouterByRouter(new String[]{router.getId()});
+        if (!request.getSuccess()) {
+            log.error("删除关系失败!");
+            return JsonRequest.error(RequestException.UPDATE_ERROR);
+        }
+        //构造条件
+        List<PermissionRouter> permissionRouterList = router
+                .getPermissionList()//获取权限列表
+                .stream()
+                .map(v -> {
+                    PermissionRouter permissionRouter = new PermissionRouter();
+                    permissionRouter.setRouterId(router.getId());//路由ID
+                    permissionRouter.setPermissionId(v.getId());//权限ID
+                    return permissionRouter;
+                })//重构
+                .collect(Collectors.toList());//转换成集合
+        //再绑定权限信息
+        JsonRequest<Integer> request1 = permissionRouterService
+                .addPermissionRouter(permissionRouterList);
+        //判断是否成功
+        if (!request1.getSuccess()) {
+            log.error("添加条件失败!");
+            return JsonRequest.error(RequestException.UPDATE_ERROR);
+        }
         //日志信息
         router.setUpdateUser(SqlDateUtils.currentUserId);
         router.setUpdateTime(SqlDateUtils.date);
+        //最后修改本体
         Integer column = routerMapper.updateRouterById(router);
         if (column < 1) {
             log.error("修改ID为{}的路由信息失败!", router.getId());

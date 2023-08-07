@@ -1,6 +1,7 @@
 package com.chunfeng.dao.mapper;
 
 import com.chunfeng.dao.entity.Subject;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public interface SubjectMapper {
      * @param ids 科目ID
      * @return 科目列表
      */
-    List<Subject> selectAllSubjectById(String[] ids);
+    List<Subject> selectAllSubjectById(@Param("ids") String[] ids);
 
     /**
      * 插入一条科目信息
@@ -51,5 +52,5 @@ public interface SubjectMapper {
      * @param ids 选择的科目ID
      * @return 影响行数
      */
-    Integer deleteSubjectById(String[] ids);
+    Integer deleteSubjectById(@Param("ids") String[] ids);
 }

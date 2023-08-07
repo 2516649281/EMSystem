@@ -27,7 +27,7 @@ public interface ExamMapper {
      * @param ids 试卷ID
      * @return 试卷列表
      */
-    List<Exam> selectAllExamById(String[] ids);
+    List<Exam> selectAllExamById(@Param("ids") String[] ids);
 
     /**
      * 插入一条试卷数据

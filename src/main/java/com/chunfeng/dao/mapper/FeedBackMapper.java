@@ -1,6 +1,7 @@
 package com.chunfeng.dao.mapper;
 
 import com.chunfeng.dao.entity.FeedBack;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public interface FeedBackMapper {
      * @param ids 反馈ID
      * @return 反馈列表
      */
-    List<FeedBack> selectAllFeedBackById(String[] ids);
+    List<FeedBack> selectAllFeedBackById(@Param("ids") String[] ids);
 
     /**
      * 插入一条反馈信息
@@ -43,5 +44,5 @@ public interface FeedBackMapper {
      * @param ids 选择的反馈ID
      * @return 影响行数
      */
-    Integer deleteFeedBackById(String[] ids);
+    Integer deleteFeedBackById(@Param("ids") String[] ids);
 }

@@ -60,6 +60,25 @@ public class ExamController {
         return examService.lookAllExam();
     }
 
+
+    /**
+     * 根据ID值查询试卷信息
+     *
+     * @param examId 试卷ID
+     * @return JSON
+     */
+    @GetMapping
+    @ApiOperation(value = "查询一条试卷信息")
+    @ApiResponses({
+            @ApiResponse(code = 404, message = "没有找到任何数据!"),
+            @ApiResponse(code = 200, message = "查询成功!")
+    })
+    public JsonRequest<Exam> lookOneExam(
+            @ApiParam(value = "试卷ID", required = true)
+            @RequestParam String examId) {
+        return examService.lookOneExam(examId);
+    }
+
     /**
      * 新增一条试卷信息
      *

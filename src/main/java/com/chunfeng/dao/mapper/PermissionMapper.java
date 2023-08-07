@@ -27,7 +27,7 @@ public interface PermissionMapper {
      * @param ids 权限ID
      * @return 权限列表
      */
-    List<Permission> selectAllPermissionById(String[] ids);
+    List<Permission> selectAllPermissionById(@Param("ids") String[] ids);
 
     /**
      * 插入一条权限数据

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 试卷实体类
@@ -53,6 +54,11 @@ public class Exam implements Serializable {
      */
     @ApiModelProperty(value = "存放路径", hidden = true)
     private String filePath;
+    /**
+     * 题库列表
+     */
+    @ApiModelProperty(value = "题库列表", allowEmptyValue = true)
+    private List<Problem> problemList;
     /**
      * 创建人
      */

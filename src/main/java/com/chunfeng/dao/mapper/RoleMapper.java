@@ -1,6 +1,7 @@
 package com.chunfeng.dao.mapper;
 
 import com.chunfeng.dao.entity.Role;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public interface RoleMapper {
      * @param ids 角色ID
      * @return 角色列表
      */
-    List<Role> selectAllRoleById(String[] ids);
+    List<Role> selectAllRoleById(@Param("ids") String[] ids);
 
     /**
      * 插入一条角色信息
@@ -50,5 +51,5 @@ public interface RoleMapper {
      * @param ids 选择的角色ID
      * @return 影响行数
      */
-    Integer deleteRoleById(String[] ids);
+    Integer deleteRoleById(@Param("ids") String[] ids);
 }
