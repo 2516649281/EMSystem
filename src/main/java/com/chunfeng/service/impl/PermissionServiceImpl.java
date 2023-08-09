@@ -149,18 +149,24 @@ public class PermissionServiceImpl implements IPermissionService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"permission_select", "permission_select", "security_userDetail"}, allEntries = true)
+    @CacheEvict(value = {"permission_select", "role_select", "router_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> updateOnePermission(Permission permission) {
+        JsonRequest<List<Permission>> request = permissionService.lookPermissionById(new String[]{permission.getId()});
+        //判断是否成功
+        if (!request.getSuccess()) {
+            log.warn("{}", request.getMessage());
+            return JsonRequest.error(RequestException.UPDATE_ERROR);
+        }
         //配置控制
         if (systemProperties.getIsOpenDefaultDataProtect()) {
-            JsonRequest<List<Permission>> request = permissionService.lookPermissionById(new String[]{permission.getId()});
-            //判断是否成功
-            if (!request.getSuccess()) {
-                log.warn("{}}", request.getMessage());
-                return JsonRequest.error(RequestException.UPDATE_ERROR);
+            Permission permission1;
+            //解决传回来的data不为集合类型
+            if (request.getData() instanceof Permission) {
+                permission1 = (Permission) request.getData();
+            }//获取路由
+            else {
+                permission1 = request.getData().get(0);
             }
-            //获取权限
-            Permission permission1 = request.getData().get(0);
             //判断是否为默认权限
             if (permission1.getIsDefault().equals(0)) {
                 log.warn("ID为{}的权限为默认权限,不得修改标识符!", permission1.getId());
@@ -186,16 +192,16 @@ public class PermissionServiceImpl implements IPermissionService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"permission_select", "permission_select", "security_userDetail"}, allEntries = true)
+    @CacheEvict(value = {"permission_select", "role_select", "router_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> deletePermission(String[] ids) {
+        //获取权限列表
+        JsonRequest<List<Permission>> request = permissionService.lookPermissionById(ids);
+        if (!request.getSuccess()) {
+            log.error("{}", request.getMessage());
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
         //配置控制
         if (systemProperties.getIsOpenDefaultDataProtect()) {
-            //获取权限列表
-            JsonRequest<List<Permission>> request = permissionService.lookPermissionById(ids);
-            if (!request.getSuccess()) {
-                log.error("删除权限失败!原因:{}", request.getMessage());
-                return JsonRequest.error(RequestException.NOT_FOUND);
-            }
             //排除默认的权限
             ids = request.getData()
                     .stream()

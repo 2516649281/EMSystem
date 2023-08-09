@@ -24,6 +24,7 @@ CREATE TABLE `role`
 (
     `id`          VARCHAR(48) PRIMARY KEY COMMENT '主键',
     `name`        VARCHAR(32) NOT NULL COMMENT '角色名',
+    `is_default` INT NOT NULL DEFAULT 1 COMMENT '是否为默认(0默认,1自定义)',
     `create_user` VARCHAR(48) NOT NULL COMMENT '创建用户',
     `update_user` VARCHAR(48) COMMENT '修改用户',
     `create_time` DATETIME    NOT NULL COMMENT '创建时间',
@@ -59,7 +60,7 @@ CREATE TABLE `permission`
     `id`          VARCHAR(48) PRIMARY KEY COMMENT '主键',
     `name`        VARCHAR(32) NOT NULL COMMENT '权限名',
     `sign`        VARCHAR(32) NOT NULL COMMENT '标识符',
-    `is_default`  INT         NOT NULL DEFAULT 1 COMMENT '是否为默认',
+    `is_default` INT NOT NULL DEFAULT 1 COMMENT '是否为默认(0默认,1自定义)',
     `create_user` VARCHAR(48) NOT NULL COMMENT '创建用户',
     `update_user` VARCHAR(48) COMMENT '修改用户',
     `create_time` DATETIME    NOT NULL COMMENT '创建时间',

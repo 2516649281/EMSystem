@@ -29,6 +29,20 @@
           ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="年级" prop="gradleId">
+        <el-select
+          v-model="oldProblem.gradleId"
+          clearable
+          placeholder="选择年级"
+        >
+          <el-option
+            :label="gradle.name"
+            :value="gradle.id"
+            v-for="gradle in grades"
+            :key="gradle.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button @click="addOptions(options.length)">新增选项</el-button>
       </el-form-item>
@@ -43,7 +57,6 @@
           <el-button @click.prevent="removeProblem(item)">删除</el-button>
         </el-form-item>
       </template>
-
       <el-form-item label="答案" prop="answer">
         <el-input v-model="oldProblem.answer" prop="answer"></el-input>
       </el-form-item>
@@ -70,12 +83,13 @@
 
 <script>
 import {updateProblem} from "@/api/problem";
-import {getSubjects} from "@/api/table";
+import {getGrades, getSubjects} from "@/api/table";
 import {getProblem} from "./public";
 
 export default {
   data() {
     return {
+      grades: [],
       subjects: [],
       options: [
         {
@@ -110,6 +124,13 @@ export default {
           {
             required: true,
             message: "请选择科目!",
+            trigger: "change",
+          },
+        ],
+        gradleId: [
+          {
+            required: true,
+            message: "请选择年级!",
             trigger: "change",
           },
         ],
@@ -164,10 +185,13 @@ export default {
         }
       });
     },
-    //获取科目列表
+    //获取列表
     getSubjects() {
       getSubjects().then((response) => {
         this.subjects = response.data;
+      });
+      getGrades().then((response) => {
+        this.grades = response.data;
       });
     },
     //新增选项

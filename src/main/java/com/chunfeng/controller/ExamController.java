@@ -67,7 +67,7 @@ public class ExamController {
      * @param examId 试卷ID
      * @return JSON
      */
-    @GetMapping
+    @GetMapping("/one")
     @ApiOperation(value = "查询一条试卷信息")
     @ApiResponses({
             @ApiResponse(code = 404, message = "没有找到任何数据!"),

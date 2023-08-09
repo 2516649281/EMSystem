@@ -197,11 +197,12 @@ public class PermissionRoleServiceImpl implements IPermissionRoleService {
     @CacheEvict(value = {"permissionRole_select", "role_select"}, allEntries = true)
     public JsonRequest<Integer> deletePermissionRoleByRole(String[] ids) {
         Integer column = permissionRoleMapper.deletePermissionRoleByRole(ids);
+        //这里不做处理，因为存在没有关系的数据
         if (column < 1) {
-            log.error("删除关系失败!");
-            return JsonRequest.error(RequestException.DELETE_ERROR);
+            log.warn("没有任何关系信息!");
+        } else {
+            log.info("已删除{}条关系信息!", ids.length);
         }
-        log.info("已删除{}条关系信息!", ids.length);
         return JsonRequest.success(column);
     }
 }

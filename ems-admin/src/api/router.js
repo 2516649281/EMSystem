@@ -68,38 +68,3 @@ export function deleteRouter(ids) {
     data: ids,
   });
 }
-
-//获取路由绑定
-export function getPermissionRouter(obj) {
-  return request({
-    url: "/prt/select",
-    method: "get",
-    params: obj,
-  });
-}
-
-/**
- * 设置路由绑定
- * @param {*} obj
- * @returns
- */
-export function setPermissionRouter(obj) {
-  return request({
-    url: "/prt",
-    method: "post",
-    data: obj,
-  });
-}
-
-/**
- * 删除路由绑定
- * @param {*} obj
- * @returns
- */
-export function deletePermissionRouter(obj) {
-  return request({
-      url: "/prt/router",
-      method: "delete",
-      data: obj,
-  });
-}

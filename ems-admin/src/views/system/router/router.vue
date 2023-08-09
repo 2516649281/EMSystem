@@ -8,6 +8,20 @@
           clearable
         ></el-input>
       </el-form-item>
+      <el-form-item label="请求方式">
+        <el-select
+          v-model="selectForm.method"
+          clearable
+          placeholder="选择请求方式"
+        >
+          <el-option
+            :label="method"
+            :value="method"
+            v-for="method in methods"
+            :key="method.$index"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button
           type="primary"
@@ -116,6 +130,7 @@
       :visible.sync="updateDialogVisible"
       label-position="left"
       center
+      width="50%"
     >
       <el-form
         :model="oldRouter"
@@ -184,6 +199,7 @@
         :rules="routerRules"
         status-icon
         ref="ruleForm"
+        label-width="15%"
       >
         <el-form-item label="路由名" prop="name">
           <el-input v-model="newRouter.name" clearable></el-input>
@@ -227,8 +243,7 @@
 
 <script>
 import {getPermissions, getRouters} from "@/api/table";
-import {addRouter, deleteRouter, getRouterById, getRouterInfo, setPermissionRouter, updateRouter,} from "@/api/router";
-import {deletePermissionRouter} from "@/api/permission";
+import {addRouter, deleteRouter, getRouterById, getRouterInfo, updateRouter,} from "@/api/router";
 
 export default {
   filters: {
@@ -387,10 +402,21 @@ export default {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
           this.editLoading = true;
+          //添加
+          var permissionList = this.oldPermissionIds.map((v) => {
+            var obj = {};
+            obj.id = v;
+            return obj;
+          });
+          newRouter.permissionList = permissionList;
           updateRouter(newRouter).then((response) => {
             if (response.success) {
-              //修改关系
-              this.updatePermissionRouter(newRouter.id);
+              this.$message({
+                showClose: true,
+                message: "修改路由成功!",
+                type: "success",
+              });
+              this.fetchData();
             }
             this.fetchData();
             this.getPermissions();
@@ -399,32 +425,6 @@ export default {
           });
         } else {
           return false;
-        }
-      });
-    },
-    //修改关系
-    updatePermissionRouter(id) {
-      var del = [];
-      //删除关系
-      if (this.oldPermissionIds.length !== 0) {
-        deletePermissionRouter([id]);
-      }
-      //构造条件
-      del = this.oldPermissionIds.map((v) => {
-        var obj = {
-          permissionId: v,
-          routerId: id,
-        };
-        return obj;
-      });
-      //直接添加
-      setPermissionRouter(del).then((response) => {
-        if (response.success) {
-          this.$message({
-            showClose: true,
-            message: "修改路由成功!",
-            type: "success",
-          });
         }
       });
     },
@@ -490,3 +490,16 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+::v-deep .demo-form-inline {
+  .el-input__inner {
+    width: 150px;
+  }
+}
+
+::v-deep .el-dialog {
+  .el-input__inner {
+    width: 80%;
+  }
+}
+</style>

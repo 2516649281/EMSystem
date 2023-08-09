@@ -196,16 +196,22 @@ public class RouterServiceImpl implements IRouterService {
     @Override
     @CacheEvict(value = {"router_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> updateOneRouter(Router router) {
+        JsonRequest<List<Router>> request = routerService.lookRouterById(new String[]{router.getId()});
+        //判断是否成功
+        if (!request.getSuccess()) {
+            log.warn("{}", request.getMessage());
+            return JsonRequest.error(RequestException.UPDATE_ERROR);
+        }
         //配置控制
         if (systemProperties.getIsOpenDefaultDataProtect()) {
-            JsonRequest<List<Router>> request = routerService.lookRouterById(new String[]{router.getId()});
-            //判断是否成功
-            if (!request.getSuccess()) {
-                log.warn("数据库中不存在ID为{}的路由信息!", router.getId());
-                return JsonRequest.error(RequestException.UPDATE_ERROR);
+            Router router1;
+            //解决传回来的data不为集合类型
+            if (request.getData() instanceof Router) {
+                router1 = (Router) request.getData();
+            }//获取路由
+            else {
+                router1 = request.getData().get(0);
             }
-            //获取路由
-            Router router1 = request.getData().get(0);
             //判断是否为默认路由
             if (router1.getIsDefault().equals(0)) {
                 log.warn("ID为{}的权限为默认路由,不允许修改!", router.getId());
@@ -213,11 +219,7 @@ public class RouterServiceImpl implements IRouterService {
             }
         }
         //首先删除路由绑定的权限信息
-        JsonRequest<Integer> request = permissionRouterService.deletePermissionRouterByRouter(new String[]{router.getId()});
-        if (!request.getSuccess()) {
-            log.error("删除关系失败!");
-            return JsonRequest.error(RequestException.UPDATE_ERROR);
-        }
+        permissionRouterService.deletePermissionRouterByRouter(new String[]{router.getId()});
         //构造条件
         List<PermissionRouter> permissionRouterList = router
                 .getPermissionList()//获取权限列表
@@ -230,10 +232,10 @@ public class RouterServiceImpl implements IRouterService {
                 })//重构
                 .collect(Collectors.toList());//转换成集合
         //再绑定权限信息
-        JsonRequest<Integer> request1 = permissionRouterService
+        JsonRequest<Integer> request2 = permissionRouterService
                 .addPermissionRouter(permissionRouterList);
         //判断是否成功
-        if (!request1.getSuccess()) {
+        if (!request2.getSuccess()) {
             log.error("添加条件失败!");
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
@@ -259,25 +261,25 @@ public class RouterServiceImpl implements IRouterService {
     @Override
     @CacheEvict(value = {"router_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> deleteRouter(String[] ids) {
+        //获取路由列表
+        JsonRequest<List<Router>> request = routerService.lookRouterById(ids);
+        if (!request.getSuccess()) {
+            log.error("{}", request.getMessage());
+            return JsonRequest.error(RequestException.DELETE_ERROR);
+        }
         // 配置控制
         if (systemProperties.getIsOpenDefaultDataProtect()) {
-            //获取路由列表
-            JsonRequest<List<Router>> request = routerService.lookRouterById(ids);
-            if (!request.getSuccess()) {
-                log.error("删除路由失败!原因:未找到任何路由");
-                return JsonRequest.error(RequestException.NOT_FOUND);
-            }
             //排除默认的路由
             ids = request.getData()
                     .stream()
                     .filter(v -> v.getIsDefault() != 0)//获取非默认路由
                     .map(Router::getId)//提取ID值
                     .toArray(String[]::new);
-        }
-        //判断ID是否为空
-        if (ids.length == 0) {
-            log.error("删除路由失败!原因:不得删除默认路由!");
-            return JsonRequest.error(RequestException.DELETE_ERROR);
+            //判断ID是否为空
+            if (ids.length == 0) {
+                log.error("删除路由失败!原因:不得删除默认路由!");
+                return JsonRequest.error(RequestException.DELETE_ERROR);
+            }
         }
         //删除原有绑定的关系
         permissionRouterMapper.deletePermissionRouterByRid(ids);

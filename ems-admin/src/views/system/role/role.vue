@@ -70,6 +70,13 @@
           <template v-if="table.value === 'id'"
           >{{ scope.$index + 1 }}
           </template>
+          <!-- 是否默认特殊列 -->
+          <el-tag
+            :type="scope.row.isDefault | statusFilter"
+            v-else-if="table.value === 'isDefault'"
+          >
+            {{ scope.row.isDefault === 0 ? "默认" : "自定义" }}
+          </el-tag>
           <!-- 其他列 -->
           <template v-else>{{ scope.row[table.value] }}</template>
         </template>
@@ -152,17 +159,18 @@
 
 <script>
 import {getPermissions, getRoles} from "@/api/table";
-import {
-  addRole,
-  deletePermissionRoleByRole,
-  deleteRole,
-  getRoleById,
-  getRoleInfo,
-  setPermissionRole,
-  updateRole,
-} from "@/api/role";
+import {addRole, deleteRole, getRoleById, getRoleInfo, updateRole,} from "@/api/role";
 
 export default {
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        1: "success",
+        0: "danger",
+      };
+      return statusMap[status];
+    },
+  },
   data() {
     return {
       list: null,
@@ -192,12 +200,17 @@ export default {
         {
           name: "编号",
           value: "id",
-          width: 220,
+          width: 200,
         },
         {
           name: "角色名",
           value: "name",
-          width: 220,
+          width: 200,
+        },
+        {
+          name: "是否默认",
+          value: "isDefault",
+          width: 200,
         },
       ],
     };
@@ -255,10 +268,7 @@ export default {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
           //判断是否为默认角色
-          if (
-            (newRole.id === "0") |
-            (newRole.id === "232b9005ab8a466495ca0b1f741e5adc")
-          ) {
+          if (newRole.isDefault === 0) {
             this.$message({
               showClose: true,
               message: "不得修改默认角色!",
@@ -267,60 +277,32 @@ export default {
             return;
           }
           this.editLoading = true;
+          var permissionList = this.oldPermissionIds.map((v) => {
+            var obj = {};
+            obj.id = v;
+            return obj;
+          });
+          newRole.permissionList = permissionList;
           // 修改本体
           updateRole(newRole).then((response) => {
             if (response.success) {
-              this.updatePermissionRole(newRole.id);
+              this.$message({
+                showClose: true,
+                message: "修改角色成功!",
+                type: "success",
+              });
+              this.fetchData();
+              this.updateDialogVisible = false;
             }
           });
-          this.updateDialogVisible = false;
           this.editLoading = false;
         } else {
           return false;
         }
       });
     },
-    //修改关系
-    updatePermissionRole(id) {
-      var del = [];
-      //删除关系
-      if (this.oldPermissionIds.length !== 0) {
-        deletePermissionRoleByRole([id]);
-      }
-      //构造条件
-      del = this.oldPermissionIds.map((v) => {
-        var obj = {
-          permissionId: v,
-          roleId: id,
-        };
-        return obj;
-      });
-      //直接添加
-      setPermissionRole(del).then((response) => {
-        if (response.success) {
-          this.$message({
-            showClose: true,
-            message: "修改角色成功!",
-            type: "success",
-          });
-        }
-      });
-    },
     //删除角色
     deleteRole(ids) {
-      for (let i = 0; i < ids.length; i++) {
-        if (
-          (ids[i] === "0") |
-          (ids[i] === "232b9005ab8a466495ca0b1f741e5adc")
-        ) {
-          this.$message({
-            showClose: true,
-            message: "不得删除默认角色!",
-            type: "error",
-          });
-          return;
-        }
-      }
       if (ids === null || ids.length === 0) {
         this.$message({
           showClose: true,

@@ -188,11 +188,12 @@ public class ProblemExamServiceImpl implements IProblemExamService {
     @CacheEvict(value = {"problemExam_select"}, allEntries = true)
     public JsonRequest<Integer> deleteProblemExamByExam(String[] ids) {
         Integer column = problemExamMapper.deleteProblemExamByExam(ids);
+        //这里不做处理，因为存在没有关系的数据
         if (column < 1) {
-            log.error("删除关系失败!");
-            return JsonRequest.error(RequestException.DELETE_ERROR);
+            log.warn("没有任何关系信息!");
+        } else {
+            log.info("已删除{}条关系信息!", ids.length);
         }
-        log.info("已删除{}条关系数据!", ids.length);
         return JsonRequest.success(column);
     }
 }

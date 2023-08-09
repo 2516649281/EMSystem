@@ -23,9 +23,9 @@ export function getRoleInfo(role) {
  */
 export function getRoleById(roleId) {
   return request({
-      url: `/role/one`,
-      method: "get",
-      params: roleId,
+    url: `/role/one`,
+    method: "get",
+    params: roleId,
   });
 }
 
@@ -67,39 +67,4 @@ export function deleteRole(ids) {
     method: "delete",
     data: ids,
   });
-}
-
-//获取权限绑定
-export function getPermissionRole(obj) {
-  return request({
-    url: "/pr/select",
-    method: "get",
-    params: obj,
-  });
-}
-
-/**
- * 设置权限绑定
- * @param {*} obj
- * @returns
- */
-export function setPermissionRole(obj) {
-  return request({
-    url: "/pr",
-    method: "post",
-    data: obj,
-  });
-}
-
-/**
- * 删除权限绑定
- * @param {*} obj
- * @returns
- */
-export function deletePermissionRoleByRole(obj) {
-    return request({
-        url: "/pr/role",
-        method: "delete",
-        data: obj,
-    });
 }

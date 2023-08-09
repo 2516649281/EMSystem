@@ -55,11 +55,6 @@ spring:
         max-idle: 8
         #最大等待时间
         max-wait: 5000ms
-  #api配置
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-    static-path-pattern: classpath:static/**
 
 #拦截器配置
 handle:

@@ -5,6 +5,7 @@ import com.chunfeng.dao.entity.PermissionRole;
 import com.chunfeng.dao.entity.Role;
 import com.chunfeng.dao.mapper.PermissionRoleMapper;
 import com.chunfeng.dao.mapper.RoleMapper;
+import com.chunfeng.properties.SystemProperties;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.service.IPermissionRoleService;
@@ -63,6 +64,12 @@ public class RoleServiceImpl implements IRoleService {
      */
     @Autowired
     private IPermissionService permissionService;
+
+    /**
+     * 导入系统配置
+     */
+    @Autowired
+    private SystemProperties systemProperties;
 
     /**
      * 分类筛选角色信息
@@ -197,17 +204,27 @@ public class RoleServiceImpl implements IRoleService {
             log.warn("{}", request.getMessage());
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
+        //配置控制
+        if (systemProperties.getIsOpenDefaultDataProtect()) {
+            Role role1;
+            //解决传回来的data不为集合类型
+            if (request.getData() instanceof Role) {
+                role1 = (Role) request.getData();
+            }//获取路由
+            else {
+                role1 = request.getData().get(0);
+            }
+            //判断是否为默认角色
+            if (role1.getIsDefault().equals(0)) {
+                log.warn("ID为{}的权限为默认角色,不得修改标识符!", role1.getId());
+                return JsonRequest.error(RequestException.UPDATE_ERROR);
+            }
+        }
         //日志信息
         role.setUpdateUser(SqlDateUtils.currentUserId);
         role.setUpdateTime(SqlDateUtils.date);
         //首先删除所有绑定的权限信息
-        JsonRequest<Integer> request1 = permissionRoleService
-                .deletePermissionRoleByRole(new String[]{role.getId()});
-        //是否成功
-        if (!request1.getSuccess()) {
-            log.error("删除关系信息失败!");
-            return JsonRequest.error(RequestException.UPDATE_ERROR);
-        }
+        permissionRoleService.deletePermissionRoleByRole(new String[]{role.getId()});
         //收集提供的条件
         List<PermissionRole> permissionRoleList = role
                 .getPermissionList()//获取权限列表
@@ -247,21 +264,28 @@ public class RoleServiceImpl implements IRoleService {
     @CacheEvict(value = {"role_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> deleteRole(String[] ids) {
         JsonRequest<List<Role>> request = roleService.lookRoleById(ids);
-        if (request.getSuccess()) {
+        if (!request.getSuccess()) {
             log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
-        //删除关系
-        Integer column = permissionRoleMapper
-                .deletePermissionRoleByRole(ids);
-        if (column < 1) {
-            log.error("删除关系失败!");
-            return JsonRequest.error(RequestException.DELETE_ERROR);
+        //配置控制
+        if (systemProperties.getIsOpenDefaultDataProtect()) {
+            //排除默认的权限
+            ids = request.getData()
+                    .stream()
+                    .filter(v -> v.getIsDefault() != 0)//获取非默认角色
+                    .map(Role::getId)//提取ID值
+                    .toArray(String[]::new);
+            //判断ID是否为空
+            if (ids.length == 0) {
+                log.error("删除角色失败!原因:不得删除默认角色!");
+                return JsonRequest.error(RequestException.DELETE_ERROR);
+            }
         }
         //删除关系数据
         permissionRoleMapper.deletePermissionRoleByRole(ids);
         //删除本体
-        column = roleMapper.deleteRoleById(ids);
+        Integer column = roleMapper.deleteRoleById(ids);
         if (column < 1) {
             log.error("删除角色失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);

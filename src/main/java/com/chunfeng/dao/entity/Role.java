@@ -35,6 +35,11 @@ public class Role implements Serializable {
     @ApiModelProperty(value = "角色名")
     private String name;
     /**
+     * 是否为默认(0默认,1自定义)
+     */
+    @ApiModelProperty(value = "是否为默认(0默认,1自定义)", allowableValues = "0,1", allowEmptyValue = true)
+    private Integer isDefault;
+    /**
      * 权限列表
      */
     @ApiModelProperty(value = "权限列表")

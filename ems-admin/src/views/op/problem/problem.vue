@@ -22,6 +22,20 @@
           ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="选择年级">
+        <el-select
+          v-model="selectForm.gradleId"
+          clearable
+          placeholder="选择年级"
+        >
+          <el-option
+            :label="gradle.name"
+            :value="gradle.id"
+            v-for="gradle in grades"
+            :key="gradle.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button
           type="primary"
@@ -61,7 +75,7 @@
       fit
       highlight-current-row
       @selection-change="selectTable"
-      height="500"
+      height="450"
     >
       <el-table-column
         type="selection"
@@ -115,7 +129,7 @@
 </template>
 
 <script>
-import {getProblems, getSubjects} from "@/api/table";
+import {getGrades, getProblems, getSubjects} from "@/api/table";
 import {deleteProblem, getInfo} from "@/api/problem";
 import {setProblem} from "./public";
 
@@ -198,6 +212,7 @@ export default {
         ],
       },
       subjectList: null,
+      grades: [],
       problemRules: {
         main: [{required: true, message: "题干不得为空!", trigger: "blur"}],
         options: [
@@ -244,6 +259,9 @@ export default {
       });
       getSubjects().then((response) => {
         this.subjectList = response.data;
+      });
+      getGrades().then((response) => {
+        this.grades = response.data;
       });
     },
     //初始化Excel组件
@@ -325,3 +343,16 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+::v-deep .demo-form-inline {
+  .el-input__inner {
+    width: 90px;
+  }
+}
+
+::v-deep .el-dialog {
+  .el-input__inner {
+    width: 80%;
+  }
+}
+</style>

@@ -48,18 +48,16 @@
     </select>
     <!--按条件批量查询符合条件的个数-->
     <select id="selectAllPermissionRouterCount" resultType="java.lang.Integer">
-        select COUNT(id)
-        from permission_router
-        <where>
-            <foreach collection="prt" item="id" open="(" separator="and" close=")">
+        <foreach collection="prt" item="id" open="select COUNT(id) from permission_router" separator=";">
+            <where>
                 <if test="id.permissionId!=null and id.permissionId!=''">
                     permission_id=#{id.permissionId}
                 </if>
                 <if test="id.routerId!=null and id.routerId!=''">
                     and router_id=#{id.routerId}
                 </if>
-            </foreach>
-        </where>
+            </where>
+        </foreach>
     </select>
     <!--根据路由ID查询关系-->
     <select id="selectAllByPermissionRouterByRouter" resultType="com.chunfeng.dao.entity.PermissionRouter"

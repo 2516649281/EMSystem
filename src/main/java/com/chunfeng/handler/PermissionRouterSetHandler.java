@@ -3,7 +3,6 @@ package com.chunfeng.handler;
 import com.chunfeng.dao.entity.Permission;
 import com.chunfeng.dao.entity.PermissionRouter;
 import com.chunfeng.dao.entity.Router;
-import com.chunfeng.note.OtherMethods;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.result.exception.ServiceException;
@@ -61,7 +60,6 @@ public class PermissionRouterSetHandler implements FilterInvocationSecurityMetad
      * @throws IllegalArgumentException 验证失败则抛出此异常
      */
     @Override
-    @OtherMethods
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         //创建配置对象
         Collection<ConfigAttribute> collection = new HashSet<>();
@@ -85,9 +83,9 @@ public class PermissionRouterSetHandler implements FilterInvocationSecurityMetad
         //判断权限是否查询完成
         if (!request.getSuccess()) {
             log.error("未找到任何权限!");
-            throw new ServiceException(RequestException.NOT_FOUND);
+            throw new ServiceException(RequestException.UNAUTHORIZED);
         }
-        // 拿到权限菜单
+        // 拿到路由菜单
         List<Router> routers = request.getData();
         //获得ID值
         String[] routerIds = routers
@@ -98,7 +96,7 @@ public class PermissionRouterSetHandler implements FilterInvocationSecurityMetad
         JsonRequest<List<PermissionRouter>> request1 = permissionRouterService.lookPermissionRouterByRouter(routerIds);
         if (!request1.getSuccess()) {
             log.error("未找到任何权限!");
-            throw new ServiceException(RequestException.NOT_FOUND);
+            throw new ServiceException(RequestException.UNAUTHORIZED);
         }
         // 获取权限ID
         String[] ids = request1.getData()
@@ -110,10 +108,12 @@ public class PermissionRouterSetHandler implements FilterInvocationSecurityMetad
                 .lookPermissionById(ids);
         if (!jsonRequest.getSuccess()) {
             log.error("未找到任何权限!");
-            throw new ServiceException(RequestException.NOT_FOUND);
+            throw new ServiceException(RequestException.UNAUTHORIZED);
         }
         //加入配置菜单
-        jsonRequest.getData().forEach(v -> collection.add(new SecurityConfig(v.getSign())));
+        jsonRequest.getData()
+                .forEach(v -> collection
+                        .add(new SecurityConfig(v.getSign())));
         log.info("动态权限配置完成!");
         return collection;
     }

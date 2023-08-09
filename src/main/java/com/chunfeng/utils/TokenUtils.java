@@ -7,7 +7,6 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.UUID;
@@ -20,7 +19,6 @@ import java.util.UUID;
  * 2022/10/11
  */
 @Slf4j
-@Component
 public class TokenUtils {
     /**
      * 过期时间
@@ -64,7 +62,7 @@ public class TokenUtils {
      * @return object
      */
     public static Claims checkToken(String token) {
-        if (token == null || token.equals("")) {
+        if (token == null || token.isEmpty()) {
             log.error("token为空!");
             throw new ServiceException(RequestException.TOKEN_ERROR);
         }
