@@ -107,6 +107,12 @@ export const constantRoutes = [
         meta: {title: "管理年级信息", icon: "el-icon-collection-tag"},
       },
       {
+        path: "/op/exam",
+        name: "exam",
+        component: () => import("@/views/op/exam/exam"),
+        meta: {title: "管理试卷信息", icon: "el-icon-reading"},
+      },
+      {
         path: "/op/pro",
         name: "problem",
         component: () => import("@/views/op/problem/problem"),

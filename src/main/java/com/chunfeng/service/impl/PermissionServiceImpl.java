@@ -149,7 +149,7 @@ public class PermissionServiceImpl implements IPermissionService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"permission_select", "role_select", "router_select", "security_userDetail"}, allEntries = true)
+    @CacheEvict(value = {"permission_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> updateOnePermission(Permission permission) {
         JsonRequest<List<Permission>> request = permissionService.lookPermissionById(new String[]{permission.getId()});
         //判断是否成功
@@ -192,7 +192,7 @@ public class PermissionServiceImpl implements IPermissionService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"permission_select", "role_select", "router_select", "security_userDetail"}, allEntries = true)
+    @CacheEvict(value = {"permission_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> deletePermission(String[] ids) {
         //获取权限列表
         JsonRequest<List<Permission>> request = permissionService.lookPermissionById(ids);

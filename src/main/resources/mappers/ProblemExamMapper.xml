@@ -8,23 +8,23 @@
     </resultMap>
     <!--条件查询关系-->
     <select id="selectAllProblemExam" resultType="com.chunfeng.dao.entity.ProblemExam"
-            parameterType="com.chunfeng.dao.entity.ProblemExam">
+            parameterType="com.chunfeng.dao.entity.ProblemExam" resultMap="problemExamRole">
         select id, exam_id, problem_id
         from problem_exam
         <where>
             <if test="id!='' and id!=null">
                 id=#{id}
             </if>
-            <if test="permissionId!='' and permissionId!=null">
+            <if test="problemId!='' and problemId!=null">
                 and problem_id=#{problemId}
             </if>
-            <if test="roleId!='' and roleId!=null">
-                and role_id=#{roleId}
+            <if test="examId!='' and examId!=null">
+                and exam_id=#{examId}
             </if>
         </where>
     </select>
     <!--根据关系ID查询关系信息-->
-    <select id="selectAllProblemExamById" resultType="com.chunfeng.dao.entity.ProblemExam">
+    <select id="selectAllProblemExamById" resultType="com.chunfeng.dao.entity.ProblemExam" resultMap="problemExamRole">
         select id, exam_id, problem_id
         from problem_exam
         <where>

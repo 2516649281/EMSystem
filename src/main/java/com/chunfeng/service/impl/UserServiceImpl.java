@@ -10,8 +10,6 @@ import com.chunfeng.note.ExcludeMethods;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.result.exception.ServiceException;
-import com.chunfeng.service.IPermissionRoleService;
-import com.chunfeng.service.IPermissionService;
 import com.chunfeng.service.IRoleService;
 import com.chunfeng.service.IUserService;
 import com.chunfeng.utils.*;
@@ -56,16 +54,6 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
      */
     @Autowired
     private IRoleService roleService;
-    /**
-     * 导入权限业务
-     */
-    @Autowired
-    private IPermissionService permissionService;
-    /**
-     * 导入关系业务
-     */
-    @Autowired
-    private IPermissionRoleService permissionRoleService;
     /**
      * Redis工具类
      */

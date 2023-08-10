@@ -140,7 +140,7 @@ public class ExamServiceImpl implements IExamService {
             log.warn("{}", lookExam.getMessage());
             return JsonRequest.error(RequestException.NOT_FOUND);
         }
-        //获取单个题库
+        //获取单个试卷
         Exam exam1 = lookExam.getData().get(0);
         //构造条件
         ProblemExam problemExam = new ProblemExam();
@@ -152,7 +152,7 @@ public class ExamServiceImpl implements IExamService {
         String[] problemIds = lookProblemExam
                 .getData()
                 .stream()
-                .map(ProblemExam::getProblemId)
+                .map(ProblemExam::getProblemId)//获取题库ID
                 .toArray(String[]::new);
         //最终获得题库列表
         JsonRequest<List<Problem>> request = problemService

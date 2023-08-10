@@ -55,3 +55,11 @@ export function getGrades() {
     method: "get",
   });
 }
+
+//试卷
+export function getExams() {
+  return request({
+    url: "/exam",
+    method: "get",
+  });
+}

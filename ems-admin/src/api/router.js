@@ -43,7 +43,7 @@ export function addRouter(router) {
 }
 
 /**
- * 修改一名路由信息
+ * 修改一条路由信息
  *
  * @param {*} router 待修改的路由
  * @returns 数据

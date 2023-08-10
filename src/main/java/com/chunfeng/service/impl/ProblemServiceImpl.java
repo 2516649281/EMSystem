@@ -104,13 +104,22 @@ public class ProblemServiceImpl implements IProblemService {
     @Override
     @Cacheable(value = "problem_select", key = "#ids")
     public JsonRequest<List<Problem>> lookProblemById(String[] ids) {
+        //查询数据库
         List<Problem> problems = problemMapper.selectAllProblemById(ids);
         if (problems.size() != ids.length) {
             log.warn("待查询的题库ID与数据库中的数量不符!数据库:{},实际:{}", problems.size(), ids.length);
             return JsonRequest.error(RequestException.NOT_FOUND);
         }
+        //提取ID值
+        List<String> ids1 = problems.stream()
+                .map(Problem::getId)//获取ID值
+                .collect(Collectors.toList());//转换为list集合
+        //查询结果
+        List<Problem> problemList = ids1.stream()
+                .map(id -> fileMangerUtils.fileLook(id + ".txt"))//遍历获取结果
+                .collect(Collectors.toList());//收集查询结果
         log.info("已查询出{}条题库数据!", problems.size());
-        return JsonRequest.success(problems);
+        return JsonRequest.success(problemList);
     }
 
     /**
@@ -147,7 +156,7 @@ public class ProblemServiceImpl implements IProblemService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"problem_select"}, allEntries = true)
+    @CacheEvict(value = "problem_select", allEntries = true)
     public JsonRequest<Integer> updateOneProblem(Problem problem) {
         JsonRequest<List<Problem>> request = problemService.lookProblemById(new String[]{problem.getId()});
         //判断是否成功
@@ -176,7 +185,7 @@ public class ProblemServiceImpl implements IProblemService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"problem_select"}, allEntries = true)
+    @CacheEvict(value = "problem_select", allEntries = true)
     public JsonRequest<Integer> deleteProblem(String[] ids) {
         JsonRequest<List<Problem>> request = problemService.lookProblemById(ids);
         if (!request.getSuccess()) {

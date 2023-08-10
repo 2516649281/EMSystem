@@ -96,7 +96,7 @@ public class ProblemExamServiceImpl implements IProblemExamService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = "problemExam_select", allEntries = true)
+    @CacheEvict(value = {"problemExam_select", "exam_select"}, allEntries = true)
     public JsonRequest<Integer> addProblemExam(List<ProblemExam> problemExams) {
         //判断关系是否已经存在
         Integer column = problemExamMapper.selectAllProblemExamCount(problemExams);
@@ -129,7 +129,7 @@ public class ProblemExamServiceImpl implements IProblemExamService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"problemExam_select"}, allEntries = true)
+    @CacheEvict(value = {"problemExam_select", "exam_select"}, allEntries = true)
     public JsonRequest<Integer> updateProblemExam(List<ProblemExam> problemExams) {
         //获取ID值
         String[] ids = problemExams.stream().map(ProblemExam::getId).toArray(String[]::new);
@@ -162,7 +162,7 @@ public class ProblemExamServiceImpl implements IProblemExamService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"problemExam_select"}, allEntries = true)
+    @CacheEvict(value = {"problemExam_select", "exam_select"}, allEntries = true)
     public JsonRequest<Integer> deleteProblemExam(String[] ids) {
         JsonRequest<List<ProblemExam>> request = problemExamService.lookProblemExamById(ids);
         if (!request.getSuccess()) {
@@ -185,7 +185,7 @@ public class ProblemExamServiceImpl implements IProblemExamService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = {"problemExam_select"}, allEntries = true)
+    @CacheEvict(value = {"problemExam_select", "exam_select"}, allEntries = true)
     public JsonRequest<Integer> deleteProblemExamByExam(String[] ids) {
         Integer column = problemExamMapper.deleteProblemExamByExam(ids);
         //这里不做处理，因为存在没有关系的数据
