@@ -9,7 +9,12 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="选择角色">
-        <el-select v-model="selectForm.roleId" clearable placeholder="选择角色">
+        <el-select
+          filterable
+          v-model="selectForm.roleId"
+          clearable
+          placeholder="选择角色"
+        >
           <el-option
             :label="role.name"
             :value="role.id"
@@ -135,7 +140,12 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="角色" prop="role">
-          <el-select v-model="oldUser.roleId" clearable placeholder="选择角色">
+          <el-select
+            filterable
+            v-model="oldUser.roleId"
+            clearable
+            placeholder="选择角色"
+          >
             <el-option
               :label="role.name"
               :value="role.id"

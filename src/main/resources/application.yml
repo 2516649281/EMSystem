@@ -83,7 +83,7 @@ file:
     #输出路径
     url: 'D:/Test/'
     #以MB为单位
-    file-max-size: 5
+    file-max-size: 2
     #默认头像名
     default-file: '0.png'
 #swagger配置

@@ -10,6 +10,7 @@
       </el-form-item>
       <el-form-item label="选择科目">
         <el-select
+          filterable
           v-model="selectForm.subjectId"
           clearable
           placeholder="选择科目"
@@ -24,6 +25,7 @@
       </el-form-item>
       <el-form-item label="选择年级">
         <el-select
+          filterable
           v-model="selectForm.gradleId"
           clearable
           placeholder="选择年级"

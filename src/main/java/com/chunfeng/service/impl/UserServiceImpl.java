@@ -315,6 +315,10 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     @Override
     @CacheEvict(value = {"user_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Boolean> avatarUpload(MultipartFile file, String userId) {
+        if (file == null) {
+            log.error("头像上传失败!原因:未选择任何文件!");
+            return JsonRequest.error(RequestException.FILE_ERROR);
+        }
         User user = new User();
         user.setId(userId);
         // 获取文件后缀

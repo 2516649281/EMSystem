@@ -111,7 +111,13 @@
           <el-input v-model="oldRole.name" clearable></el-input>
         </el-form-item>
         <el-form-item label="权限列表">
-          <el-select v-model="oldPermissionIds" multiple placeholder="请选择">
+          <el-select
+            filterable
+            collapse-tags
+            v-model="oldPermissionIds"
+            multiple
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in permissions"
               :key="item.id"

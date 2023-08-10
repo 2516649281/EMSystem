@@ -61,11 +61,11 @@ export function deleteUser(ids) {
  * @returns 数据
  */
 export function logout(token) {
-    return request({
-        url: "/user/logout",
-        method: "get",
-        params: token,
-    });
+  return request({
+    url: "/user/logout",
+    method: "get",
+    params: token,
+  });
 }
 
 //获取头像
@@ -80,9 +80,9 @@ export function avatar(userId) {
 
 export function setAvatar(userId, img) {
   return request({
-      url: "/user/avatar",
-      method: "get",
-      params: userId,
-      data: {file: img},
+    url: "/user/upload",
+    method: "post",
+    params: userId,
+    data: img,
   });
 }

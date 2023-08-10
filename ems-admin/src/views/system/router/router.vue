@@ -10,6 +10,7 @@
       </el-form-item>
       <el-form-item label="请求方式">
         <el-select
+          filterable
           v-model="selectForm.method"
           clearable
           placeholder="选择请求方式"
@@ -147,6 +148,7 @@
         </el-form-item>
         <el-form-item label="请求方式" prop="method">
           <el-select
+            filterable
             v-model="oldRouter.method"
             clearable
             placeholder="选择请求方式"
@@ -166,7 +168,13 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="权限列表">
-          <el-select v-model="oldPermissionIds" multiple placeholder="请选择">
+          <el-select
+            filterable
+            v-model="oldPermissionIds"
+            collapse-tags
+            multiple
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in permissions"
               :key="item.id"
@@ -209,6 +217,7 @@
         </el-form-item>
         <el-form-item label="请求方式" prop="method">
           <el-select
+            filterable
             v-model="newRouter.method"
             clearable
             placeholder="选择请求方式"
