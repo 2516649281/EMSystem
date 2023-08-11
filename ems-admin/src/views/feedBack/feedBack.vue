@@ -6,13 +6,13 @@
           type="danger"
           @click="deleteFeedBack(ids)"
           :icon="deleteLoading ? 'el-icon-loading' : 'el-icon-delete'"
-        >批量删除
+          >批量删除
         </el-button>
         <el-button
           type="success"
           @click="addDialogVisible = true"
           icon="el-icon-plus"
-        >添加反馈
+          >添加反馈
         </el-button>
       </el-form-item>
       <el-form-item>
@@ -24,7 +24,7 @@
           :name="`${title}.xls`"
         >
           <el-button icon="el-icon-printer" type="warning"
-          >导出Excel表格
+            >导出Excel表格
           </el-button>
         </download-excel>
       </el-form-item>
@@ -55,19 +55,19 @@
         <template slot-scope="scope">
           <!-- ID特殊列 -->
           <template v-if="table.value === 'id'"
-          >{{ scope.$index + 1 }}
+            >{{ scope.$index + 1 }}
           </template>
           <!-- 其他列 -->
           <template v-else>{{ scope.row[table.value] }}</template>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="440">
+      <el-table-column label="操作" ali他gn="center" width="440">
         <template slot-scope="scope">
           <el-button
             type="danger"
             @click="deleteFeedBack([scope.row.id])"
             icon="el-icon-delete"
-          >删除
+            >删除
           </el-button>
         </template>
       </el-table-column>
@@ -95,7 +95,7 @@
           type="primary"
           @click="addFeedBack(newFeedBack)"
           :icon="editLoading ? 'el-icon-loading' : ''"
-        >确 定
+          >确 定
         </el-button>
       </div>
     </el-dialog>
@@ -103,8 +103,8 @@
 </template>
 
 <script>
-import {getFeedBacks} from "@/api/table";
-import {deleteFeedBack, getFeedBackInfo, addFeedBack} from "@/api/feedBack";
+import { getFeedBacks } from "@/api/table";
+import { deleteFeedBack, getFeedBackInfo, addFeedBack } from "@/api/feedBack";
 
 export default {
   data() {
@@ -120,7 +120,7 @@ export default {
       feedBackList: null,
       feedBackRules: {
         message: [
-          {required: true, message: "反馈消息不得为空!", trigger: "blur"},
+          { required: true, message: "反馈消息不得为空!", trigger: "blur" },
         ],
       },
       title: "考试管理系统-反馈表",
