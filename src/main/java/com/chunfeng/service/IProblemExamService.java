@@ -21,12 +21,14 @@ public interface IProblemExamService {
      * @return JSON
      */
     JsonRequest<List<ProblemExam>> lookProblemExam(ProblemExam problemExam);
+
     /**
      * 查询所有关系信息
      *
      * @return JSON
      */
     JsonRequest<List<ProblemExam>> lookAllProblemExam();
+
     /**
      * 根据ID值批量查询关系信息
      *
