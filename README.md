@@ -1,76 +1,83 @@
 # 考试管理系统
 
-![](https://img.shields.io/badge/Java-1.8+-green.svg)![](https://img.shields.io/badge/MySQL-5.7+-blue.svg)![](https://img.shields.io/badge/Vue-3.0+-red)![](https://img.shields.io/badge/Maven-3.0+-blue)
+![](https://img.shields.io/badge/Java-1.8+-green.svg)![](https://img.shields.io/badge/MySQL-5.7+-blue.svg)![](https://img.shields.io/badge/Vue-3.0+-red)![](https://img.shields.io/badge/Gradle-3.0+-blue)
 
 [![](https://img.shields.io/badge/blog-@cfnjs-red.svg)](https://www.cnblogs.com/cfnjs)
 
-[![star](https://gitee.com/cfnjs20020602/ems/badge/star.svg?theme=dark)](https://gitee.com/cfnjs20020602/lerun2)[![fork](https://gitee.com/cfnjs20020602/ems/badge/fork.svg??theme=dark)](https://gitee.com/cfnjs20020602/lerun2)
+[![star](https://gitee.com/cfnjs20020602/EMSystem/badge/star.svg?theme=dark)](https://gitee.com/cfnjs20020602/lerun2)[![fork](https://gitee.com/cfnjs20020602/EMSystem/badge/fork.svg??theme=dark)](https://gitee.com/cfnjs20020602/lerun2)
 
 # 目录
 
-- 1. [1.背景](#)
-- 2. [2.简介](#-1)
-- 3. [1.使用的主流技术](#-1)
-- 4. [2.业务执行流程](#-1)
-- 5. [3.权限管理机制](#-1)
-- 6. [4.数据库表设计](#-1)
-- 7. [5.丰富的管理菜单(后台)](#-1)
-- 8. [6.API 接口自动生成](#API)
-- 9. [必要条件](#-1)
-- 10. [1.克隆仓库](#-1)
-- 11. [2.项目构建](#-1)
-  - 11.1. [后端](#-1)
-  - 11.2. [前端](#-1)
-- 12. [3.项目运行](#-1)
-  - 12.1. [后端](#-1)
-  - 12.2. [前端](#-1)
-- 13. [4.查看](#-1)
-  - 13.1. [后端](#-1)
-  - 13.2. [前端](#-1)
+- [考试管理系统](#考试管理系统)
+- [目录](#目录)
+- [一、项目简介](#一项目简介)
+  - [1.背景](#1背景)
+  - [2.简介](#2简介)
+- [二、技术与优势](#二技术与优势)
+  - [1.使用的主流技术](#1使用的主流技术)
+  - [2.业务执行流程](#2业务执行流程)
+  - [3.权限管理机制](#3权限管理机制)
+  - [4.数据库表设计](#4数据库表设计)
+  - [5.丰富的管理菜单(后台)](#5丰富的管理菜单后台)
+  - [6.API 接口自动生成](#6api-接口自动生成)
+- [三、使用方法与安装教程](#三使用方法与安装教程)
+  - [必要条件](#必要条件)
+  - [1.克隆仓库](#1克隆仓库)
+  - [2.项目构建](#2项目构建)
+    - [后端](#后端)
+    - [前端](#前端)
+  - [3.项目运行](#3项目运行)
+    - [后端](#后端-1)
+    - [前端](#前端-1)
+  - [4.查看](#4查看)
+    - [后端](#后端-2)
+    - [前端](#前端-2)
+- [四、项目已知的部分未修复的 BUG](#四项目已知的部分未修复的-bug)
+- [五、开发日志](#五开发日志)
 
 # 一、项目简介
 
 ![LOGO](MarkDownImages/logo.png)
 
-## 1. <a name=''></a>1.背景
+## 1.背景
 
 在教务管理系统二代的基础上进行了修改，将原本的难以维护的微服务架构转变为一般的 SpringBoot 单体项目，减少了服务器内存占用，避免多个模块的启动导致服务器内存溢出，对渣机友好，具体原因可查阅[总结.md](summary.md)
 
-## 2. <a name='-1'></a>2.简介
+## 2.简介
 
 考试管理系统(Exam Management System)，可以实现考试模拟，考试管理、成员管理，另外，该系统有着比较完善的权限管理机制，可在后台精准控制前后端路由权限
 
 # 二、技术与优势
 
-## 3. <a name='-1'></a>1.使用的主流技术
+## 1.使用的主流技术
 
 后端：SpringBoot+SpringSecurity+MyBatis+Redis+Gradle
 
 前端：Vue-Admin-Template(后台)
 
-## 4. <a name='-1'></a>2.业务执行流程
+## 2.业务执行流程
 
 ![2-1-1](MarkDownImages/2-1-1.png)
 
-## 5. <a name='-1'></a>3.权限管理机制
+## 3.权限管理机制
 
 ![2-1-2](MarkDownImages/2-1-2.png)
 
-## 6. <a name='-1'></a>4.数据库表设计
+## 4.数据库表设计
 
 ![mysql](data/mysql.png)
 
-## 7. <a name='-1'></a>5.丰富的管理菜单(后台)
+## 5.丰富的管理菜单(后台)
 
 ![2-1-5](MarkDownImages/2-1-5.png)
 
-## 8. <a name='API'></a>6.API 接口自动生成
+## 6.API 接口自动生成
 
 ![2-1-6](MarkDownImages/2-1-6.png)
 
 # 三、使用方法与安装教程
 
-## 9. <a name='-1'></a>必要条件
+## 必要条件
 
 1. JDK1.8 及其以上(必需)
 
@@ -85,15 +92,15 @@
 6. MySQL5.7 及其以上(必需)
 7. 一台内存 8GB 以上的电脑(可选)
 
-## 10. <a name='-1'></a>1.克隆仓库
+## 1.克隆仓库
 
 ```bash
 git clone https://gitee.com/cfnjs20020602/EMSystem
 ```
 
-## 11. <a name='-1'></a>2.项目构建
+## 2.项目构建
 
-### 11.1. <a name='-1'></a>后端
+### 后端
 
 进入项目并打开命令行
 
@@ -103,7 +110,7 @@ git clone https://gitee.com/cfnjs20020602/EMSystem
 
 也可使用 IDEA 等开发工具，打开项目即可自动开始构建
 
-### 11.2. <a name='-1'></a>前端
+### 前端
 
 进入项目并打开命令行或使用 VSCode 开发工具
 
@@ -111,9 +118,9 @@ git clone https://gitee.com/cfnjs20020602/EMSystem
 npm install
 ```
 
-## 12. <a name='-1'></a>3.项目运行
+## 3.项目运行
 
-### 12.1. <a name='-1'></a>后端
+### 后端
 
 在项目 bin 目录下找到 xxx.jar 打包好的 jar 文件
 
@@ -123,7 +130,7 @@ java -jar xxx.jar
 
 或在 IDEA 开发工具打开 com/chunfeng/EmSystemApplication.java 的 main 方法运行
 
-### 12.2. <a name='-1'></a>前端
+### 前端
 
 进入项目并打开命令行或使用 VSCode 开发工具
 
@@ -131,9 +138,9 @@ java -jar xxx.jar
 npm run dev
 ```
 
-## 13. <a name='-1'></a>4.查看
+## 4.查看
 
-### 13.1. <a name='-1'></a>后端
+### 后端
 
 查看控制台，是否出现
 
@@ -143,7 +150,7 @@ Tomcat started on port(s): 8080 (http) with context path ''
 
 若出现则开服成功!
 
-### 13.2. <a name='-1'></a>前端
+### 前端
 
 待前后端服务器启动后，在浏览器输入
 
@@ -310,9 +317,7 @@ Author: 梦途 <2516649281@qq.com>
 
 Date: Sun Jul 30 13:01:41 2023 +0800
 
-    后端权限系统大改，增加路由表及其关系表，SpringSecurity开始向动态权限过渡，前端科目管理完成，前后端代码微
-
-调优化
+    后端权限系统大改，增加路由表及其关系表，SpringSecurity开始向动态权限过渡，前端科目管理完成，前后端代码微调优化
 
 commit 29a5e2dae198eed51d32fa6bbfa834c5770c9f52
 
@@ -493,7 +498,7 @@ Date: Mon Jul 17 12:21:38 2023 +0000
 
     添加许可证，为开源做准备
 
-    Signed-off-by: 梦途 <9821120+cfnjs20020602@user.noreply.gitee.com>
+Signed-off-by: 梦途 <9821120+cfnjs20020602@user.noreply.gitee.com>
 
 commit c8c8693d2ee1edfca3ff5e7584d66ba52acf27d7
 
