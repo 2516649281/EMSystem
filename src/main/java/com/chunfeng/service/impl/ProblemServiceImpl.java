@@ -77,7 +77,7 @@ public class ProblemServiceImpl implements IProblemService {
                 .collect(Collectors.toList());//转换为list集合
         //查询结果
         List<Problem> problemList = ids.stream()
-                .map(id -> fileMangerUtils.fileLook(id + ".txt"))//遍历获取结果
+                .map(id -> fileMangerUtils.fileLook("problem_" + id + ".txt"))//遍历获取结果
                 .collect(Collectors.toList());//收集查询结果
         log.info("已找到{}条题目信息", problems.size());
         return JsonRequest.success(problemList);
@@ -116,7 +116,7 @@ public class ProblemServiceImpl implements IProblemService {
                 .collect(Collectors.toList());//转换为list集合
         //查询结果
         List<Problem> problemList = ids1.stream()
-                .map(id -> fileMangerUtils.fileLook(id + ".txt"))//遍历获取结果
+                .map(id -> fileMangerUtils.fileLook("problem_" + id + ".txt"))//遍历获取结果
                 .collect(Collectors.toList());//收集查询结果
         log.info("已查询出{}条题库数据!", problems.size());
         return JsonRequest.success(problemList);
@@ -133,7 +133,7 @@ public class ProblemServiceImpl implements IProblemService {
     public JsonRequest<Integer> addOneProblem(Problem problem) {
         problem.setId(UIDCreateUtil.getUUId());
         //将数据写入文件
-        String path = fileMangerUtils.fileWriter(problem.getId() + ".txt", problem);
+        String path = fileMangerUtils.fileWriter("problem_" + problem.getId() + ".txt", problem);
         //日志信息
         problem.setCreateUser(SqlDateUtils.currentUserId);
         problem.setCreateTime(SqlDateUtils.date);
@@ -173,7 +173,7 @@ public class ProblemServiceImpl implements IProblemService {
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
         //修改文件内容
-        fileMangerUtils.fileUpdate(problem.getId() + ".txt", problem);
+        fileMangerUtils.fileUpdate("problem_" + problem.getId() + ".txt", problem);
         log.info("ID为{}的题库信息修改成功!", problem.getId());
         return JsonRequest.success(column);
     }
@@ -202,7 +202,7 @@ public class ProblemServiceImpl implements IProblemService {
         }
         //删除文件内容
         Arrays.stream(ids)
-                .forEach(id -> fileMangerUtils.fileDelete(id + ".txt"));
+                .forEach(id -> fileMangerUtils.fileDelete("problem_" + id + ".txt"));
         log.info("已删除{}条题库信息!", ids.length);
         return JsonRequest.success(column);
     }

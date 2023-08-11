@@ -194,9 +194,11 @@ public class RouterServiceImpl implements IRouterService {
      * @return JSON
      */
     @Override
+
     @CacheEvict(value = {"router_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> updateOneRouter(Router router) {
-        JsonRequest<List<Router>> request = routerService.lookRouterById(new String[]{router.getId()});
+        JsonRequest<List<Router>> request = routerService
+                .lookRouterById(new String[]{router.getId()});
         //判断是否成功
         if (!request.getSuccess()) {
             log.warn("{}", request.getMessage());
@@ -262,7 +264,8 @@ public class RouterServiceImpl implements IRouterService {
     @CacheEvict(value = {"router_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> deleteRouter(String[] ids) {
         //获取路由列表
-        JsonRequest<List<Router>> request = routerService.lookRouterById(ids);
+        JsonRequest<List<Router>> request = routerService
+                .lookRouterById(ids);
         if (!request.getSuccess()) {
             log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);

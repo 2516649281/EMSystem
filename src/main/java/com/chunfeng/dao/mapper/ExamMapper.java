@@ -51,5 +51,5 @@ public interface ExamMapper {
      * @param ids 选择的试卷ID
      * @return 影响行数
      */
-    Integer deleteExamById(@Param("id") String[] ids);
+    Integer deleteExamById(@Param("ids") String[] ids);
 }

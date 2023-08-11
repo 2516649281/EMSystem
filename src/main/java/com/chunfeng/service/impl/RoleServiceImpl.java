@@ -263,7 +263,8 @@ public class RoleServiceImpl implements IRoleService {
     @Override
     @CacheEvict(value = {"role_select", "security_userDetail"}, allEntries = true)
     public JsonRequest<Integer> deleteRole(String[] ids) {
-        JsonRequest<List<Role>> request = roleService.lookRoleById(ids);
+        JsonRequest<List<Role>> request = roleService
+                .lookRoleById(ids);
         if (!request.getSuccess()) {
             log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);

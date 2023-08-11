@@ -1,13 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :inline="true" :model="selectForm" class="demo-form-inline">
-      <el-form-item label="题目名">
-        <el-input
-          v-model="selectForm.name"
-          placeholder="题目名"
-          clearable
-        ></el-input>
-      </el-form-item>
       <el-form-item label="选择科目">
         <el-select
           filterable
@@ -316,7 +309,6 @@ export default {
     search(selectForm) {
       this.listLoading = true;
       this.searchLoading = true;
-      console.log(selectForm);
       getInfo(this.isEntity(selectForm)).then((response) => {
         this.list = response.data;
         this.listLoading = false;
@@ -328,7 +320,6 @@ export default {
       var newObj = {};
       Object.keys(obj).forEach((x) => {
         if ((obj[x] !== undefined) & (obj !== null) & (obj[x] !== "")) {
-          console.log(`${x}--->${obj[x]}`);
           newObj[x] = obj[x];
         }
       });
@@ -348,7 +339,7 @@ export default {
 <style lang="scss" scoped>
 ::v-deep .demo-form-inline {
   .el-input__inner {
-    width: 90px;
+    width: 150px;
   }
 }
 

@@ -5,6 +5,7 @@ import com.chunfeng.dao.mapper.FeedBackMapper;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
 import com.chunfeng.service.IFeedBackService;
+import com.chunfeng.utils.FileMangerUtils;
 import com.chunfeng.utils.SqlDateUtils;
 import com.chunfeng.utils.UIDCreateUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 反馈业务层实现
@@ -39,6 +42,11 @@ public class FeedBackServiceImpl implements IFeedBackService {
     @Lazy
     @Autowired
     private IFeedBackService feedBackService;
+    /**
+     * 文件工具类
+     */
+    @Autowired
+    private FileMangerUtils<FeedBack> fileMangerUtils;
 
     /**
      * 分类筛选反馈信息
@@ -55,8 +63,16 @@ public class FeedBackServiceImpl implements IFeedBackService {
             log.warn("未找到任何反馈信息!");
             return JsonRequest.error(RequestException.NOT_FOUND);
         }
+        //提取ID值
+        List<String> ids = feedBacks.stream()
+                .map(FeedBack::getId)//获取ID值
+                .collect(Collectors.toList());//转换为list集合
+        //查询结果
+        List<FeedBack> feedBackList = ids.stream()
+                .map(id -> fileMangerUtils.fileLook("feedBack_" + id + ".txt"))//遍历获取结果
+                .collect(Collectors.toList());//收集查询结果
         log.info("已找到{}条反馈信息", feedBacks.size());
-        return JsonRequest.success(feedBacks);
+        return JsonRequest.success(feedBackList);
     }
 
     /**
@@ -84,8 +100,16 @@ public class FeedBackServiceImpl implements IFeedBackService {
             log.warn("待查询的反馈ID与数据库中的数量不符!数据库:{},实际:{}", feedBacks.size(), ids.length);
             return JsonRequest.error(RequestException.NOT_FOUND);
         }
+        //提取ID值
+        List<String> ids1 = feedBacks.stream()
+                .map(FeedBack::getId)//获取ID值
+                .collect(Collectors.toList());//转换为list集合
+        //查询结果
+        List<FeedBack> feedBackList = ids1.stream()
+                .map(id -> fileMangerUtils.fileLook("feedBack_" + id + ".txt"))//遍历获取结果
+                .collect(Collectors.toList());//收集查询结果
         log.info("已查询出{}条反馈数据!", feedBacks.size());
-        return JsonRequest.success(feedBacks);
+        return JsonRequest.success(feedBackList);
     }
 
     /**
@@ -100,6 +124,10 @@ public class FeedBackServiceImpl implements IFeedBackService {
         //日志信息
         feedBack.setId(UIDCreateUtil.getUUId());
         feedBack.setCreateTime(SqlDateUtils.date);
+        //将数据写入文件
+        String path = fileMangerUtils.fileWriter("feedBack_" + feedBack.getId() + ".txt", feedBack);
+        //存入路径
+        feedBack.setFilePath(path);
         Integer column = feedBackMapper.insertFeedBack(feedBack);
         //判断添加是否成功
         if (column < 1) {
@@ -129,6 +157,9 @@ public class FeedBackServiceImpl implements IFeedBackService {
             log.error("删除反馈失败!");
             return JsonRequest.error(RequestException.DELETE_ERROR);
         }
+        //删除文件内容
+        Arrays.stream(ids)
+                .forEach(id -> fileMangerUtils.fileDelete("feedBack_" + id + ".txt"));
         log.info("已删除{}条反馈信息!", ids.length);
         return JsonRequest.success(column);
     }

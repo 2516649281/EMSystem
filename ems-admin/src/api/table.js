@@ -63,3 +63,11 @@ export function getExams() {
     method: "get",
   });
 }
+
+//反馈
+export function getFeedBacks() {
+  return request({
+    url: "/feed",
+    method: "get",
+  });
+}

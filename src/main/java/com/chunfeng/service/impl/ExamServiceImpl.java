@@ -86,7 +86,7 @@ public class ExamServiceImpl implements IExamService {
                 .collect(Collectors.toList());//转换为list集合
         //查询结果
         List<Exam> examList = ids.stream()
-                .map(id -> fileMangerUtils.fileLook(id + ".txt"))//遍历获取结果
+                .map(id -> fileMangerUtils.fileLook("exam_" + id + ".txt"))//遍历获取结果
                 .collect(Collectors.toList());//收集查询结果
         log.info("已找到{}条试卷信息", exams.size());
         return JsonRequest.success(examList);
@@ -177,7 +177,7 @@ public class ExamServiceImpl implements IExamService {
     public JsonRequest<Integer> addOneExam(Exam exam) {
         exam.setId(UIDCreateUtil.getUUId());
         //将数据写入文件
-        String path = fileMangerUtils.fileWriter(exam.getId() + ".txt", exam);
+        String path = fileMangerUtils.fileWriter("exam_" + exam.getId() + ".txt", exam);
         //日志信息
         exam.setCreateUser(SqlDateUtils.currentUserId);
         exam.setCreateTime(SqlDateUtils.date);
@@ -241,7 +241,7 @@ public class ExamServiceImpl implements IExamService {
             return JsonRequest.error(RequestException.UPDATE_ERROR);
         }
         //修改文件内容
-        fileMangerUtils.fileUpdate(exam.getId() + ".txt", exam);
+        fileMangerUtils.fileUpdate("exam_" + exam.getId() + ".txt", exam);
         log.info("ID为{}的试卷信息修改成功!", exam.getId());
         return JsonRequest.success(column);
     }
@@ -262,8 +262,6 @@ public class ExamServiceImpl implements IExamService {
         }
         //删除关系数据
         problemExamService.deleteProblemExamByExam(ids);
-        //删除数据库内容
-        examMapper.deleteExamById(ids);
         //删除本体
         Integer column = examMapper.deleteExamById(ids);
         if (column < 1) {
@@ -272,7 +270,7 @@ public class ExamServiceImpl implements IExamService {
         }
         //删除文件内容
         Arrays.stream(ids)
-                .forEach(id -> fileMangerUtils.fileDelete(id + ".txt"));
+                .forEach(id -> fileMangerUtils.fileDelete("exam_" + id + ".txt"));
         log.info("已删除{}条试卷信息!", ids.length);
         return JsonRequest.success(column);
     }

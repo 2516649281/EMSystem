@@ -134,6 +134,19 @@ export const constantRoutes = [
       },
     ],
   },
+  {
+    path: "/feed",
+    component: Layout,
+    redirect: "/feed",
+    children: [
+      {
+        path: "/feed",
+        name: "feedBack",
+        component: () => import("@/views/feedBack/feedBack"),
+        meta: {title: "用户bug反馈", icon: "el-icon-s-promotion"},
+      },
+    ],
+  },
   // 404 page must be placed at the end !!!
   {path: "*", redirect: "/404", hidden: true},
 ];

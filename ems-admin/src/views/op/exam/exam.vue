@@ -1,20 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :inline="true" :model="selectForm" class="demo-form-inline">
-      <el-form-item label="试卷名">
-        <el-input
-          v-model="selectForm.name"
-          placeholder="试卷名"
-          clearable
-        ></el-input>
-      </el-form-item>
       <el-form-item>
-        <el-button
-          type="primary"
-          @click="search(selectForm)"
-          :icon="searchLoading ? 'el-icon-loading' : 'el-icon-search'"
-        >查询
-        </el-button>
         <el-button
           type="danger"
           @click="deleteExam(ids)"
@@ -195,7 +182,7 @@
 
 <script>
 import {getExams, getProblems} from "@/api/table";
-import {addExam, deleteExam, getExamById, getExamInfo, updateExam,} from "@/api/exam";
+import {addExam, deleteExam, getExamById, updateExam,} from "@/api/exam";
 
 export default {
   data() {
@@ -206,7 +193,6 @@ export default {
       updateDialogVisible: false,
       addDialogVisible: false,
       editLoading: false,
-      searchLoading: false,
       deleteLoading: false,
       problems: [],
       permissionExams: [],
@@ -227,7 +213,6 @@ export default {
           {required: true, message: "合格分数不得为空!", trigger: "blur"},
         ],
       },
-      selectForm: {},
       title: "考试管理系统-试卷表",
       //字段备注
       column: {},
@@ -376,17 +361,6 @@ export default {
           }
         });
         this.deleteLoading = false;
-      });
-    },
-    //按条件搜索试卷
-    search(selectForm) {
-      this.listLoading = true;
-      this.searchLoading = true;
-      console.log(selectForm);
-      getExamInfo(this.isEntity(selectForm)).then((response) => {
-        this.list = response.data;
-        this.listLoading = false;
-        this.searchLoading = false;
       });
     },
     //判断字符串
