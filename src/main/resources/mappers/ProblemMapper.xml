@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chunfeng.dao.mapper.ProblemMapper">
+    <!--字段映射-->
+    <resultMap id="problemMap" type="com.chunfeng.dao.entity.Problem">
+        <result column="subject_id" property="subjectId"/>
+        <result column="gradle_id" property="gradleId"/>
+        <result column="file_path" property="filePath"/>
+    </resultMap>
+    <!--条件查询题目-->
+    <select id="selectAllProblem" resultType="com.chunfeng.dao.entity.Problem"
+            parameterType="com.chunfeng.dao.entity.Problem"
+            resultMap="problemMap">
+        select id, type, subject_id,gradle_id,file_path
+        from problem
+        <where>
+            <if test="id!='' and id!=null">
+                id=#{id}
+            </if>
+            <if test="type!=null">
+                and type=#{type}
+            </if>
+            <if test="subjectId!='' and subjectId!=null">
+                and subject_id=#{subjectId}
+            </if>
+            <if test="gradleId!='' and gradleId!=null">
+                and gradle_id=#{gradleId}
+            </if>
+        </where>
+    </select>
+    <!--根据ID查询题目-->
+    <select id="selectAllProblemById" resultType="com.chunfeng.dao.entity.Problem" resultMap="problemMap">
+        select id, type, subject_id,gradle_id,file_path
+        from problem
+        <where>
+            id in
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+        ;
+    </select>
+    <!--插入一条题目数据-->
+    <insert id="insertProblem">
+        insert into problem (id, type, subject_id, gradle_id, file_path, create_user, create_time)
+        values (#{id}, #{type}, #{subjectId}, #{gradleId}, #{filePath}, #{createUser}, #{createTime});
+    </insert>
+    <!--根据题目ID修改一条题目数据-->
+    <update id="updateProblemById">
+        update problem
+        <set>
+            <if test="type!=null">
+                type=#{type}
+            </if>
+            <if test="subjectId!='' and subjectId!=null">
+                ,subject_id=#{subjectId}
+            </if>
+            <if test="gradleId!='' and gradleId!=null">
+                ,gradle_id=#{gradleId}
+            </if>
+            <if test="filePath!=null and filePath!=''">
+                ,file_path=#{filePath}
+            </if>
+            <if test="updateUser!='' and updateUser!=null">
+                ,update_user=#{updateUser}
+            </if>
+            <if test="updateTime!='' and updateTime!=null">
+                ,update_time=#{updateTime}
+            </if>
+        </set>
+        where id=#{id};
+    </update>
+    <!--根据题目ID批量删除题目信息-->
+    <delete id="deleteProblemById" parameterType="list">
+        delete
+        from problem
+        where
+        id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
