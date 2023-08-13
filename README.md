@@ -200,6 +200,8 @@ http://localhost:8000
 
 [SpringSecurity 框架教程-三更](https://www.bilibili.com/video/BV1mm4y1X7Hc/)
 
+[vue-h5-template(改版)](https://gitee.com/dc_teach/vue-h5-template)
+
 # 六、开发日志(实时更新)
 
 commit 79120d93e79f6a8448a2c17adbb715a62280b9c4 (HEAD -> master, Gitee/master)
