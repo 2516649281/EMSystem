@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chunfeng.dao.mapper.RoleMapper">
+    <resultMap id="roleMap" type="com.chunfeng.dao.entity.Role">
+        <result column="is_default" property="isDefault"/>
+    </resultMap>
+    <!--条件查询角色信息-->
+    <select id="selectAllRole" resultType="com.chunfeng.dao.entity.Role" resultMap="roleMap">
+        select id, name,is_default
+        from role
+        <where>
+            <if test="id!='' and id!=null">
+                id=#{id}
+            </if>
+            <if test="name!='' and name!=null">
+                and name like CONCAT('%', #{name}, '%')
+            </if>
+            <if test="isDefault!=null">
+                and is_default=${isDefault}
+            </if>
+
+        </where>
+        ;
+    </select>
+    <!--根据ID查询角色-->
+    <select id="selectAllRoleById" resultType="com.chunfeng.dao.entity.Role" resultMap="roleMap">
+        select id, name,is_default
+        from role
+        <where>
+            id in
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+        ;
+    </select>
+    <!--插入一条角色信息-->
+    <insert id="insertRole">
+        insert into role (id, name, create_user, create_time)
+        values (#{id}, #{name}, #{createUser}, #{createTime});
+    </insert>
+    <!--修改一条角色信息-->
+    <update id="updateRoleById">
+        update role
+        <set>
+            <if test="name!='' and name!=null">
+                name=#{name}
+            </if>
+            <if test="updateUser!='' and updateUser!=null">
+                ,update_user=#{updateUser}
+            </if>
+            <if test="updateTime!='' and updateTime!=null">
+                ,update_time=#{updateTime}
+            </if>
+        </set>
+        where id=#{id};
+    </update>
+    <!--根据角色ID批量删除角色信息-->
+    <delete id="deleteRoleById" parameterType="list">
+        delete
+        from role
+        where
+        id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

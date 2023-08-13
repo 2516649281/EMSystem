@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chunfeng.dao.mapper.ProblemExamMapper">
+    <!--字段映射-->
+    <resultMap id="problemExamRole" type="com.chunfeng.dao.entity.ProblemExam">
+        <result column="exam_id" property="examId"/>
+        <result column="problem_id" property="problemId"/>
+    </resultMap>
+    <!--条件查询关系-->
+    <select id="selectAllProblemExam" resultType="com.chunfeng.dao.entity.ProblemExam"
+            parameterType="com.chunfeng.dao.entity.ProblemExam" resultMap="problemExamRole">
+        select id, exam_id, problem_id
+        from problem_exam
+        <where>
+            <if test="id!='' and id!=null">
+                id=#{id}
+            </if>
+            <if test="problemId!='' and problemId!=null">
+                and problem_id=#{problemId}
+            </if>
+            <if test="examId!='' and examId!=null">
+                and exam_id=#{examId}
+            </if>
+        </where>
+    </select>
+    <!--根据关系ID查询关系信息-->
+    <select id="selectAllProblemExamById" resultType="com.chunfeng.dao.entity.ProblemExam" resultMap="problemExamRole">
+        select id, exam_id, problem_id
+        from problem_exam
+        <where>
+            id in
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+        ;
+    </select>
+    <!--按条件批量查询符合条件的个数-->
+    <select id="selectAllProblemExamCount" resultType="java.lang.Integer">
+        select COUNT(id)
+        from problem_exam
+        <where>
+            <foreach collection="pes" item="id" open="(" separator="and" close=")">
+                <if test="id.problemId!=null and id.problemId!=''">
+                    problem_id=#{id.problemId}
+                </if>
+                <if test="id.examId!=null and id.examId!=''">
+                    and exam_id=#{id.examId}
+                </if>
+            </foreach>
+        </where>
+        ;
+    </select>
+    <!--插入一条关系数据-->
+    <insert id="insertProblemExam">
+        insert into problem_exam (id, exam_id, problem_id, create_user, create_time)
+        <foreach collection="pes" item="pe" open="values" separator="," close=";">
+            (#{pe.id}, #{pe.examId}, #{pe.problemId}, #{pe.createUser}, #{pe.createTime})
+        </foreach>
+    </insert>
+    <!--根据关系ID批量修改关系数据-->
+    <update id="updateProblemExamById">
+        <foreach collection="pes" item="pe" separator="," close=";">
+            update problem_exam
+            <set>
+                <if test="pe.examId!='' and pe.examId!=null">
+                    exam_id=#{pe.examId}
+                </if>
+                <if test="pe.problemId!='' and pe.problemId!=null">
+                    ,problem_id=#{pe.problemId}
+                </if>
+                <if test="pe.updateUser!='' and pe.updateUser!=null">
+                    ,update_user=#{pe.updateUser}
+                </if>
+                <if test="pe.updateTime!='' and pe.updateTime!=null">
+                    ,update_time=#{pe.updateTime}
+                </if>
+            </set>
+            where id=#{id}
+        </foreach>
+    </update>
+    <!--根据关系ID批量解绑关系信息-->
+    <delete id="deleteProblemExamById" parameterType="list">
+        delete
+        from problem_exam
+        where
+        id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--根据题库ID批量解绑关系信息-->
+    <delete id="deleteProblemExamByPro">
+        delete
+        from problem_exam
+        where
+        problem_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--根据试卷ID批量解绑关系信息-->
+    <delete id="deleteProblemExamByExam">
+        delete
+        from problem_exam
+        where
+        exam_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

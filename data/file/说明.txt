@@ -1,0 +1,1 @@
+请将本文件夹内所有的文件放到application.yml配置的文件路径下,默认在D:\text
