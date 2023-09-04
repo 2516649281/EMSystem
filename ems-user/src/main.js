@@ -1,25 +1,28 @@
-import Vue from "vue";
-// import "vant/lib/index.css";
+import { createApp } from "vue";
 import App from "./App.vue";
-import router from "./router/index";
-// import "@/assets/style/font/iconfont.css";
-import "@/assets/style/index.less";
-import $axios from "@/utils/request";
-import mixin from "./mixin/index";
-import store from "./store/index";
+import router from "./router";
+import store from "./store";
+import "vant/lib/index.css";
+import {
+  Form,
+  Field,
+  CellGroup,
+  Sidebar,
+  SidebarItem,
+  Popup,
+  Tabbar,
+  TabbarItem,
+} from "vant";
 
-import "@/components/Vant";
-// rem
-import "amfe-flexible";
-// 把变量挂载到vue的原型上
-Vue.prototype.$axios = $axios;
-
-Vue.mixin(mixin);
-
-Vue.config.productionTip = false;
-
-new Vue({
-  store,
-  router,
-  render: h => h(App)
-}).$mount("#app");
+createApp(App)
+  .use(store)
+  .use(router)
+  .use(Form)
+  .use(Field)
+  .use(CellGroup)
+  .use(Sidebar)
+  .use(SidebarItem)
+  .use(Popup)
+  .use(Tabbar)
+  .use(TabbarItem)
+  .mount("#app");

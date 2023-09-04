@@ -108,7 +108,7 @@ git clone https://gitee.com/cfnjs20020602/EMSystem
 进入项目并打开命令行
 
 ```bash
-./gradlew
+gradlew.bat
 ```
 
 也可使用 IDEA 等开发工具，打开项目即可自动开始构建
@@ -199,8 +199,6 @@ http://localhost:8000
 [error-page](https://gitee.com/cloudResource/error-page)
 
 [SpringSecurity 框架教程-三更](https://www.bilibili.com/video/BV1mm4y1X7Hc/)
-
-[vue-h5-template(改版)](https://gitee.com/dc_teach/vue-h5-template)
 
 # 六、开发日志(实时更新)
 

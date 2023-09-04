@@ -111,4 +111,4 @@ system:
     #是否开启默认数据保护机制
     is-open-default-data-protect: true
     #是否开启跨域
-    is-open-cors-config: false
+    is-open-cors-config: true
