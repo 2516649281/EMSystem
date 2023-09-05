@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import "vant/lib/index.css";
 import {
+  Button,
   Form,
   Field,
   CellGroup,
@@ -12,11 +13,19 @@ import {
   Popup,
   Tabbar,
   TabbarItem,
+  Cell,
+  Image as VanImage,
+  NavBar,
+  Loading,
+  Overlay,
+  Uploader,
+  Dialog,
 } from "vant";
 
 createApp(App)
   .use(store)
   .use(router)
+  .use(Button)
   .use(Form)
   .use(Field)
   .use(CellGroup)
@@ -25,4 +34,11 @@ createApp(App)
   .use(Popup)
   .use(Tabbar)
   .use(TabbarItem)
+  .use(Cell)
+  .use(VanImage)
+  .use(NavBar)
+  .use(Loading)
+  .use(Overlay)
+  .use(Uploader)
+  .use(Dialog)
   .mount("#app");

@@ -31,6 +31,8 @@
 <script>
 import { login } from "../api/user";
 import { showNotify } from "vant";
+import JWT from "jwt-decode";
+
 export default {
   data() {
     return {
@@ -48,9 +50,9 @@ export default {
           showNotify({ type: "success", message: "登录成功!" });
           //存入token
           sessionStorage.setItem("token", response.data.data);
+          var id = JWT(response.data.data).user;
+          sessionStorage.setItem("user_id", id);
           this.$router.push("/");
-        } else {
-          showNotify({ type: "error", message: "登录失败!" });
         }
       });
     },

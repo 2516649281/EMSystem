@@ -23,6 +23,12 @@ const routes = [
         meta: { title: "主页" },
       },
       {
+        path: "/exam",
+        name: "exam",
+        component: () => import("../views/exam.vue"),
+        meta: { title: "考试中心" },
+      },
+      {
         path: "/user",
         name: "user",
         component: () => import("../views/user.vue"),
