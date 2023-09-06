@@ -22,7 +22,7 @@ public class UserExam implements Serializable {
      * 序列化字段
      */
     @ApiModelProperty(value = "序列化字段", hidden = true)
-    private static final long serialVersionUID = 3566910586390046888L;
+    private static final long serialVersionUID = -5687448718878478668L;
     /**
      * 主键
      */
@@ -43,6 +43,16 @@ public class UserExam implements Serializable {
      */
     @ApiModelProperty(value = "得分")
     private Float score;
+    /**
+     * 时间
+     */
+    @ApiModelProperty(value = "时间")
+    private String time;
+    /**
+     * 试卷信息
+     */
+    @ApiModelProperty(value = "试卷信息")
+    private Exam exam;
     /**
      * 创建人
      */

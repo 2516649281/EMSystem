@@ -156,7 +156,7 @@ public class ProblemServiceImpl implements IProblemService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = "problem_select", allEntries = true)
+    @CacheEvict(value = {"problem_select", "userProblem_select"}, allEntries = true)
     public JsonRequest<Integer> updateOneProblem(Problem problem) {
         JsonRequest<List<Problem>> request = problemService.lookProblemById(new String[]{problem.getId()});
         //判断是否成功
@@ -185,7 +185,7 @@ public class ProblemServiceImpl implements IProblemService {
      * @return JSON
      */
     @Override
-    @CacheEvict(value = "problem_select", allEntries = true)
+    @CacheEvict(value = {"problem_select", "userProblem_select"}, allEntries = true)
     public JsonRequest<Integer> deleteProblem(String[] ids) {
         JsonRequest<List<Problem>> request = problemService.lookProblemById(ids);
         if (!request.getSuccess()) {

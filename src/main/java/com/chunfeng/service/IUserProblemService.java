@@ -35,7 +35,15 @@ public interface IUserProblemService {
      * @param ids 关系ID
      * @return JSON
      */
-    JsonRequest<List<UserProblem>> lookUserProblemById(String[] ids);
+    JsonRequest<List<UserProblem>> lookUserProblemByIds(String[] ids);
+
+    /**
+     * 根据ID值查询详细关系信息
+     *
+     * @param id 关系ID
+     * @return JSON
+     */
+    JsonRequest<UserProblem> lookUserProblemById(String id);
 
     /**
      * 批量绑定关系信息
@@ -68,5 +76,5 @@ public interface IUserProblemService {
      * @param ids 题目ID
      * @return JSON
      */
-    JsonRequest<Integer> deleteUserProblemByExam(String[] ids);
+    JsonRequest<Integer> deleteUserProblemByProblem(String[] ids);
 }

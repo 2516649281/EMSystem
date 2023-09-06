@@ -1,9 +1,11 @@
 package com.chunfeng.service.impl;
 
+import com.chunfeng.dao.entity.Problem;
 import com.chunfeng.dao.entity.UserProblem;
 import com.chunfeng.dao.mapper.UserProblemMapper;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
+import com.chunfeng.service.IProblemService;
 import com.chunfeng.service.IUserProblemService;
 import com.chunfeng.utils.SqlDateUtils;
 import com.chunfeng.utils.UIDCreateUtil;
@@ -40,6 +42,12 @@ public class UserProblemServiceImpl implements IUserProblemService {
     @Lazy
     @Autowired
     private IUserProblemService userProblemService;
+
+    /**
+     * 题库业务层注入
+     */
+    @Autowired
+    private IProblemService problemService;
 
     /**
      * 分类筛选关系信息
@@ -79,7 +87,7 @@ public class UserProblemServiceImpl implements IUserProblemService {
      */
     @Override
     @Cacheable(value = "userProblem_select", key = "#ids")
-    public JsonRequest<List<UserProblem>> lookUserProblemById(String[] ids) {
+    public JsonRequest<List<UserProblem>> lookUserProblemByIds(String[] ids) {
         List<UserProblem> userProblems = userProblemMapper.selectAllUserProblemById(ids);
         if (userProblems.size() != ids.length) {
             log.warn("待查询的关系ID与数据库中的数量不符!数据库:{},实际:{}", userProblems.size(), ids.length);
@@ -88,6 +96,35 @@ public class UserProblemServiceImpl implements IUserProblemService {
         log.info("已查询出{}条关系数据!", userProblems.size());
         return JsonRequest.success(userProblems);
     }
+
+    /**
+     * 根据ID值查询详细关系信息
+     *
+     * @param id 关系ID
+     * @return JSON
+     */
+    @Override
+    @Cacheable(value = "userProblem_select", key = "#id")
+    public JsonRequest<UserProblem> lookUserProblemById(String id) {
+        //查询关系列表
+        JsonRequest<List<UserProblem>> request = userProblemService.lookUserProblemByIds(new String[]{id});
+        if (!request.getSuccess()) {
+            log.warn("{}", request.getMessage());
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        //获取单个关系
+        UserProblem userProblem = request.getData().get(0);
+        //获得题库列表
+        JsonRequest<List<Problem>> request1 = problemService.lookProblemById(new String[]{userProblem.getProblemId()});
+        if (!request1.getSuccess()) {
+            log.warn("{}", request.getMessage());
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        //存入
+        userProblem.setProblem(request1.getData().get(0));
+        return JsonRequest.success(userProblem);
+    }
+
 
     /**
      * 批量绑定关系信息
@@ -133,7 +170,7 @@ public class UserProblemServiceImpl implements IUserProblemService {
     public JsonRequest<Integer> updateUserProblem(List<UserProblem> userProblems) {
         //获取ID值
         String[] ids = userProblems.stream().map(UserProblem::getId).toArray(String[]::new);
-        JsonRequest<List<UserProblem>> request = userProblemService.lookUserProblemById(ids);
+        JsonRequest<List<UserProblem>> request = userProblemService.lookUserProblemByIds(ids);
         //判断是否成功
         if (!request.getSuccess()) {
             log.warn("{}", request.getMessage());
@@ -164,7 +201,7 @@ public class UserProblemServiceImpl implements IUserProblemService {
     @Override
     @CacheEvict(value = {"userProblem_select"}, allEntries = true)
     public JsonRequest<Integer> deleteUserProblem(String[] ids) {
-        JsonRequest<List<UserProblem>> request = userProblemService.lookUserProblemById(ids);
+        JsonRequest<List<UserProblem>> request = userProblemService.lookUserProblemByIds(ids);
         if (!request.getSuccess()) {
             log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);
@@ -186,7 +223,7 @@ public class UserProblemServiceImpl implements IUserProblemService {
      */
     @Override
     @CacheEvict(value = {"userProblem_select"}, allEntries = true)
-    public JsonRequest<Integer> deleteUserProblemByExam(String[] ids) {
+    public JsonRequest<Integer> deleteUserProblemByProblem(String[] ids) {
         Integer column = userProblemMapper.deleteUserProblemByExam(ids);
         //这里不做处理，因为存在没有关系的数据
         if (column < 1) {

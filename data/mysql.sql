@@ -120,6 +120,7 @@ CREATE TABLE `user_exam`
     `user_id`     VARCHAR(48) NOT NULL COMMENT '用户ID',
     `exam_id`     VARCHAR(48) NOT NULL COMMENT '试卷ID',
     `score`       FLOAT       NOT NULL COMMENT '得分',
+    `time`        VARCHAR(32) NOT NULL COMMENT '时间',
     `create_user` VARCHAR(48) NOT NULL COMMENT '创建用户',
     `update_user` VARCHAR(48) COMMENT '修改用户',
     `create_time` DATETIME    NOT NULL COMMENT '创建时间',

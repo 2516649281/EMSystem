@@ -4,12 +4,12 @@
     <!--字段映射-->
     <resultMap id="userExamRole" type="com.chunfeng.dao.entity.UserExam">
         <result column="user_id" property="userId"/>
-        <result column="exam_id" property="examId"/>
+        <result column="exam_id,time" property="examId"/>
     </resultMap>
     <!--条件查询关系-->
     <select id="selectAllUserExam" resultType="com.chunfeng.dao.entity.UserExam"
             parameterType="com.chunfeng.dao.entity.UserExam" resultMap="userExamRole">
-        select id,user_id,exam_id
+        select id,user_id,exam_id,time
         from user_exam
         <where>
             <if test="id!='' and id!=null">
@@ -28,7 +28,7 @@
     </select>
     <!--根据关系ID查询关系信息-->
     <select id="selectAllUserExamById" resultType="com.chunfeng.dao.entity.UserExam" resultMap="userExamRole">
-        select id, user_id,exam_id
+        select id, user_id,exam_id,time
         from user_exam
         <where>
             id in
@@ -43,15 +43,18 @@
         select COUNT(id)
         from user_exam
         <where>
-            <foreach collection="ues" item="id" open="(" separator="and" close=")">
-                <if test="id.userId!=null and id.userId!=''">
-                    user_id=#{id.userId}
+            <foreach collection="ues" item="ue" open="(" separator="and" close=")">
+                <if test="ue.userId!=null and ue.userId!=''">
+                    user_id=#{ue.userId}
                 </if>
-                <if test="id.examId!=null and id.examId!=''">
-                    and exam_id=#{id.examId}
+                <if test="ue.examId!=null and ue.examId!=''">
+                    and exam_id=#{ue.examId}
                 </if>
-                <if test="score!=null">
-                    and score=#{score}
+                <if test="ue.score!=null">
+                    and score=#{ue.score}
+                </if>
+                <if test="ue.time!='' and ue.time!=null">
+                    and time=#{ue.time}
                 </if>
             </foreach>
         </where>
@@ -59,9 +62,9 @@
     </select>
     <!--插入一条关系数据-->
     <insert id="insertUserExam">
-        insert into user_exam (id, exam_id, user_id,score, create_user, create_time)
+        insert into user_exam (id, exam_id,time, user_id,score, create_user, create_time)
         <foreach collection="ues" item="ue" open="values" separator="," close=";">
-            (#{ue.id}, #{ue.examId}, #{ue.userId},#{ue.score}, #{ue.createUser}, #{ue.createTime})
+            (#{ue.id}, #{ue.examId},#{ue.time}, #{ue.userId},#{ue.score}, #{ue.createUser}, #{ue.createTime})
         </foreach>
     </insert>
     <!--根据关系ID批量修改关系数据-->
@@ -76,7 +79,10 @@
                     ,user_id=#{ue.userId}
                 </if>
                 <if test="score!=null">
-                    ,score=#{up.score}
+                    ,score=#{ue.score}
+                </if>
+                <if test="ue.time!='' and ue.time!=null">
+                    ,time=#{ue.time}
                 </if>
                 <if test="ue.updateUser!='' and ue.updateUser!=null">
                     ,update_user=#{ue.updateUser}

@@ -44,6 +44,11 @@ public class UserProblem implements Serializable {
     @ApiModelProperty(value = "是否正确", allowableValues = "0,1")
     private Integer status;
     /**
+     * 题库信息
+     */
+    @ApiModelProperty(value = "题库信息")
+    private Problem problem;
+    /**
      * 创建人
      */
     @ApiModelProperty(value = "创建人", hidden = true)

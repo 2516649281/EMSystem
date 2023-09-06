@@ -35,7 +35,15 @@ public interface IUserExamService {
      * @param ids 关系ID
      * @return JSON
      */
-    JsonRequest<List<UserExam>> lookUserExamById(String[] ids);
+    JsonRequest<List<UserExam>> lookUserExamByIds(String[] ids);
+
+    /**
+     * 根据ID值查询关系详细信息
+     *
+     * @param id 关系ID
+     * @return JSON
+     */
+    JsonRequest<UserExam> lookUserExamById(String id);
 
     /**
      * 批量绑定关系信息

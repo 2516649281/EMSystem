@@ -43,14 +43,14 @@
         select COUNT(id)
         from user_problem
         <where>
-            <foreach collection="ups" item="id" open="(" separator="and" close=")">
-                <if test="id.userId!=null and id.userId!=''">
+            <foreach collection="ups" item="up" open="(" separator="and" close=")">
+                <if test="up.userId!=null and up.userId!=''">
                     user_id=#{id.userId}
                 </if>
-                <if test="id.problemId!=null and id.problemId!=''">
+                <if test="up.problemId!=null and up.problemId!=''">
                     and problem_id=#{id.problemId}
                 </if>
-                <if test="status!=null">
+                <if test="up.status!=null">
                     and status=#{status}
                 </if>
             </foreach>
@@ -75,7 +75,7 @@
                 <if test="up.userId!='' and up.userId!=null">
                     ,user_id=#{up.userId}
                 </if>
-                <if test="status!=null">
+                <if test="up.status!=null">
                     ,status=#{up.status}
                 </if>
                 <if test="up.updateUser!='' and up.updateUser!=null">

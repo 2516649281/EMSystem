@@ -1,9 +1,11 @@
 package com.chunfeng.service.impl;
 
+import com.chunfeng.dao.entity.Exam;
 import com.chunfeng.dao.entity.UserExam;
 import com.chunfeng.dao.mapper.UserExamMapper;
 import com.chunfeng.result.JsonRequest;
 import com.chunfeng.result.RequestException;
+import com.chunfeng.service.IExamService;
 import com.chunfeng.service.IUserExamService;
 import com.chunfeng.utils.SqlDateUtils;
 import com.chunfeng.utils.UIDCreateUtil;
@@ -40,6 +42,12 @@ public class UserExamServiceImpl implements IUserExamService {
     @Lazy
     @Autowired
     private IUserExamService userExamService;
+
+    /**
+     * 试卷业务层注入
+     */
+    @Autowired
+    private IExamService examService;
 
     /**
      * 分类筛选关系信息
@@ -79,7 +87,7 @@ public class UserExamServiceImpl implements IUserExamService {
      */
     @Override
     @Cacheable(value = "userExam_select", key = "#ids")
-    public JsonRequest<List<UserExam>> lookUserExamById(String[] ids) {
+    public JsonRequest<List<UserExam>> lookUserExamByIds(String[] ids) {
         List<UserExam> userExams = userExamMapper.selectAllUserExamById(ids);
         if (userExams.size() != ids.length) {
             log.warn("待查询的关系ID与数据库中的数量不符!数据库:{},实际:{}", userExams.size(), ids.length);
@@ -87,6 +95,33 @@ public class UserExamServiceImpl implements IUserExamService {
         }
         log.info("已查询出{}条关系数据!", userExams.size());
         return JsonRequest.success(userExams);
+    }
+
+    /**
+     * 根据ID值查询关系详细信息
+     *
+     * @param id 关系ID
+     * @return JSON
+     */
+    @Override
+    @Cacheable(value = "userExam_select", key = "#id")
+    public JsonRequest<UserExam> lookUserExamById(String id) {
+        //查询关系
+        JsonRequest<List<UserExam>> request = userExamService.lookUserExamByIds(new String[]{id});
+        if (!request.getSuccess()) {
+            log.warn("{}", request.getMessage());
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        //获取一个
+        UserExam userExam = request.getData().get(0);
+        //查询试卷信息
+        JsonRequest<List<Exam>> request1 = examService.lookExamById(new String[]{userExam.getExamId()});
+        if (!request1.getSuccess()) {
+            log.warn("{}", request.getMessage());
+            return JsonRequest.error(RequestException.NOT_FOUND);
+        }
+        userExam.setExam(request1.getData().get(0));
+        return JsonRequest.success(userExam);
     }
 
     /**
@@ -133,7 +168,7 @@ public class UserExamServiceImpl implements IUserExamService {
     public JsonRequest<Integer> updateUserExam(List<UserExam> userExams) {
         //获取ID值
         String[] ids = userExams.stream().map(UserExam::getId).toArray(String[]::new);
-        JsonRequest<List<UserExam>> request = userExamService.lookUserExamById(ids);
+        JsonRequest<List<UserExam>> request = userExamService.lookUserExamByIds(ids);
         //判断是否成功
         if (!request.getSuccess()) {
             log.warn("{}", request.getMessage());
@@ -164,7 +199,7 @@ public class UserExamServiceImpl implements IUserExamService {
     @Override
     @CacheEvict(value = {"userExam_select"}, allEntries = true)
     public JsonRequest<Integer> deleteUserExam(String[] ids) {
-        JsonRequest<List<UserExam>> request = userExamService.lookUserExamById(ids);
+        JsonRequest<List<UserExam>> request = userExamService.lookUserExamByIds(ids);
         if (!request.getSuccess()) {
             log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.DELETE_ERROR);
