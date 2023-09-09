@@ -13,19 +13,19 @@
           type="primary"
           @click="search(selectForm)"
           :icon="searchLoading ? 'el-icon-loading' : 'el-icon-search'"
-        >查询
+          >查询
         </el-button>
         <el-button
           type="danger"
           @click="deleteRole(ids)"
           :icon="deleteLoading ? 'el-icon-loading' : 'el-icon-delete'"
-        >批量删除
+          >批量删除
         </el-button>
         <el-button
           type="success"
           @click="addDialogVisible = true"
           icon="el-icon-plus"
-        >添加角色
+          >添加角色
         </el-button>
       </el-form-item>
       <el-form-item>
@@ -37,7 +37,7 @@
           :name="`${title}.xls`"
         >
           <el-button icon="el-icon-printer" type="warning"
-          >导出Excel表格
+            >导出Excel表格
           </el-button>
         </download-excel>
       </el-form-item>
@@ -68,7 +68,7 @@
         <template slot-scope="scope">
           <!-- ID特殊列 -->
           <template v-if="table.value === 'id'"
-          >{{ scope.$index + 1 }}
+            >{{ scope.$index + 1 }}
           </template>
           <!-- 是否默认特殊列 -->
           <el-tag
@@ -87,13 +87,13 @@
             @click="showUpdate(scope.row)"
             type="primary"
             icon="el-icon-edit"
-          >修改
+            >修改
           </el-button>
           <el-button
             type="danger"
             @click="deleteRole([scope.row.id])"
             icon="el-icon-delete"
-          >删除
+            >删除
           </el-button>
         </template>
       </el-table-column>
@@ -134,7 +134,7 @@
           type="primary"
           @click="updateRole(oldRole)"
           :icon="editLoading ? 'el-icon-loading' : ''"
-        >确 定
+          >确 定
         </el-button>
       </div>
     </el-dialog>
@@ -156,7 +156,7 @@
           type="primary"
           @click="addRole(newRole)"
           :icon="editLoading ? 'el-icon-loading' : ''"
-        >确 定
+          >确 定
         </el-button>
       </div>
     </el-dialog>
@@ -164,8 +164,14 @@
 </template>
 
 <script>
-import {getPermissions, getRoles} from "@/api/table";
-import {addRole, deleteRole, getRoleById, getRoleInfo, updateRole,} from "@/api/role";
+import { getPermissions, getRoles } from "@/api/table";
+import {
+  addRole,
+  deleteRole,
+  getRoleById,
+  getRoleInfo,
+  updateRole,
+} from "@/api/role";
 
 export default {
   filters: {
@@ -191,7 +197,7 @@ export default {
       ids: [],
       roleList: null,
       roleRules: {
-        name: [{required: true, message: "角色名不得为空!", trigger: "blur"}],
+        name: [{ required: true, message: "角色名不得为空!", trigger: "blur" }],
       },
       selectForm: {},
       oldPermissions: [],
@@ -273,15 +279,15 @@ export default {
     updateRole(newRole) {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          //判断是否为默认角色
-          if (newRole.isDefault === 0) {
-            this.$message({
-              showClose: true,
-              message: "不得修改默认角色!",
-              type: "error",
-            });
-            return;
-          }
+          // //判断是否为默认角色
+          // if (newRole.isDefault === 0) {
+          //   this.$message({
+          //     showClose: true,
+          //     message: "不得修改默认角色!",
+          //     type: "error",
+          //   });
+          //   return;
+          // }
           this.editLoading = true;
           var permissionList = this.oldPermissionIds.map((v) => {
             var obj = {};
@@ -369,7 +375,7 @@ export default {
     //显示修改窗
     showUpdate(oldRole) {
       //获取已绑定的权限ID
-      getRoleById({roleId: oldRole.id}).then((response) => {
+      getRoleById({ roleId: oldRole.id }).then((response) => {
         this.oldPermissionIds = response.data.permissionList.map((v) => {
           return v.id;
         });

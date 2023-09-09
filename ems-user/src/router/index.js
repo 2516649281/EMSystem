@@ -13,8 +13,8 @@ const routes = [
   {
     path: "/",
     name: "page",
-    component: () => import("../views/page.vue"),
     redirect: "/index",
+    component: () => import("../views/page.vue"),
     children: [
       {
         path: "/index",
@@ -23,10 +23,22 @@ const routes = [
         meta: { title: "主页" },
       },
       {
+        path: "/pro",
+        name: "problem",
+        component: () => import("../views/problem/problem.vue"),
+        meta: { title: "刷题" },
+      },
+      {
         path: "/exam",
         name: "exam",
-        component: () => import("../views/exam.vue"),
-        meta: { title: "考试中心" },
+        component: () => import("../views/exam/exam.vue"),
+        meta: { title: "模拟考试" },
+      },
+      {
+        path: "/his",
+        name: "history",
+        component: () => import("../views/history.vue"),
+        meta: { title: "历史记录" },
       },
       {
         path: "/user",

@@ -20,6 +20,9 @@ import {
   Overlay,
   Uploader,
   Dialog,
+  Search,
+  DropdownMenu,
+  DropdownItem,
 } from "vant";
 
 createApp(App)
@@ -41,4 +44,7 @@ createApp(App)
   .use(Overlay)
   .use(Uploader)
   .use(Dialog)
+  .use(Search)
+  .use(DropdownMenu)
+  .use(DropdownItem)
   .mount("#app");

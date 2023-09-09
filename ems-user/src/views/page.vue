@@ -27,8 +27,10 @@ export default {
       active: 0,
       tabList: [
         { index: 0, title: "主页", icon: "wap-home-o", url: "/index" },
-        { index: 1, title: "考试中心", icon: "notes-o", url: "/exam" },
-        { index: 2, title: "我的", icon: "user-o", url: "/user" },
+        { index: 1, title: "刷题", icon: "edit", url: "/pro" },
+        { index: 2, title: "模拟考试", icon: "orders-o", url: "/exam" },
+        { index: 3, title: "历史记录", icon: "notes-o", url: "/his" },
+        { index: 4, title: "我的", icon: "user-o", url: "/user" },
       ],
     };
   },

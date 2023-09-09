@@ -109,6 +109,6 @@ debug: false
 system:
   config:
     #是否开启默认数据保护机制
-    is-open-default-data-protect: true
+    is-open-default-data-protect: false
     #是否开启跨域
     is-open-cors-config: true
