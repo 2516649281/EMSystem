@@ -23,6 +23,8 @@ import {
   Search,
   DropdownMenu,
   DropdownItem,
+  Card,
+  SwipeCell,
 } from "vant";
 
 createApp(App)
@@ -47,4 +49,6 @@ createApp(App)
   .use(Search)
   .use(DropdownMenu)
   .use(DropdownItem)
+  .use(Card)
+  .use(SwipeCell)
   .mount("#app");

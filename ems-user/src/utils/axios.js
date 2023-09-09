@@ -1,9 +1,8 @@
 import axios from "axios";
-import { showDialog, Notify } from "vant";
+import { showDialog } from "vant";
 import "vant/lib/index.css";
-import router from "@/router/index";
 
-var messageStarus = false;
+var messageStatus = false;
 //设置公共后台url地址
 const server = axios.create({
   // baseURL: "http://47.92.215.94:8000/api",
@@ -24,7 +23,8 @@ server.interceptors.request.use(
     return config;
   },
   (err) => {
-    return Promise.reject(err);
+    showDialog({ message: err.message });
+    console.log(`捕获到异常:${err}`);
   }
 );
 
@@ -33,32 +33,43 @@ server.interceptors.response.use(
   (config) => {
     console.log("======响应体======");
     console.log(config);
+    error(config);
     return config;
   },
   (err) => {
-    console.log(`捕获到异常:${err.response}`);
-    error(err);
-    return Promise.reject(err);
+    showDialog({ message: err.message });
+    console.log(`捕获到异常:${err}`);
   }
 );
 
+//异常处理
 function error(err) {
   console.log(err);
-  if (err.response.status === 401) {
+  if (err.data.status === 403) {
     console.log("登陆过期");
-    if (!messageStarus) {
-      showDialog({ message: "当前登录信息已过期,请重新登陆!" });
-      router.push({ name: "login" });
+    if (!messageStatus) {
+      showDialog({
+        message: "当前登录信息已过期,请重新登陆!",
+        type: "warning",
+      });
+      sessionStorage.clear();
     }
   }
-  if (err.response.status !== 500) {
-    Notify({
+  if (err.data.status === 401) {
+    console.log("非法访问!");
+    if (!messageStatus) {
+      showDialog({ message: "对不起,你没有权限访问!", type: "warning" });
+      sessionStorage.clear();
+    }
+  }
+  if (err.data.status === 500) {
+    showDialog({
       message: "服务异常!请稍后重试!",
       type: "danger",
     });
+    sessionStorage.clear();
   }
-  sessionStorage.clear();
-  messageStarus = true;
+  messageStatus = true;
 }
 
 export default server;

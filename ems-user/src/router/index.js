@@ -29,6 +29,12 @@ const routes = [
         meta: { title: "刷题" },
       },
       {
+        path: "/ep",
+        name: "editProblem",
+        component: () => import("../views/problem/editProblem.vue"),
+        meta: { title: "题目练习" },
+      },
+      {
         path: "/exam",
         name: "exam",
         component: () => import("../views/exam/exam.vue"),

@@ -279,15 +279,15 @@ export default {
     updateRole(newRole) {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          // //判断是否为默认角色
-          // if (newRole.isDefault === 0) {
-          //   this.$message({
-          //     showClose: true,
-          //     message: "不得修改默认角色!",
-          //     type: "error",
-          //   });
-          //   return;
-          // }
+          //判断是否为默认角色
+          if (newRole.isDefault === 0) {
+            this.$message({
+              showClose: true,
+              message: "不得修改默认角色!",
+              type: "error",
+            });
+            return;
+          }
           this.editLoading = true;
           var permissionList = this.oldPermissionIds.map((v) => {
             var obj = {};

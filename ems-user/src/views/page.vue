@@ -34,7 +34,6 @@ export default {
       ],
     };
   },
-  created() {},
   methods: {
     clickItem(url) {
       this.$router.push(url);
@@ -46,5 +45,5 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 </style>
