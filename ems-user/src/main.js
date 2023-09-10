@@ -25,6 +25,10 @@ import {
   DropdownItem,
   Card,
   SwipeCell,
+  Tag,
+  CountDown,
+  Checkbox,
+  CheckboxGroup,
 } from "vant";
 
 createApp(App)
@@ -51,4 +55,8 @@ createApp(App)
   .use(DropdownItem)
   .use(Card)
   .use(SwipeCell)
+  .use(Tag)
+  .use(CountDown)
+  .use(Checkbox)
+  .use(CheckboxGroup)
   .mount("#app");

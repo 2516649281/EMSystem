@@ -25,6 +25,7 @@ server.interceptors.request.use(
   (err) => {
     showDialog({ message: err.message });
     console.log(`捕获到异常:${err}`);
+    sessionStorage.clear();
   }
 );
 
@@ -39,6 +40,7 @@ server.interceptors.response.use(
   (err) => {
     showDialog({ message: err.message });
     console.log(`捕获到异常:${err}`);
+    sessionStorage.clear();
   }
 );
 
