@@ -3,11 +3,11 @@
     <van-tag :type="problemInfo.type === 0 ? 'success' : 'primary'">{{
       problemInfo.type === 0 ? "选择题" : "主观题"
     }}</van-tag>
-    <van-tag :color="isMuSelect ? '#7232dd' : 'green'">{{
+    <van-tag :color="isMuSelect ? '#7232dd' : '#FF7400'">{{
       isMuSelect ? "多选" : "单选"
     }}</van-tag>
     <van-count-down :time="time" @finish="finish" />
-    <p class="problem-main">0.{{ problemInfo.main }}</p>
+    <p class="problem-main">{{ problemInfo.main }}</p>
   </div>
   <div class="problem-awe" v-if="problemInfo.type === 0">
     <van-checkbox-group v-model="userAnswer">
@@ -28,10 +28,11 @@
           plain
           hairline
           type="primary"
-          v-for="option in problemInfo.optionList"
+          v-for="(option, index) in problemInfo.optionList"
           :name="option[0]"
           :key="option[0]"
-          @click="edit(option[0])"
+          ref="btn"
+          @click="buttonClick(index)"
           >{{ option[0] }}.{{ option[1] }}</van-button
         >
       </template>
@@ -41,6 +42,11 @@
         >提交</van-button
       >
     </div>
+  </div>
+  <div class="problem-text" v-if="problemInfo.type === 1"></div>
+  <div class="problem-parse" v-if="parseShow">
+    <p><van-tag type="success">解析</van-tag>{{ problemInfo.parse }}</p>
+    <p><van-tag type="warning">答案</van-tag>{{ problemInfo.answer }}</p>
   </div>
 </template>
 
@@ -56,6 +62,13 @@ export default {
       isMuSelect: false,
       //用户答案
       userAnswer: [],
+      //是否显示解析和答案
+      parseShow: false,
+      //错误答案
+      falseAnswer: [],
+      //正确答案
+      trueAnswer: [],
+      selectBtnId: 0,
     };
   },
   created() {
@@ -82,20 +95,20 @@ export default {
       //先转成数组再排序最后转回字符串
       var a = this.problemInfo.answer.split("");
       var ua = userAnswer;
-      //多选逻辑
-      if (userAnswer.length > 1 && this.problemInfo.answer.length > 1) {
-        var a = a.sort().toString();
-        ua = ua.sort();
-      }
+      var a = a.sort().toString();
+      ua = ua.sort();
       ua = ua.toString();
       a = a.toString();
-      //回答正确
-      if (ua === a) {
-        console.log(1);
-      } //回答错误
-      else {
-        console.log(2);
-      }
+      this.parseShow = true;
+    },
+    //单选逻辑
+    buttonClick(index) {
+      var answer = this.problemInfo.answer;
+      console.log(this.$refs.btn[index]);
+      console.log(answer);
+      //判断是否正确
+
+      //将点击的按钮和正确答案按钮更改颜色
     },
     //选中逻辑
     toggle(index) {
@@ -124,5 +137,7 @@ export default {
 }
 .van-button {
   width: 100%;
+}
+.problem-parse {
 }
 </style>
