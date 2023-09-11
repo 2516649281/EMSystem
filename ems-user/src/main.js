@@ -29,6 +29,7 @@ import {
   CountDown,
   Checkbox,
   CheckboxGroup,
+  Icon,
 } from "vant";
 
 createApp(App)
@@ -59,4 +60,5 @@ createApp(App)
   .use(CountDown)
   .use(Checkbox)
   .use(CheckboxGroup)
+  .use(Icon)
   .mount("#app");

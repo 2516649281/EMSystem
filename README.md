@@ -204,11 +204,47 @@ http://localhost:8000
 
 # 六、开发日志(实时更新)
 
-commit 54bae58260347030e985b5c71a3abfa514056597 (HEAD -> master, Gitee/master, GitHub/master)
+commit 15a8f1051a44dd33f501551154d71be8872a4803 (HEAD -> master, Gitee/master, GitHub/master)
 Author: 梦途 <2516649281@qq.com>                                                             
+Date:   Sun Sep 10 16:37:45 2023 +0800
+
+    用户端做题页面大致完成，题目正确与否功能判断尚未完成，修复了一些bug                      
+
+commit 629f15c470b7650647843da367ac286106657b44
+Author: 梦途 <2516649281@qq.com>
+Date:   Sun Sep 10 13:38:54 2023 +0800
+
+    用户端做题页面大致完成，题目正确与否功能判断尚未完成，修复了一些bug
+
+commit 5b7128e1936a45289d8bc45e7a5489b107b2b576
+Author: 梦途 <2516649281@qq.com>
+Date:   Sat Sep 9 21:31:12 2023 +0800
+
+    用户端题目查看与搜索功能实现，题目练习页面开始开发，修复了部分bug
+
+commit b78ad3d58a5083f49d93bb79b15a9ab7bcbf1aa9
+Author: 梦途 <2516649281@qq.com>
+Date:   Sat Sep 9 19:15:47 2023 +0800
+
+    前端菜单页新增刷题、模拟和历史记录模块，刷题模块实现了分类搜索
+
+commit 2bdde8e41d16df81e5514a9c4bebcfff4fd75afc
+Author: 梦途 <2516649281@qq.com>
+Date:   Wed Sep 6 21:53:37 2023 +0800
+
+    后端试卷历史、题目历史接口开发完成
+
+commit 5844a9d882dc107be76b4919b338074a77a6f570
+Author: 梦途 <2516649281@qq.com>
+Date:   Tue Sep 5 21:41:40 2023 +0800
+
+    README.md日志更新
+
+commit 54bae58260347030e985b5c71a3abfa514056597
+Author: 梦途 <2516649281@qq.com>
 Date:   Tue Sep 5 21:38:46 2023 +0800
 
-    用户个人信息查询页面完成，后端用户历史记录开发，修复了一些潜在的bug                      
+    用户个人信息查询页面完成，后端用户历史记录开发，修复了一些潜在的bug
 
 commit d9be9f1dda59de5772e52ac7f6d0ee72e219a34b
 Merge: 3e35a17 ea75e91
