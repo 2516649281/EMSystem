@@ -60,7 +60,11 @@
         </el-form-item>
       </template>
       <el-form-item label="答案" prop="answer">
-        <el-input v-model="oldProblem.answer" prop="answer"></el-input>
+        <el-input
+          v-model="oldProblem.answer"
+          prop="answer"
+          type="textarea"
+        ></el-input>
       </el-form-item>
       <el-form-item label="解析" prop="parse">
         <el-input v-model="oldProblem.parse" type="textarea"/>

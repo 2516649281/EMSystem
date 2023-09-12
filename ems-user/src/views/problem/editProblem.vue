@@ -102,18 +102,19 @@
     </div>
   </div>
   <div class="problem-text" v-if="problemInfo.type === 1">
-    <van-field
-      v-model="message"
-      rows="1"
-      autosize
-      label="答案"
-      type="textarea"
-      placeholder="本题不批改,可点击查看按钮自行批改"
-    />
+    <van-button type="primary" @click="lookAnswer">查看答案</van-button>
   </div>
   <div class="problem-parse" v-if="parseShow">
-    <p><van-tag type="success">解析</van-tag>{{ problemInfo.parse }}</p>
-    <p><van-tag type="warning">答案</van-tag>{{ problemInfo.answer }}</p>
+    <van-tag type="success">解析</van-tag>
+    <p v-for="pause in problemInfo.pauseList" :key="pause.$index">
+      {{ pause }}
+    </p>
+    <p>
+      <van-tag type="warning">答案</van-tag>
+    </p>
+    <p v-for="answer in problemInfo.answerList" :key="answer.$index">
+      {{ answer }}
+    </p>
   </div>
 </template>
 
@@ -124,6 +125,8 @@ export default {
     return {
       problemInfo: {
         mainList: [],
+        pauseList: [],
+        answerList: [],
       },
       //时*分*秒*毫秒
       time: 1 * 5 * 60 * 1000,
@@ -172,11 +175,16 @@ export default {
           var options = data.options;
           var mains = data.main;
           var mainList = mains.split("\n");
+          var pause = data.parse.split("\n");
+          if (data.type === 1) {
+            data.answerList = data.answer.split("\n");
+          }
           //转为Map集合
           if (options != null) {
             data.optionList = new Map(Object.entries(JSON.parse(options)));
           }
           data.mainList = mainList;
+          data.pauseList = pause;
           console.log(data);
           this.isMuSelect = data.answer.length > 1;
           this.problemInfo = data;
@@ -189,6 +197,11 @@ export default {
       this.parseShow = true;
       //显示答案
       this.trueAnswer = this.problemInfo.answer;
+    },
+    //查看答案
+    lookAnswer() {
+      this.finish();
+      this.$refs.countDown.pause();
     },
     //多选
     edit(userAnswer) {
