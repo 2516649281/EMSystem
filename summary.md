@@ -595,7 +595,7 @@
        /**
         * 排除切入点
         */
-       @Pointcut("!execution(* com.chunfeng.service.impl.*.look*(..)))")
+       @Pointcut("!execution(* com.chunfeng.service.impl.*.look*(..))")
        private void lookMethods() {
        }
 
