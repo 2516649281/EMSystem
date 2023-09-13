@@ -5,7 +5,7 @@
 
 [![](https://img.shields.io/badge/blog-@cfnjs-red.svg)](https://www.cnblogs.com/cfnjs)
 
-[![star](https://gitee.com/cfnjs20020602/EMSystem/badge/star.svg?theme=dark)](https://gitee.com/cfnjs20020602/EmSystem)[![fork](https://gitee.com/cfnjs20020602/EMSystem/badge/fork.svg??theme=dark)](https://gitee.com/cfnjs20020602/EmSystem)
+[![star](https://gitee.com/cfnjs20020602/EMSystem/badge/star.svg?theme=dark)](https://gitee.com/cfnjs20020602/EMSystem)[![fork](https://gitee.com/cfnjs20020602/EMSystem/badge/fork.svg??theme=dark)](https://gitee.com/cfnjs20020602/EMSystem)
 
 # 目录
 
@@ -76,7 +76,13 @@
 
 ![2-1-5](MarkDownImages/2-1-5.png)
 
-## 6.API 接口自动生成
+## 6.精简的用户界面(前台)
+
+![2-2-1](MarkDownImages/2-2-1.png)
+
+![2-2-2](MarkDownImages/2-2-2.png)
+
+## 7.API 接口自动生成
 
 ![2-1-6](MarkDownImages/2-1-6.png)
 
@@ -252,7 +258,7 @@ Author: 梦途 <2516649281@qq.com>
 Date:   Mon Sep 4 22:32:07 2023 +0800
 
     Merge branch 'master' of https://gitee.com/cfnjs20020602/EMSystem
-
+    
     # Conflicts:
     #       README.md
     #       summary.md
@@ -305,7 +311,7 @@ Author: 梦途 <2516649281@qq.com>
 Date:   Sat Aug 12 12:36:17 2023 +0800
 
     Merge branch 'master' of https://gitee.com/cfnjs20020602/EMSystem
-
+    
     # Conflicts:
     #       README.md
 
@@ -579,7 +585,7 @@ Author: 梦途 <9821120+cfnjs20020602@user.noreply.gitee.com>
 Date:   Mon Jul 17 12:21:38 2023 +0000
 
     添加许可证，为开源做准备
-
+    
     Signed-off-by: 梦途 <9821120+cfnjs20020602@user.noreply.gitee.com>
 
 commit c8c8693d2ee1edfca3ff5e7584d66ba52acf27d7

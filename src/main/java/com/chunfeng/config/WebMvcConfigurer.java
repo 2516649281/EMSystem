@@ -23,11 +23,11 @@ public class WebMvcConfigurer extends WebMvcConfigurationSupport {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //静态资源
-        registry.addResourceHandler("/**").addResourceLocations(
-                "classpath:/static/");
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/");
         //添加API映射
-        registry.addResourceHandler("/swagger-ui/**").addResourceLocations(
-                "classpath:/META-INF/resources/webjars/springfox-swagger-ui/");
+        registry.addResourceHandler("/swagger-ui/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/");
         super.addResourceHandlers(registry);
     }
 
