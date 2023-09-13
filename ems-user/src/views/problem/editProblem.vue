@@ -112,9 +112,16 @@
     <p>
       <van-tag type="warning">答案</van-tag>
     </p>
-    <p v-for="answer in problemInfo.answerList" :key="answer.$index">
-      {{ answer }}
-    </p>
+    <template v-if="problemInfo.type === 1">
+      <p v-for="answer in problemInfo.answerList" :key="answer.$index">
+        {{ answer }}
+      </p>
+    </template>
+    <template v-else>
+      <p>
+        {{ problemInfo.answer }}
+      </p>
+    </template>
   </div>
 </template>
 

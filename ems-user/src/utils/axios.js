@@ -1,3 +1,9 @@
+/**
+ * @Author: 春风能解释
+ * @Date:   2023-09-04 22:12:10
+ * @Last Modified by:   春风能解释
+ * @Last Modified time: 2023-09-13 14:49:06
+ */
 import axios from "axios";
 import { showDialog } from "vant";
 import "vant/lib/index.css";

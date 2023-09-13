@@ -22,7 +22,7 @@
       :border="true"
       :title="
         problem.main.length > 4
-          ? problem.main.substring(0, 3) + '...(右滑开始做题)'
+          ? problem.main.substring(0, 3) + '...(左滑开始做题)'
           : problem.main
       "
       :value="problem.type === 0 ? '选择题' : '主观题'"
@@ -96,7 +96,6 @@ export default {
       var newObj = {};
       Object.keys(obj).forEach((x) => {
         if ((obj[x] !== undefined) & (obj !== null) & (obj[x] !== "")) {
-          console.log(`${x}--->${obj[x]}`);
           newObj[x] = obj[x];
         }
       });
