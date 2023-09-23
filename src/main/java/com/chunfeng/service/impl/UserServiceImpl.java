@@ -208,6 +208,11 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
             log.error("{}", request.getMessage());
             return JsonRequest.error(RequestException.NOT_FOUND);
         }
+        //日志
+        user.setUpdateUser(SqlDateUtils.currentUserId);
+        user.setUpdateTime(SqlDateUtils.date);
+        //密码加密处理
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         Integer column = userMapper.updateUserById(user);
         //判断是否成功
         if (column < 1) {
