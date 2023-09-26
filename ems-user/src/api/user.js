@@ -14,7 +14,7 @@ export function login(data) {
     method: "post",
     params: data,
   });
-} 
+}
 
 /**
  * 获取当前用户信息

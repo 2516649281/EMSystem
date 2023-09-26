@@ -30,6 +30,8 @@ import {
   Checkbox,
   CheckboxGroup,
   Icon,
+    RadioGroup,
+    Radio,
 } from "vant";
 
 createApp(App)
@@ -61,4 +63,6 @@ createApp(App)
   .use(Checkbox)
   .use(CheckboxGroup)
   .use(Icon)
+    .use(RadioGroup)
+    .use(Radio)
   .mount("#app");
