@@ -32,6 +32,7 @@ import {
   Icon,
     RadioGroup,
     Radio,
+    Switch,
 } from "vant";
 
 createApp(App)
@@ -65,4 +66,5 @@ createApp(App)
   .use(Icon)
     .use(RadioGroup)
     .use(Radio)
+    .use(Switch)
   .mount("#app");

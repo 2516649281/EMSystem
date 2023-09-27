@@ -36,18 +36,40 @@
       v-model:show="updateDialog"
       title="修改信息"
     show-cancel-button
-      :beforeClose="updateTest(updateUserInfo)"
-      confirmButtonText="修改"
+      @cancel="updateDialog = false"
+      @confirm="updateTest"
+      :before-close="updateTest"
+      confirm-button-text="修改"
+      show-confirm-button
   >
     <van-cell-group inset>
-      <van-form ref="updateUserForm">
+      <van-form ref="updateUserForm" @submit="updateTest(updateUserInfo)">
+        <van-field label="修改密码?">
+          <template #input>
+            <van-switch v-model="updatePassword"/>
+          </template>
+        </van-field>
         <van-field
-            name="name"
-            v-model="updateUserInfo.name"
-            label="用户名"
-            placeholder="用户名"
-            :rules="[{ required: true, message: '请填写用户名' }]"
-        />
+            v-for="cell in cellList"
+            :key="cell.index"
+            :name="cell.value"
+            v-model="updateUserInfo[cell.value]"
+            :label="cell.label"
+            :placeholder="cell.label"
+            :rules="[{ required: true, message: `${cell.label}` }]"
+        >
+          <template #input>
+            <van-radio-group
+                v-model="updateUserInfo.sex"
+                direction="horizontal"
+                v-if="cell.value === 'sex'"
+                :rules="[{ required: true, message: '请指定性别' }]"
+            >
+              <van-radio :name="0">女</van-radio>
+              <van-radio :name="1">男</van-radio>
+            </van-radio-group>
+          </template>
+        </van-field>
         <van-field
             v-model="updateUserInfo.password"
             type="password"
@@ -55,6 +77,7 @@
             label="密码"
             placeholder="密码"
             :rules="[{ validator: PasswordTest }]"
+            v-if="updatePassword"
         />
         <van-field
             v-model="updateUserInfo.aPassword"
@@ -63,19 +86,9 @@
             label="确认密码"
             placeholder="确认密码"
             :rules="[{ validator: PasswordTest }]"
+            v-if="updatePassword"
         />
-        <van-field label="选择性别" name="sex">
-          <template #input>
-            <van-radio-group
-                v-model="updateUserInfo.sex"
-                direction="horizontal"
-                :rules="[{ required: true, message: '请指定性别' }]"
-            >
-              <van-radio :name="0">女</van-radio>
-              <van-radio :name="1">男</van-radio>
-            </van-radio-group>
-          </template>
-        </van-field>
+        <van-field label="选择性别" name="sex"></van-field>
         <van-field
             label="手机号"
             v-model="updateUserInfo.phone"
@@ -96,8 +109,8 @@
 </template>
 
 <script>
-import {getInfo, avatar, logout} from "../api/user";
-import {showConfirmDialog} from "vant";
+import {getInfo, avatar, logout, updateUser} from "../api/user";
+import {showConfirmDialog, showSuccessToast} from "vant";
 export default {
   data() {
     return {
@@ -115,12 +128,14 @@ export default {
       avatarDialog: false,
       fileList: [],
       updateUserInfo: {},
+      id: "",
+      updatePassword: false,
     };
   },
   created() {
-    var id = sessionStorage.getItem("user_id");
-    this.getUser(id);
-    this.getHeader(id);
+    this.id = sessionStorage.getItem("user_id");
+    this.getUser(this.id);
+    this.getHeader(this.id);
   },
   methods: {
     //获取头像
@@ -169,10 +184,18 @@ export default {
       this.updateDialog = true;
     },
     //更新校验
-    updateTest(updateUserInfo) {
-      this.$nextTick(() => {
-        console.log(this.$refs["updateUserForm"]);
-      });
+    updateTest() {
+      //校验
+      this.$refs.updateUserForm.validate().then(
+          (res) => {
+            //校验通过时
+            this.updateUser(this.updateUserInfo);
+          },
+          (res) => {
+            //校验失败时
+            return false;
+          }
+      );
     },
     //确认密码校验逻辑
     PasswordTest(val) {
@@ -190,7 +213,14 @@ export default {
     },
     //更新用户主逻辑
     updateUser(userInfo) {
-      console.log(userInfo);
+      updateUser(userInfo).then((response) => {
+        if (response.data.success) {
+          showSuccessToast("修改成功!");
+          this.updateDialog = false;
+          //查询
+          this.getUser(this.id);
+        }
+      });
     },
   },
 };
