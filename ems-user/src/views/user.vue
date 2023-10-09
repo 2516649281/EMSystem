@@ -33,11 +33,33 @@
     <div class="main"><van-loading type="spinner">加载中...</van-loading></div>
   </van-overlay>
   <van-dialog
+      v-model:show="avatarDialog"
+      title="上传头像"
+      show-cancel-button
+      confirm-button-text="上传"
+      show-confirm-button
+      @confirm="uploadAvatar(fileList)"
+  >
+    <van-field label="头像" center>
+      <template #input>
+        <van-uploader
+            v-model="fileList"
+            multiple
+            :max-count="1"
+            :after-read="getFile"
+            :before-read="setAvatar"
+        >
+        </van-uploader>
+      </template>
+    </van-field>
+    <van-cell title="大小" value="不得超过2MB"></van-cell>
+    <van-cell title="格式" value="jpg/png"></van-cell>
+  </van-dialog>
+  <van-dialog
       v-model:show="updateDialog"
       title="修改信息"
     show-cancel-button
       @confirm="updateTest"
-      :before-close="updateTest"
       confirm-button-text="修改"
       show-confirm-button
   >
@@ -52,19 +74,30 @@
             v-for="cell in cellList"
             :key="cell.index"
             :label="cell.title"
-            :name="cell.value"
-            :placeholder="cell.label"
-            v-model="updateUserInfo[cell.value]"
-            :rules="[{ required: true, message: `${cell.message}` }]"
         >
-          <van-radio-group
-              v-model="updateUserInfo.sex"
-              direction="horizontal"
-              v-if="cell.value === 'sex'"
+          <template #input v-if="cell.value === 'sex'"
           >
-            <van-radio :name="0">女</van-radio>
-            <van-radio :name="1">男</van-radio>
-          </van-radio-group>
+            <van-radio-group
+                direction="horizontal"
+                v-model="updateUserInfo[cell.value]"
+                :name="cell.value"
+                :placeholder="cell.label"
+                :rules="[{ required: true, message: `${cell.message}` }]"
+            >
+              <van-radio :name="0">女</van-radio>
+              <van-radio :name="1">男</van-radio>
+            </van-radio-group>
+          </template
+          >
+          <template #input v-else>
+            <van-field
+                v-model="updateUserInfo[cell.value]"
+                :name="cell.value"
+                :placeholder="cell.label"
+                :rules="[{ required: true, message: `${cell.message}` }]"
+            >
+            </van-field>
+          </template>
         </van-field>
         <van-field
             v-model="updateUserInfo.password"
@@ -90,8 +123,8 @@
 </template>
 
 <script>
-import {avatar, getInfo, logout, updateUser} from "../api/user";
-import {showConfirmDialog, showSuccessToast} from "vant";
+import {avatar, getInfo, logout, setAvatar, updateUser} from "../api/user";
+import {showConfirmDialog, showSuccessToast, showToast} from "vant";
 
 export default {
   data() {
@@ -153,6 +186,9 @@ export default {
     //获取头像
     getHeader(userId) {
       avatar({ userId: userId }).then((response) => {
+        if (this.userAvatar) {
+          this.userAvatar = null;
+        }
         this.userAvatar = window.URL.createObjectURL(response.data);
       });
     },
@@ -169,12 +205,28 @@ export default {
       const isJPG = file.type === "image/jpeg" || file.type === "image/png";
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isJPG) {
-        ShowNotify("上传头像图片只能是 JPG或PNG 格式!");
+        showToast("上传头像图片只能是 JPG或PNG 格式!");
       }
       if (!isLt2M) {
-        ShowNotify("上传头像图片大小不能超过 2MB!");
+        showToast("上传头像图片大小不能超过 2MB!");
       }
+      console.log(`${isJPG}-${isLt2M}`);
       return isJPG && isLt2M;
+    },
+    //头像上传逻辑
+    uploadAvatar(file) {
+      this.fileList[0].status = "uploading";
+      var data = new FormData();
+      data.append("file", file[0].file);
+      setAvatar({userId: this.id}, data).then((response) => {
+        if (response.data.success) {
+          showSuccessToast("修改头像成功!");
+          this.getHeader(this.id);
+          this.fileList[0].status = "done";
+        } else {
+          this.fileList[0].status = "failed";
+        }
+      });
     },
     //登出
     logout() {
@@ -183,8 +235,11 @@ export default {
         message: "你真的要退出登录吗?",
       })
           .then(() => {
-            logout(sessionStorage.getItem("token")).then((response) => {
+            var token = sessionStorage.getItem("token");
+            logout({token}).then((response) => {
+              if (response.data.data) {
               this.$router.push("/login");
+              }
             });
           })
           .catch(() => {

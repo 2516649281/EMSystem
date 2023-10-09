@@ -1,5 +1,6 @@
+<template>
 
-<template>exam</template>
+</template>
 
 <script>
 export default {};

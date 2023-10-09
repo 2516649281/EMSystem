@@ -5,7 +5,7 @@
  * @Last Modified time: 2023-09-13 14:49:06
  */
 import axios from "axios";
-import { showDialog } from "vant";
+import {showDialog} from "vant";
 import "vant/lib/index.css";
 
 var messageStatus = false;
@@ -31,6 +31,7 @@ server.interceptors.request.use(
   (err) => {
     showDialog({ message: err.message });
     console.log(`捕获到异常:${err}`);
+      error(err);
     sessionStorage.clear();
   }
 );
@@ -40,44 +41,36 @@ server.interceptors.response.use(
   (config) => {
     console.log("======响应体======");
     console.log(config);
-    error(config);
     return config;
   },
   (err) => {
     showDialog({ message: err.message });
     console.log(`捕获到异常:${err}`);
+      error(err);
     sessionStorage.clear();
   }
 );
 
 //异常处理
 function error(err) {
-  console.log(err);
-  if (err.data.status === 403) {
-    console.log("登陆过期");
-    if (!messageStatus) {
-      showDialog({
-        message: "当前登录信息已过期,请重新登陆!",
-        type: "warning",
-      });
-      sessionStorage.clear();
-    }
+    var data = err.response.data;
+    console.log(data);
+    if (!data) {
+        showDialog({
+            message: "客户端未知异常!",
+            type: "warning",
+        });
+        sessionStorage.clear();
+        return;
   }
-  if (err.data.status === 401) {
-    console.log("非法访问!");
-    if (!messageStatus) {
-      showDialog({ message: "对不起,你没有权限访问!", type: "warning" });
-      sessionStorage.clear();
-    }
-  }
-  if (err.data.status === 500) {
+    if (data.status != 200) {
     showDialog({
-      message: "服务异常!请稍后重试!",
+        message: data.message,
       type: "danger",
     });
     sessionStorage.clear();
+        return;
   }
-  messageStatus = true;
 }
 
 export default server;

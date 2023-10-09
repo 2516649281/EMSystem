@@ -2,6 +2,9 @@ const { defineConfig } = require("@vue/cli-service");
 module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
+      client: {
+          overlay: false, //取消报错显示
+      },
     port: process.env.port || process.env.npm_config_port || 8000, // 设置端口号
     proxy: {
       "/api": {
