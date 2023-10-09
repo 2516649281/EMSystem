@@ -36,7 +36,6 @@
       v-model:show="updateDialog"
       title="修改信息"
     show-cancel-button
-      @cancel="updateDialog = false"
       @confirm="updateTest"
       :before-close="updateTest"
       confirm-button-text="修改"
@@ -52,23 +51,20 @@
         <van-field
             v-for="cell in cellList"
             :key="cell.index"
+            :label="cell.title"
             :name="cell.value"
-            v-model="updateUserInfo[cell.value]"
-            :label="cell.label"
             :placeholder="cell.label"
-            :rules="[{ required: true, message: `${cell.label}` }]"
+            v-model="updateUserInfo[cell.value]"
+            :rules="[{ required: true, message: `${cell.message}` }]"
         >
-          <template #input>
-            <van-radio-group
-                v-model="updateUserInfo.sex"
-                direction="horizontal"
-                v-if="cell.value === 'sex'"
-                :rules="[{ required: true, message: '请指定性别' }]"
-            >
-              <van-radio :name="0">女</van-radio>
-              <van-radio :name="1">男</van-radio>
-            </van-radio-group>
-          </template>
+          <van-radio-group
+              v-model="updateUserInfo.sex"
+              direction="horizontal"
+              v-if="cell.value === 'sex'"
+          >
+            <van-radio :name="0">女</van-radio>
+            <van-radio :name="1">男</van-radio>
+          </van-radio-group>
         </van-field>
         <van-field
             v-model="updateUserInfo.password"
@@ -88,38 +84,54 @@
             :rules="[{ validator: PasswordTest }]"
             v-if="updatePassword"
         />
-        <van-field label="选择性别" name="sex"></van-field>
-        <van-field
-            label="手机号"
-            v-model="updateUserInfo.phone"
-            placeholder="手机号"
-            name="phone"
-            :rules="[{ required: true, message: '请输入手机号' }]"
-        />
-        <van-field
-            v-model="updateUserInfo.email"
-            placeholder="邮箱"
-            name="email"
-            label="邮箱"
-            :rules="[{ required: true, message: '请输入邮箱' }]"
-        />
       </van-form>
     </van-cell-group>
   </van-dialog>
 </template>
 
 <script>
-import {getInfo, avatar, logout, updateUser} from "../api/user";
+import {avatar, getInfo, logout, updateUser} from "../api/user";
 import {showConfirmDialog, showSuccessToast} from "vant";
+
 export default {
   data() {
     return {
       cellList: [
-        { index: 0, title: "用户名", value: "name", label: "您登陆时的账号" },
-        { index: 1, title: "昵称", value: "nickName", label: "设置昵称" },
-        { index: 4, title: "性别", value: "sex", label: "性别" },
-        { index: 2, title: "电话", value: "phone", label: "您的电话" },
-        { index: 3, title: "邮箱", value: "email", label: "您的电子邮箱" },
+        {
+          index: 0,
+          title: "用户名",
+          value: "name",
+          label: "您登陆时的账号",
+          message: "账号不得为空!",
+        },
+        {
+          index: 1,
+          title: "昵称",
+          value: "nickName",
+          label: "设置昵称",
+          message: "昵称不得为空!",
+        },
+        {
+          index: 4,
+          title: "性别",
+          value: "sex",
+          label: "性别",
+          message: "请选择至少一个!",
+        },
+        {
+          index: 2,
+          title: "电话",
+          value: "phone",
+          label: "您的电话",
+          message: "电话不得为空!",
+        },
+        {
+          index: 3,
+          title: "邮箱",
+          value: "email",
+          label: "您的电子邮箱",
+          message: "电子邮箱不得为空!",
+        },
       ],
       userInfo: {},
       userAvatar: [],
@@ -213,6 +225,10 @@ export default {
     },
     //更新用户主逻辑
     updateUser(userInfo) {
+      //判空
+      if (userInfo.password === "") {
+        userInfo.password = null;
+      }
       updateUser(userInfo).then((response) => {
         if (response.data.success) {
           showSuccessToast("修改成功!");

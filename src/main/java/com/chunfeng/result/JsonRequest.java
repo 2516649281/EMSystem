@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import java.io.Serializable;
 
@@ -111,8 +112,11 @@ public class JsonRequest<T> implements Serializable {
         if (e instanceof ServiceException) {
             ServiceException exception = (ServiceException) e;
             return new JsonRequest<>(exception.getStatus(), e.getMessage(), false);
+        }//特殊异常处理
+        else if (e instanceof BadCredentialsException) {
+            return JsonRequest.error(RequestException.LOGIN_ERROR);
         }
         //其他的未知异常
-        return new JsonRequest<>(500, e.getLocalizedMessage(), false);
+        return new JsonRequest<>(RequestException.UNKNOWN_EXCEPTION.getStatus(), e.getLocalizedMessage(), false);
     }
 }

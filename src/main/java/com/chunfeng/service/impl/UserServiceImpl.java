@@ -142,11 +142,15 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         //获取UserDetail对象
         UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(name, password);
         Authentication authenticate = authenticationManager.authenticate(userToken);
-        UserDetail userDetail = (UserDetail) authenticate.getPrincipal();
-        if (Objects.isNull(userDetail)) {
+        //获取权限对象
+        Object principal = authenticate.getPrincipal();
+        //判空
+        if (Objects.isNull(principal) || !(principal instanceof UserDetail)) {
             log.error("用户名为{}的用户登陆失败!原因:用户名或密码错误!", name);
             return JsonRequest.error(RequestException.LOGIN_ERROR);
         }
+        //转换为实际的用户权限对象
+        UserDetail userDetail = (UserDetail) principal;
         //获取用户实际对象
         User user = userDetail.getUser();
         //生成token对象
@@ -211,8 +215,11 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         //日志
         user.setUpdateUser(SqlDateUtils.currentUserId);
         user.setUpdateTime(SqlDateUtils.date);
-        //密码加密处理
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        //判断密码是否为空
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            //密码加密处理
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         Integer column = userMapper.updateUserById(user);
         //判断是否成功
         if (column < 1) {
