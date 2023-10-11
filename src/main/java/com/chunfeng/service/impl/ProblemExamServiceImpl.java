@@ -3,7 +3,7 @@ package com.chunfeng.service.impl;
 import com.chunfeng.dao.entity.ProblemExam;
 import com.chunfeng.dao.mapper.ProblemExamMapper;
 import com.chunfeng.result.JsonRequest;
-import com.chunfeng.result.RequestException;
+import com.chunfeng.result.exenum.RequestException;
 import com.chunfeng.service.IProblemExamService;
 import com.chunfeng.utils.SqlDateUtils;
 import com.chunfeng.utils.UIDCreateUtil;

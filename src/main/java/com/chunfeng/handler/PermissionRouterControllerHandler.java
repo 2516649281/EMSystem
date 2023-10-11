@@ -1,8 +1,8 @@
 package com.chunfeng.handler;
 
 import com.chunfeng.dao.security.UserDetail;
-import com.chunfeng.result.RequestException;
 import com.chunfeng.result.exception.ServiceException;
+import com.chunfeng.result.exenum.RequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.ConfigAttribute;

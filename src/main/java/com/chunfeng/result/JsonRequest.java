@@ -1,6 +1,8 @@
 package com.chunfeng.result;
 
 import com.chunfeng.result.exception.ServiceException;
+import com.chunfeng.result.exenum.RequestException;
+import com.chunfeng.result.exenum.TypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -34,7 +36,7 @@ public class JsonRequest<T> implements Serializable {
      * 序列化字段
      */
     @ApiModelProperty(value = "序列化字段", hidden = true)
-    private static final long serialVersionUID = -5408366163757792606L;
+    private static final long serialVersionUID = 2883584342373064312L;
     /**
      * 错误代码
      */
@@ -46,10 +48,15 @@ public class JsonRequest<T> implements Serializable {
     @ApiModelProperty(value = "消息")
     private String message = "请求已成功!";
     /**
-     * 是否正常
+     * 是否成功
      */
-    @ApiModelProperty(value = "是否正常")
+    @ApiModelProperty(value = "是否成功")
     private Boolean success = true;
+    /**
+     * 错误类型
+     */
+    @ApiModelProperty(value = "错误类型")
+    private Integer type = TypeEnum.SUCCESS.getIndex();
     /**
      * 数据
      */
@@ -70,12 +77,14 @@ public class JsonRequest<T> implements Serializable {
      *
      * @param status  状态
      * @param message 消息
-     * @param success 是否正常
+     * @param success 是否成功
+     * @param type    异常类型
      */
-    public JsonRequest(Integer status, String message, Boolean success) {
+    public JsonRequest(Integer status, String message, Boolean success, Integer type) {
         this.status = status;
         this.message = message;
         this.success = success;
+        this.type = type;
     }
 
     /**
@@ -97,7 +106,11 @@ public class JsonRequest<T> implements Serializable {
      * @return JSON
      */
     public static <T> JsonRequest<T> error(RequestException e) {
-        return new JsonRequest<>(e.getStatus(), e.getMessage(), false);
+        return new JsonRequest<>(
+                e.getStatus(),
+                e.getMessage(),
+                false,
+                e.getType());
     }
 
     /**
@@ -111,12 +124,21 @@ public class JsonRequest<T> implements Serializable {
         //如果是已定义的异常
         if (e instanceof ServiceException) {
             ServiceException exception = (ServiceException) e;
-            return new JsonRequest<>(exception.getStatus(), e.getMessage(), false);
+            return new JsonRequest<>(
+                    exception.getStatus(),//状态码
+                    exception.getMessage(),//消息
+                    false,//是否成功
+                    exception.getType()//异常类型
+            );
         }//特殊异常处理
         else if (e instanceof BadCredentialsException) {
-            return JsonRequest.error(RequestException.LOGIN_ERROR);
+            return error(RequestException.LOGIN_ERROR);
         }
         //其他的未知异常
-        return new JsonRequest<>(RequestException.UNKNOWN_EXCEPTION.getStatus(), e.getLocalizedMessage(), false);
+        return new JsonRequest<>(
+                RequestException.UNKNOWN_EXCEPTION.getStatus(),//状态码
+                e.getLocalizedMessage(), //消息
+                false, //是否成功
+                RequestException.UNKNOWN_EXCEPTION.getType());//异常类型
     }
 }

@@ -1,8 +1,8 @@
 package com.chunfeng.utils;
 
 import com.chunfeng.properties.FileConfigProperties;
-import com.chunfeng.result.RequestException;
 import com.chunfeng.result.exception.ServiceException;
+import com.chunfeng.result.exenum.RequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.DefaultResourceLoader;

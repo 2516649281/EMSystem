@@ -1,6 +1,7 @@
 package com.chunfeng.result.exception;
 
-import com.chunfeng.result.RequestException;
+import com.chunfeng.result.exenum.RequestException;
+import com.chunfeng.result.exenum.TypeEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import lombok.Setter;
 /**
  * 业务层异常超类
  * <p>
- * 此异常为自定义异常的超类，用于描述各类业务异常，仅作容器使用，可配合RequestException使用，详情请见{@link com.chunfeng.result.RequestException}
+ * 此异常为自定义异常的超类，用于描述各类业务异常，仅作容器使用，可配合RequestException使用，详情请见{@link RequestException}
  *
  * @author by 春风能解释
  * <p>
@@ -21,7 +22,7 @@ public class ServiceException extends RuntimeException {
     /**
      * 序列化字段
      */
-    private static final long serialVersionUID = 456372299927265329L;
+    private static final long serialVersionUID = -2430498993892681209L;
     /**
      * 错误代码
      */
@@ -30,6 +31,10 @@ public class ServiceException extends RuntimeException {
      * 消息
      */
     private String message = "未知异常!";
+    /**
+     * 异常类型
+     */
+    private Integer type = TypeEnum.UNKNOWN.getIndex();
 
     /**
      * 使用原有枚举类异常
@@ -40,6 +45,7 @@ public class ServiceException extends RuntimeException {
         super(requestException.getMessage());
         this.message = requestException.getMessage();
         this.status = requestException.getStatus();
+        this.type = requestException.getType();
     }
 
     /**

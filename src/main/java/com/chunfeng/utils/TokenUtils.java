@@ -1,7 +1,7 @@
 package com.chunfeng.utils;
 
-import com.chunfeng.result.RequestException;
 import com.chunfeng.result.exception.ServiceException;
+import com.chunfeng.result.exenum.RequestException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;

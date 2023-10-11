@@ -6,7 +6,7 @@ import com.chunfeng.dao.mapper.PermissionRoleMapper;
 import com.chunfeng.dao.mapper.PermissionRouterMapper;
 import com.chunfeng.properties.SystemProperties;
 import com.chunfeng.result.JsonRequest;
-import com.chunfeng.result.RequestException;
+import com.chunfeng.result.exenum.RequestException;
 import com.chunfeng.service.IPermissionService;
 import com.chunfeng.utils.SqlDateUtils;
 import com.chunfeng.utils.UIDCreateUtil;

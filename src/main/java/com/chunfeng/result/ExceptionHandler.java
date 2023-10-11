@@ -2,6 +2,7 @@ package com.chunfeng.result;
 
 import com.alibaba.fastjson.JSON;
 import com.chunfeng.result.exception.ServiceException;
+import com.chunfeng.result.exenum.RequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;

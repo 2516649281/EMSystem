@@ -1,7 +1,8 @@
-package com.chunfeng.result;
+package com.chunfeng.result.exenum;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * 请求异常的枚举
@@ -19,63 +20,64 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public enum RequestException {
     /**
      * 非法访问
      */
-    UNAUTHORIZED(401, "非法访问!"),
+    UNAUTHORIZED(401, "非法访问!", TypeEnum.CLIENT.getIndex()),
     /**
      * 登录失败
      */
-    LOGIN_ERROR(402, "登录失败,请检查用户名或密码是否正确!"),
+    LOGIN_ERROR(402, "登录失败,请检查用户名或密码是否正确!", TypeEnum.CLIENT.getIndex()),
     /**
      * 非法授权
      */
-    FORBIDDEN(403, "非法授权!"),
+    FORBIDDEN(403, "非法授权!", TypeEnum.CLIENT.getIndex()),
     /**
      * 找不到资源
      */
-    NOT_FOUND(404, "找不到资源!"),
+    NOT_FOUND(404, "找不到资源!", TypeEnum.CLIENT.getIndex()),
     /**
      * 注册失败
      */
-    REGISTER_ERROR(405, "注册失败,请检查数据是否符合规范!"),
+    REGISTER_ERROR(405, "注册失败,请检查数据是否符合规范!", TypeEnum.CLIENT.getIndex()),
     /**
      * 退出登录失败
      */
-    LOGOUT_ERROR(406, "退出登录失败!"),
+    LOGOUT_ERROR(406, "退出登录失败!", TypeEnum.SERVER.getIndex()),
     /**
      * 未知异常
      */
-    UNKNOWN_EXCEPTION(500, "未知错误,请联系网站管理员!"),
+    UNKNOWN_EXCEPTION(500, "未知错误,请联系网站管理员!", TypeEnum.UNKNOWN.getIndex()),
     /**
      * 查询数据时遇到问题
      */
-    SELECT_ERROR(501, "数据查询失败!"),
+    SELECT_ERROR(501, "数据查询失败!", TypeEnum.SERVER.getIndex()),
     /**
      * 添加数据时遇到问题
      */
-    INSERT_ERROR(502, "数据添加失败!"),
+    INSERT_ERROR(502, "数据添加失败!", TypeEnum.SERVER.getIndex()),
     /**
      * 修改数据时遇到问题
      */
-    UPDATE_ERROR(503, "数据修改失败!"),
+    UPDATE_ERROR(503, "数据修改失败!", TypeEnum.SERVER.getIndex()),
     /**
      * 删除数据时遇到问题
      */
-    DELETE_ERROR(504, "数据删除失败!"),
+    DELETE_ERROR(504, "数据删除失败!", TypeEnum.SERVER.getIndex()),
     /**
      * 文件上传失败
      */
-    FILE_ERROR(505, "文件上传失败!"),
+    FILE_ERROR(505, "文件上传失败!", TypeEnum.SERVER.getIndex()),
     /**
      * 文件超出范围
      */
-    FILE_BEYOND_MAX_SIZE(506, "文件超出范围!"),
+    FILE_BEYOND_MAX_SIZE(506, "文件超出范围!", TypeEnum.CLIENT.getIndex()),
     /**
      * token异常
      */
-    TOKEN_ERROR(507, "非法token");
+    TOKEN_ERROR(507, "非法token", TypeEnum.CLIENT.getIndex());
     /**
      * 错误代码
      */
@@ -84,4 +86,8 @@ public enum RequestException {
      * 消息
      */
     private String message;
+    /**
+     * 错误类型
+     */
+    private Integer type;
 }

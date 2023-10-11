@@ -7,7 +7,7 @@ import com.chunfeng.dao.mapper.PermissionRouterMapper;
 import com.chunfeng.dao.mapper.RouterMapper;
 import com.chunfeng.properties.SystemProperties;
 import com.chunfeng.result.JsonRequest;
-import com.chunfeng.result.RequestException;
+import com.chunfeng.result.exenum.RequestException;
 import com.chunfeng.service.IPermissionRouterService;
 import com.chunfeng.service.IPermissionService;
 import com.chunfeng.service.IRouterService;

@@ -9,6 +9,7 @@ com.chunfeng.note
 com.chunfeng.properties
 com.chunfeng.result
 com.chunfeng.result.exception
+com.chunfeng.result.exenum
 com.chunfeng.service
 com.chunfeng.service.impl
 com.chunfeng.utils

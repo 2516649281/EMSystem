@@ -4,7 +4,7 @@ import com.chunfeng.dao.entity.Exam;
 import com.chunfeng.dao.entity.UserExam;
 import com.chunfeng.dao.mapper.UserExamMapper;
 import com.chunfeng.result.JsonRequest;
-import com.chunfeng.result.RequestException;
+import com.chunfeng.result.exenum.RequestException;
 import com.chunfeng.service.IExamService;
 import com.chunfeng.service.IUserExamService;
 import com.chunfeng.utils.SqlDateUtils;

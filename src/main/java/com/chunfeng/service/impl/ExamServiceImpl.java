@@ -5,7 +5,7 @@ import com.chunfeng.dao.entity.Problem;
 import com.chunfeng.dao.entity.ProblemExam;
 import com.chunfeng.dao.mapper.ExamMapper;
 import com.chunfeng.result.JsonRequest;
-import com.chunfeng.result.RequestException;
+import com.chunfeng.result.exenum.RequestException;
 import com.chunfeng.service.IExamService;
 import com.chunfeng.service.IProblemExamService;
 import com.chunfeng.service.IProblemService;

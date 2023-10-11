@@ -4,7 +4,7 @@ import com.chunfeng.dao.entity.Problem;
 import com.chunfeng.dao.mapper.ProblemExamMapper;
 import com.chunfeng.dao.mapper.ProblemMapper;
 import com.chunfeng.result.JsonRequest;
-import com.chunfeng.result.RequestException;
+import com.chunfeng.result.exenum.RequestException;
 import com.chunfeng.service.IProblemService;
 import com.chunfeng.utils.FileMangerUtils;
 import com.chunfeng.utils.SqlDateUtils;

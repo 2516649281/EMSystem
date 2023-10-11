@@ -3,7 +3,7 @@ package com.chunfeng.service.impl;
 import com.chunfeng.dao.entity.PermissionRouter;
 import com.chunfeng.dao.mapper.PermissionRouterMapper;
 import com.chunfeng.result.JsonRequest;
-import com.chunfeng.result.RequestException;
+import com.chunfeng.result.exenum.RequestException;
 import com.chunfeng.service.IPermissionRouterService;
 import com.chunfeng.utils.SqlDateUtils;
 import com.chunfeng.utils.UIDCreateUtil;

@@ -7,7 +7,7 @@ import com.chunfeng.dao.mapper.PermissionRoleMapper;
 import com.chunfeng.dao.mapper.RoleMapper;
 import com.chunfeng.properties.SystemProperties;
 import com.chunfeng.result.JsonRequest;
-import com.chunfeng.result.RequestException;
+import com.chunfeng.result.exenum.RequestException;
 import com.chunfeng.service.IPermissionRoleService;
 import com.chunfeng.service.IPermissionService;
 import com.chunfeng.service.IRoleService;

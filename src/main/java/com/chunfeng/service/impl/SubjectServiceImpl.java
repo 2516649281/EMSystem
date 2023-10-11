@@ -3,7 +3,7 @@ package com.chunfeng.service.impl;
 import com.chunfeng.dao.entity.Subject;
 import com.chunfeng.dao.mapper.SubjectMapper;
 import com.chunfeng.result.JsonRequest;
-import com.chunfeng.result.RequestException;
+import com.chunfeng.result.exenum.RequestException;
 import com.chunfeng.service.ISubjectService;
 import com.chunfeng.utils.SqlDateUtils;
 import com.chunfeng.utils.UIDCreateUtil;

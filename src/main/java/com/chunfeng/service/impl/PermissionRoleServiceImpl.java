@@ -3,7 +3,7 @@ package com.chunfeng.service.impl;
 import com.chunfeng.dao.entity.PermissionRole;
 import com.chunfeng.dao.mapper.PermissionRoleMapper;
 import com.chunfeng.result.JsonRequest;
-import com.chunfeng.result.RequestException;
+import com.chunfeng.result.exenum.RequestException;
 import com.chunfeng.service.IPermissionRoleService;
 import com.chunfeng.utils.SqlDateUtils;
 import com.chunfeng.utils.UIDCreateUtil;
