@@ -25,59 +25,59 @@ public enum RequestException {
     /**
      * 非法访问
      */
-    UNAUTHORIZED(401, "非法访问!", TypeEnum.CLIENT.getIndex()),
+    UNAUTHORIZED(401, "非法访问!", TypeEnum.CLIENT.getDescription()),
     /**
      * 登录失败
      */
-    LOGIN_ERROR(402, "登录失败,请检查用户名或密码是否正确!", TypeEnum.CLIENT.getIndex()),
+    LOGIN_ERROR(402, "登录失败,请检查用户名或密码是否正确!", TypeEnum.CLIENT.getDescription()),
     /**
      * 非法授权
      */
-    FORBIDDEN(403, "非法授权!", TypeEnum.CLIENT.getIndex()),
+    FORBIDDEN(403, "非法授权!", TypeEnum.CLIENT.getDescription()),
     /**
      * 找不到资源
      */
-    NOT_FOUND(404, "找不到资源!", TypeEnum.CLIENT.getIndex()),
+    NOT_FOUND(404, "找不到资源!", TypeEnum.CLIENT.getDescription()),
     /**
      * 注册失败
      */
-    REGISTER_ERROR(405, "注册失败,请检查数据是否符合规范!", TypeEnum.CLIENT.getIndex()),
+    REGISTER_ERROR(405, "注册失败,请检查数据是否符合规范!", TypeEnum.CLIENT.getDescription()),
     /**
      * 退出登录失败
      */
-    LOGOUT_ERROR(406, "退出登录失败!", TypeEnum.SERVER.getIndex()),
+    LOGOUT_ERROR(406, "退出登录失败!", TypeEnum.SERVER.getDescription()),
     /**
      * 未知异常
      */
-    UNKNOWN_EXCEPTION(500, "未知错误,请联系网站管理员!", TypeEnum.UNKNOWN.getIndex()),
+    UNKNOWN_EXCEPTION(500, "未知错误,请联系网站管理员!", TypeEnum.UNKNOWN.getDescription()),
     /**
      * 查询数据时遇到问题
      */
-    SELECT_ERROR(501, "数据查询失败!", TypeEnum.SERVER.getIndex()),
+    SELECT_ERROR(501, "数据查询失败!", TypeEnum.SERVER.getDescription()),
     /**
      * 添加数据时遇到问题
      */
-    INSERT_ERROR(502, "数据添加失败!", TypeEnum.SERVER.getIndex()),
+    INSERT_ERROR(502, "数据添加失败!", TypeEnum.SERVER.getDescription()),
     /**
      * 修改数据时遇到问题
      */
-    UPDATE_ERROR(503, "数据修改失败!", TypeEnum.SERVER.getIndex()),
+    UPDATE_ERROR(503, "数据修改失败!", TypeEnum.SERVER.getDescription()),
     /**
      * 删除数据时遇到问题
      */
-    DELETE_ERROR(504, "数据删除失败!", TypeEnum.SERVER.getIndex()),
+    DELETE_ERROR(504, "数据删除失败!", TypeEnum.SERVER.getDescription()),
     /**
      * 文件上传失败
      */
-    FILE_ERROR(505, "文件上传失败!", TypeEnum.SERVER.getIndex()),
+    FILE_ERROR(505, "文件上传失败!", TypeEnum.SERVER.getDescription()),
     /**
      * 文件超出范围
      */
-    FILE_BEYOND_MAX_SIZE(506, "文件超出范围!", TypeEnum.CLIENT.getIndex()),
+    FILE_BEYOND_MAX_SIZE(506, "文件超出范围!", TypeEnum.CLIENT.getDescription()),
     /**
      * token异常
      */
-    TOKEN_ERROR(507, "非法token", TypeEnum.CLIENT.getIndex());
+    TOKEN_ERROR(507, "非法token", TypeEnum.CLIENT.getDescription());
     /**
      * 错误代码
      */
@@ -89,5 +89,5 @@ public enum RequestException {
     /**
      * 错误类型
      */
-    private Integer type;
+    private String type;
 }

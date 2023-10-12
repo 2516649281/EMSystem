@@ -20,21 +20,25 @@ public enum TypeEnum {
     /**
      * 未知
      */
-    UNKNOWN(-1),
+    UNKNOWN(-1, "UNKNOWN"),
     /**
      * 成功
      */
-    SUCCESS(0),
+    SUCCESS(0, "SUCCESS"),
     /**
      * 客户端
      */
-    CLIENT(1),
+    CLIENT(1, "CLIENT"),
     /**
      * 服务端
      */
-    SERVER(2);
+    SERVER(2, "SERVER");
     /**
      * 指数
      */
     private Integer index;
+    /**
+     * 描述
+     */
+    private String description;
 }

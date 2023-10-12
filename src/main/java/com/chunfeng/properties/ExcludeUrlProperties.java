@@ -19,9 +19,12 @@ import org.springframework.stereotype.Component;
 @Data
 @NoArgsConstructor
 public class ExcludeUrlProperties {
-
     /**
      * 排除路径
      */
     private String[] excludeUrl;
+    /**
+     * 静态资源
+     */
+    private String[] staticUrl;
 }

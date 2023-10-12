@@ -13,7 +13,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -80,6 +79,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // 允许匿名访问
                 .authorizeRequests()
+                //静态资源
+                .antMatchers(excludeUrlProperties.getStaticUrl()).permitAll()
+                //匿名访问路径
+                .antMatchers(excludeUrlProperties.getExcludeUrl()).anonymous()
                 //动态权限设置
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
                     @Override
@@ -97,19 +100,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             http.cors();//允许跨域
         }
         log.info("SpringSecurity-http核心已成功配置!");
-    }
-
-    /**
-     * SpringSecurity Web配置
-     *
-     * @param web web配置对象
-     */
-    @Override
-    public void configure(WebSecurity web) {
-        web
-                //全局排除路径
-                .ignoring()
-                .antMatchers(excludeUrlProperties.getExcludeUrl());
     }
 
     /**

@@ -11,7 +11,7 @@
  Target Server Version : 80020 (8.0.20)
  File Encoding         : 65001
 
- Date: 11/08/2023 14:52:55
+ Date: 12/10/2023 22:15:12
 */
 
 SET NAMES utf8mb4;
@@ -40,7 +40,7 @@ CREATE TABLE `exam`
 -- ----------------------------
 INSERT INTO `exam`
 VALUES ('344b72bded14456ea2cc0ba34c87c0a9', 'D:/Test/exam_344b72bded14456ea2cc0ba34c87c0a9.txt', '0', '0',
-        '2023-08-10 17:59:21', '2023-08-11 14:39:47');
+        '2023-08-10 17:59:21', '2023-10-09 19:19:53');
 
 -- ----------------------------
 -- Table structure for feedback
@@ -123,6 +123,15 @@ CREATE TABLE `permission`
 -- Records of permission
 -- ----------------------------
 INSERT INTO `permission`
+VALUES ('09345f3798a44c69bf41e92fba428e8c', '删除试卷历史', 'user:ue:delete', 1, '0', NULL, '2023-09-06 22:10:33',
+        NULL);
+INSERT INTO `permission`
+VALUES ('0b8aa4205d1b48999eda0a87c69213c0', '新增试卷历史', 'user:ue:insert', 1, '0', NULL, '2023-09-06 22:10:33',
+        NULL);
+INSERT INTO `permission`
+VALUES ('0cfc6494d2284252a89fd97f443abc29', '查看试卷历史', 'user:ue:select', 1, '0', NULL, '2023-09-06 22:10:33',
+        NULL);
+INSERT INTO `permission`
 VALUES ('11412c211a6042149610d2da6931ac57', '权限删除', 'sys:per:delete', 0, '0', '0', '2023-07-22 11:25:36',
         '2023-08-02 08:20:33');
 INSERT INTO `permission`
@@ -145,6 +154,9 @@ VALUES ('24cbeb47067c4133b0b079a9dc8712c1', '年级新增', 'op:gradle:insert', 
 INSERT INTO `permission`
 VALUES ('27483ef7113949d983de2e2823984242', '年级修改', 'op:gradle:update', 1, '0', NULL, '2023-08-06 14:58:25', NULL);
 INSERT INTO `permission`
+VALUES ('288caddc8fe64a27a71d32d6091deaae', '删除做题历史', 'user:up:delete', 1, '0', '0', '2023-09-06 22:10:33',
+        '2023-09-06 22:10:33');
+INSERT INTO `permission`
 VALUES ('2c00b44556a64df1aee4220c6820e53e', '路由添加', 'sys:router:insert', 0, '0', '0', '2023-07-30 15:37:15',
         '2023-07-31 10:10:13');
 INSERT INTO `permission`
@@ -162,6 +174,9 @@ INSERT INTO `permission`
 VALUES ('40a16c64701849009852f96cde5f3a3c', '路由查询', 'sys:router:select', 0, '0', '0', '2023-07-30 15:37:15',
         '2023-07-31 10:10:13');
 INSERT INTO `permission`
+VALUES ('40f72874f100407d85cbe4482abe2bb5', '新增做题历史', 'user:up:insert', 1, '0', '0', '2023-09-06 22:10:33',
+        '2023-09-06 22:10:33');
+INSERT INTO `permission`
 VALUES ('415d2c59d61449498505ac3b3270d940', '权限新增', 'sys:per:insert', 0, '0', '0', '2023-07-22 11:25:36',
         '2023-07-31 10:10:13');
 INSERT INTO `permission`
@@ -173,6 +188,9 @@ VALUES ('504d5f46f7984f20a749a18bc45fe87d', '试卷新增', 'op:exam:insert', 0,
 INSERT INTO `permission`
 VALUES ('51a998a73ab04996b1992e11e1f7f1a1', '角色新增', 'sys:role:insert', 0, '0', '0', '2023-07-22 11:25:36',
         '2023-07-31 10:10:13');
+INSERT INTO `permission`
+VALUES ('548f84361dff4ed3b71fd2898a535de5', '修改试卷历史', 'user:ue:update', 1, '0', NULL, '2023-09-06 22:10:33',
+        NULL);
 INSERT INTO `permission`
 VALUES ('570d819be4fb45a69430fc2eb6e02f84', '试卷删除', 'op:exam:delete', 0, '0', '0', '2023-07-22 11:25:36',
         '2023-07-31 10:10:13');
@@ -201,9 +219,15 @@ INSERT INTO `permission`
 VALUES ('9886ea88ed5f4d95b16c6edf9c88f037', '个人信息注销', 'user:user:delete', 0, '0', NULL, '2023-07-22 11:25:36',
         NULL);
 INSERT INTO `permission`
+VALUES ('a68925f349a8462ebc597b9d9533791f', '修改做题历史', 'user:up:update', 1, '0', NULL, '2023-09-06 22:10:33',
+        NULL);
+INSERT INTO `permission`
 VALUES ('abcb78a67ec74e86bf57a1f2dcaaea20', '年级删除', 'op:gradle:delete', 1, '0', NULL, '2023-08-06 14:58:25', NULL);
 INSERT INTO `permission`
 VALUES ('ba39d9fc58124e2588b5bcfd502dd0c8', '科目删除', 'op:sub:delete', 0, '0', NULL, '2023-07-30 08:16:29', NULL);
+INSERT INTO `permission`
+VALUES ('c1be6dc2b1854fc488682e00bf5e3508', '查看做题历史', 'user:up:select', 1, '0', NULL, '2023-09-06 22:10:33',
+        NULL);
 INSERT INTO `permission`
 VALUES ('cbfe251729734bcb9f9486cd736f66b7', '题目查询', 'op:pro:select', 0, '0', NULL, '2023-07-22 11:25:36', NULL);
 INSERT INTO `permission`
@@ -300,6 +324,9 @@ INSERT INTO `permission_role`
 VALUES ('21e8c5eb5d1848a9a233180739d0a562', '925bd3b2a75a4e4cbce2f91dbe722291', '98876a5b3f164eecbd0a0d32b8ac5b07',
         '785ae2df8ce14b638770a781bcb2c313', NULL, '2023-07-28 16:07:35', NULL);
 INSERT INTO `permission_role`
+VALUES ('2394dd0ef67a4dbda0631572c8ae0ae2', '91d1e1e665fd4d7ba6fdc3178390e65d', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
+INSERT INTO `permission_role`
 VALUES ('23c46e52ad2b42feaeac49f90a8eec93', '83d6633cfd90426b91898a457e831b9c', 'a98606c89d624d26a93b377da61b230d', '0',
         NULL, '2023-08-07 19:05:51', NULL);
 INSERT INTO `permission_role`
@@ -330,6 +357,9 @@ INSERT INTO `permission_role`
 VALUES ('3f0c5fb76a5b4f779114ddcbfb370144', '27483ef7113949d983de2e2823984242', '1', '0', NULL, '2023-08-09 08:46:49',
         NULL);
 INSERT INTO `permission_role`
+VALUES ('3fb0ddba59e34fd79aaa9b705aaee3e9', '09345f3798a44c69bf41e92fba428e8c', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
+INSERT INTO `permission_role`
 VALUES ('40f91ac947fb4ab39bf0cf92786adb30', '83387680ef7a44ffb96dc4bfb9dd62c2', '1', '0', NULL, '2023-08-09 08:46:49',
         NULL);
 INSERT INTO `permission_role`
@@ -342,14 +372,17 @@ INSERT INTO `permission_role`
 VALUES ('5040c7b85d8346879e6f75c0a5194170', '1dc27a1fec2940f58ca8791dcff1d311', 'a98606c89d624d26a93b377da61b230d', '0',
         NULL, '2023-08-07 19:05:51', NULL);
 INSERT INTO `permission_role`
+VALUES ('5179f209d229454dbb8c55ce4c0df963', '7854230823434412be24b33b0d40844f', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
+INSERT INTO `permission_role`
 VALUES ('5372ce78011b4a4d8810eb8faa613bd9', 'e3338c77902e4a69963db05bf28ace27', '98876a5b3f164eecbd0a0d32b8ac5b07',
         '785ae2df8ce14b638770a781bcb2c313', NULL, '2023-07-28 16:07:35', NULL);
 INSERT INTO `permission_role`
-VALUES ('545dcf38867047ec8873da13de04356f', '9886ea88ed5f4d95b16c6edf9c88f037', '0', '0', NULL, '2023-08-03 09:41:28',
-        NULL);
-INSERT INTO `permission_role`
 VALUES ('5518588303904655af6d8a1dc5fbf4f2', '504d5f46f7984f20a749a18bc45fe87d', 'a98606c89d624d26a93b377da61b230d', '0',
         NULL, '2023-08-07 19:05:51', NULL);
+INSERT INTO `permission_role`
+VALUES ('55c3beaef4c849afb0963247446ee3cf', '0b8aa4205d1b48999eda0a87c69213c0', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
 INSERT INTO `permission_role`
 VALUES ('5747a2c2eb03466796d7e1389d017d3b', '33272c92c164408e8ca33e6cdd2b72c9', 'ed394afe8c844205a6d7579f2b04b073',
         '785ae2df8ce14b638770a781bcb2c313', NULL, '2023-07-28 16:07:35', NULL);
@@ -387,6 +420,9 @@ INSERT INTO `permission_role`
 VALUES ('6735aa68454b42ee80a84d215e7ed3e6', '415d2c59d61449498505ac3b3270d940', '1', '0', NULL, '2023-08-09 08:46:49',
         NULL);
 INSERT INTO `permission_role`
+VALUES ('67e3304e8e1646ca81dfd51053ce17c0', '2e57771d96b6464f9e0ba22db63796e4', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
+INSERT INTO `permission_role`
 VALUES ('6964e063db3443ed9c86273d99657b14', '27483ef7113949d983de2e2823984242', 'a98606c89d624d26a93b377da61b230d', '0',
         NULL, '2023-08-07 19:05:51', NULL);
 INSERT INTO `permission_role`
@@ -414,14 +450,23 @@ INSERT INTO `permission_role`
 VALUES ('77fb724b221a42bdbc98296b83cc08be', '33272c92c164408e8ca33e6cdd2b72c9', 'a98606c89d624d26a93b377da61b230d', '0',
         NULL, '2023-08-07 19:05:51', NULL);
 INSERT INTO `permission_role`
+VALUES ('786e4ade35fa43a8b8c323980944011e', '33272c92c164408e8ca33e6cdd2b72c9', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
+INSERT INTO `permission_role`
 VALUES ('7b811a411e0e49a7991ea31d042610c4', '91d1e1e665fd4d7ba6fdc3178390e65d', '98876a5b3f164eecbd0a0d32b8ac5b07',
         '785ae2df8ce14b638770a781bcb2c313', NULL, '2023-07-28 16:07:35', NULL);
 INSERT INTO `permission_role`
 VALUES ('7c8a58f8fe88439888b519cf480102b7', '19e1065c601d402f979eeefae3ccf402', 'a98606c89d624d26a93b377da61b230d', '0',
         NULL, '2023-08-07 19:05:51', NULL);
 INSERT INTO `permission_role`
+VALUES ('7d3ebb323b2b476a90dcb77d7cd48a6b', '288caddc8fe64a27a71d32d6091deaae', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
+INSERT INTO `permission_role`
 VALUES ('7d416de0f3f74b7cac417900fa44461c', '7854230823434412be24b33b0d40844f', 'ed394afe8c844205a6d7579f2b04b073',
         '785ae2df8ce14b638770a781bcb2c313', NULL, '2023-07-28 16:07:35', NULL);
+INSERT INTO `permission_role`
+VALUES ('7d6af51f74044ff5b327cc728bb967b6', '9886ea88ed5f4d95b16c6edf9c88f037', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
 INSERT INTO `permission_role`
 VALUES ('7fc8a2b98f834ea1bd92b72139cd7f11', '9886ea88ed5f4d95b16c6edf9c88f037', '98876a5b3f164eecbd0a0d32b8ac5b07',
         '785ae2df8ce14b638770a781bcb2c313', NULL, '2023-07-28 16:07:35', NULL);
@@ -438,11 +483,20 @@ INSERT INTO `permission_role`
 VALUES ('87c15d81a0674981803172fda7480745', '40a16c64701849009852f96cde5f3a3c', 'a98606c89d624d26a93b377da61b230d', '0',
         NULL, '2023-08-07 19:05:51', NULL);
 INSERT INTO `permission_role`
+VALUES ('889454ae15d9495ea1edfd09c398a4ed', '7e64ee3b0ba449ee8a32d3197379542b', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
+INSERT INTO `permission_role`
+VALUES ('89189e7124ad4db9a9f3ba3124f3e8b8', 'cbfe251729734bcb9f9486cd736f66b7', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
+INSERT INTO `permission_role`
 VALUES ('89d8db1bc95047a0ab6f3deaf094c5b7', 'cbfe251729734bcb9f9486cd736f66b7', '1', '0', NULL, '2023-08-09 08:46:49',
         NULL);
 INSERT INTO `permission_role`
 VALUES ('8a36f95314544763b07baa48795367fe', '1370ab9948d64c86b8f454dbdf6148bb', 'a98606c89d624d26a93b377da61b230d', '0',
         NULL, '2023-08-07 19:05:51', NULL);
+INSERT INTO `permission_role`
+VALUES ('8b0bcdbaf29a4038ae64b3830d8a50b1', '0cfc6494d2284252a89fd97f443abc29', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
 INSERT INTO `permission_role`
 VALUES ('8d5271705cc14335a7220a5751b43824', '24cbeb47067c4133b0b079a9dc8712c1', '1', '0', NULL, '2023-08-09 08:46:49',
         NULL);
@@ -498,7 +552,7 @@ INSERT INTO `permission_role`
 VALUES ('ad6e9cde7e0a465e941bc4db3ed9cbba', '83d6633cfd90426b91898a457e831b9c', '1', '0', NULL, '2023-08-09 08:46:49',
         NULL);
 INSERT INTO `permission_role`
-VALUES ('ae985c2a4e2d44bcbfdc6188cb402081', '7854230823434412be24b33b0d40844f', '0', '0', NULL, '2023-08-03 09:41:28',
+VALUES ('aeaa54e735054d99a3719e5fc33c3004', 'a68925f349a8462ebc597b9d9533791f', '0', '0', NULL, '2023-09-09 19:52:08',
         NULL);
 INSERT INTO `permission_role`
 VALUES ('afd34c9905bb4e648a991e2c59066c2a', '24cbeb47067c4133b0b079a9dc8712c1', 'a98606c89d624d26a93b377da61b230d', '0',
@@ -552,6 +606,9 @@ INSERT INTO `permission_role`
 VALUES ('d85d74e50b614cfda5cb9a5f9f4f6102', '570d819be4fb45a69430fc2eb6e02f84', 'a98606c89d624d26a93b377da61b230d', '0',
         NULL, '2023-08-07 19:05:51', NULL);
 INSERT INTO `permission_role`
+VALUES ('d8625ed8f2f642e68b9a50a912b20b51', '4fc617c8d71a443da50b3603bc27414b', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
+INSERT INTO `permission_role`
 VALUES ('d9db9c41c5d14af0a655e82d7779b1df', 'ddb4596c59fb4f63a2a6c5fee80dd7e5', '1', '0', NULL, '2023-08-09 08:46:49',
         NULL);
 INSERT INTO `permission_role`
@@ -564,20 +621,17 @@ INSERT INTO `permission_role`
 VALUES ('da5c0c6cdd354428bc607a5a03b87e28', '570d819be4fb45a69430fc2eb6e02f84', '98876a5b3f164eecbd0a0d32b8ac5b07',
         '785ae2df8ce14b638770a781bcb2c313', NULL, '2023-07-28 16:07:35', NULL);
 INSERT INTO `permission_role`
+VALUES ('dac60ce224f943d7b2503ce0276eaa76', 'c1be6dc2b1854fc488682e00bf5e3508', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
+INSERT INTO `permission_role`
 VALUES ('dbc49a5249af4a818a60f598dbd561d8', 'abcb78a67ec74e86bf57a1f2dcaaea20', '1', '0', NULL, '2023-08-09 08:46:49',
         NULL);
 INSERT INTO `permission_role`
 VALUES ('dbdb9ff84b204576862fd48d59209e4a', '1370ab9948d64c86b8f454dbdf6148bb', '5b319d59f1624b8cb16665a2798b7c44', '0',
         NULL, '2023-08-07 18:40:09', NULL);
 INSERT INTO `permission_role`
-VALUES ('dd876aa3c9064897adb729256281530c', '2e57771d96b6464f9e0ba22db63796e4', '0', '0', NULL, '2023-08-03 09:41:28',
-        NULL);
-INSERT INTO `permission_role`
 VALUES ('dda1ff2209db4575897a0300d7c8c3b7', 'cbfe251729734bcb9f9486cd736f66b7', '5b319d59f1624b8cb16665a2798b7c44', '0',
         NULL, '2023-08-07 18:40:09', NULL);
-INSERT INTO `permission_role`
-VALUES ('e00b91734a574e1794091a3f29c9bc89', '7e64ee3b0ba449ee8a32d3197379542b', '0', '0', NULL, '2023-08-03 09:41:28',
-        NULL);
 INSERT INTO `permission_role`
 VALUES ('e0f0ca8d8e744fa99bcb8598f876b6b2', '97bfede98e794599a45b37bad4fc8112', '1', '0', NULL, '2023-08-09 08:46:49',
         NULL);
@@ -586,9 +640,6 @@ VALUES ('e174176b746c4cd3869dce4b9c48f4b4', '125235b9c2fa400983a2adf55fc0218f', 
         NULL, '2023-07-30 12:59:37', NULL);
 INSERT INTO `permission_role`
 VALUES ('e2d26d2a7efc46389a444f98903ea5ea', '19e1065c601d402f979eeefae3ccf402', '1', '0', NULL, '2023-08-09 08:46:49',
-        NULL);
-INSERT INTO `permission_role`
-VALUES ('e48fee6b39134b6eaa7e9867cfef8475', '33272c92c164408e8ca33e6cdd2b72c9', '0', '0', NULL, '2023-08-03 09:41:28',
         NULL);
 INSERT INTO `permission_role`
 VALUES ('e4da166b00224386ac9a41bcfd18da2d', '7854230823434412be24b33b0d40844f', '5b319d59f1624b8cb16665a2798b7c44', '0',
@@ -603,6 +654,9 @@ INSERT INTO `permission_role`
 VALUES ('e67c4df2d3d2408ca87a1fadf72e5f11', 'abcb78a67ec74e86bf57a1f2dcaaea20', '5b319d59f1624b8cb16665a2798b7c44', '0',
         NULL, '2023-08-07 18:40:09', NULL);
 INSERT INTO `permission_role`
+VALUES ('e750263bb77945269979e1474ab670c8', '31a54479774c4065938411f81d668c32', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
+INSERT INTO `permission_role`
 VALUES ('e8e6a67200304febb9513c0c4ea858c8', '504d5f46f7984f20a749a18bc45fe87d', '5b319d59f1624b8cb16665a2798b7c44', '0',
         NULL, '2023-08-07 18:40:09', NULL);
 INSERT INTO `permission_role`
@@ -612,6 +666,9 @@ INSERT INTO `permission_role`
 VALUES ('ecf2f8da2d4f4bd9bb8f36d21f6bd78a', '2e57771d96b6464f9e0ba22db63796e4', '5b319d59f1624b8cb16665a2798b7c44', '0',
         NULL, '2023-08-07 19:05:51', NULL);
 INSERT INTO `permission_role`
+VALUES ('f05e1feb059946a0b1f7af2edc74bc0b', '548f84361dff4ed3b71fd2898a535de5', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
+INSERT INTO `permission_role`
 VALUES ('f06b595468dd43d68365eb1122a23f69', '807773f3c4e84e7289f73986d0bbbac2', '1', '0', NULL, '2023-08-09 08:46:49',
         NULL);
 INSERT INTO `permission_role`
@@ -620,6 +677,9 @@ VALUES ('fb2c5c965d1b41dd93e7e5e034742752', '7e64ee3b0ba449ee8a32d3197379542b', 
 INSERT INTO `permission_role`
 VALUES ('fc1fe0a8194645eda30a8cd8124f6501', '91d1e1e665fd4d7ba6fdc3178390e65d', '5b319d59f1624b8cb16665a2798b7c44', '0',
         NULL, '2023-08-07 18:40:09', NULL);
+INSERT INTO `permission_role`
+VALUES ('ff6d9d8a092f4a22987166bba625d912', '40f72874f100407d85cbe4482abe2bb5', '0', '0', NULL, '2023-09-09 19:52:08',
+        NULL);
 
 -- ----------------------------
 -- Table structure for permission_router
@@ -653,6 +713,9 @@ INSERT INTO `permission_router`
 VALUES ('0a0b0bc0545445a1b5ba3f38e2ad4e3c', 'ddb4596c59fb4f63a2a6c5fee80dd7e5', 'e787354f9cbb4fd79f4088138115685d', '0',
         NULL, '2023-08-02 11:09:10', NULL);
 INSERT INTO `permission_router`
+VALUES ('0a498268b5604d6b9cbde7d7d6c20904', 'a68925f349a8462ebc597b9d9533791f', '41b36e7dc2bd408f8c92bfa5d4dac25b', '0',
+        NULL, '2023-09-06 22:10:33', NULL);
+INSERT INTO `permission_router`
 VALUES ('0dc4786a96514168942c376283b05fdb', '504d5f46f7984f20a749a18bc45fe87d', '89d55789ce7c48e2abf78f86016b56fa', '0',
         NULL, '2023-08-02 11:09:10', NULL);
 INSERT INTO `permission_router`
@@ -662,8 +725,14 @@ INSERT INTO `permission_router`
 VALUES ('1bd33634f2814a2ca2485cb85b31374d', '1dc27a1fec2940f58ca8791dcff1d311', 'b2c4cd8070a14284aa18cbe16962d0bc', '0',
         NULL, '2023-08-02 11:09:10', NULL);
 INSERT INTO `permission_router`
+VALUES ('2250271587e0425889582fda2684fd17', '09345f3798a44c69bf41e92fba428e8c', '65fabcf2df2445fa9cce2743e7d87157', '0',
+        NULL, '2023-09-06 22:10:33', NULL);
+INSERT INTO `permission_router`
 VALUES ('228e537eab2e4a0b91964e3371787e3c', '925bd3b2a75a4e4cbce2f91dbe722291', 'd28d759796cd4229aacdda66d66ea7f7', '0',
         NULL, '2023-08-02 11:09:10', NULL);
+INSERT INTO `permission_router`
+VALUES ('287b5d56b93b47f29ffe9f5c7ae3a4e6', '0cfc6494d2284252a89fd97f443abc29', '3071172895bc40d38611830b8edd1d0a', '0',
+        NULL, '2023-09-06 22:10:33', NULL);
 INSERT INTO `permission_router`
 VALUES ('2af94235bbdf4bd3b175dfbe9a000fd6', '31a54479774c4065938411f81d668c32', '9ea26b0f3c7146948baa42f12686538b', '0',
         NULL, '2023-08-09 09:51:55', NULL);
@@ -677,14 +746,23 @@ INSERT INTO `permission_router`
 VALUES ('36e9514cef5a4710b1dab8c93c3a99b5', '11412c211a6042149610d2da6931ac57', '0d2a241cf1504428a98a54423ea1b04d', '0',
         NULL, '2023-08-07 18:30:03', NULL);
 INSERT INTO `permission_router`
+VALUES ('3bfee35e643841c8841e2d6afe8dfd87', '288caddc8fe64a27a71d32d6091deaae', '48367bfd9555472fb375d8993bf9bdda', '0',
+        NULL, '2023-09-06 22:10:33', NULL);
+INSERT INTO `permission_router`
 VALUES ('3c779ecc4b944cf3aab43fa425ba5940', '570d819be4fb45a69430fc2eb6e02f84', '6a00c1e03788469c9337533fa817038e', '0',
         NULL, '2023-08-02 11:09:10', NULL);
 INSERT INTO `permission_router`
 VALUES ('3d132cac60fd485ca91726b6ce489e20', '40a16c64701849009852f96cde5f3a3c', 'd2c4ace8b498477fa400f30334e1b057', '0',
         NULL, '2023-08-02 11:09:10', NULL);
 INSERT INTO `permission_router`
+VALUES ('42e186ad665e4900926da74a8625ea62', '09345f3798a44c69bf41e92fba428e8c', '0b8755a703e64dc183077a4cd9dde5d7', '0',
+        NULL, '2023-09-06 22:10:33', NULL);
+INSERT INTO `permission_router`
 VALUES ('45979a3168324ef884d1182b571a7c36', '40a16c64701849009852f96cde5f3a3c', '7f5ce299838f4725a2b3af1b6d712559', '0',
         NULL, '2023-08-02 11:09:10', NULL);
+INSERT INTO `permission_router`
+VALUES ('51d3321ac8234a9db959cc5d38835c04', 'c1be6dc2b1854fc488682e00bf5e3508', '58894351787343eeaeebb7a3442d6671', '0',
+        NULL, '2023-09-06 22:10:33', NULL);
 INSERT INTO `permission_router`
 VALUES ('5b05502d598840fe9832aea6243c3ec6', '376612e5d41347d6871d7e2216cc678b', '84c951559a0442938bb16438f92d1799', '0',
         NULL, '2023-08-02 11:09:10', NULL);
@@ -698,8 +776,14 @@ INSERT INTO `permission_router`
 VALUES ('6b1e8c2a4eae41faa546ed7493628620', '7854230823434412be24b33b0d40844f', 'e787354f9cbb4fd79f4088138115685d', '0',
         NULL, '2023-08-02 11:09:10', NULL);
 INSERT INTO `permission_router`
+VALUES ('6bf7121ea2ca41cba6858293936fa8d1', '0cfc6494d2284252a89fd97f443abc29', '7dc7ea4946f64187b299e4b64678bfa1', '0',
+        NULL, '2023-09-06 22:10:33', NULL);
+INSERT INTO `permission_router`
 VALUES ('6e9246e31a42473d8db969482ac43c18', '925bd3b2a75a4e4cbce2f91dbe722291', '7920bde0c63f43f3a550f10b2173452f', '0',
         NULL, '2023-08-02 11:09:10', NULL);
+INSERT INTO `permission_router`
+VALUES ('774404bb416b41d6bd802ecae7ddc681', '40f72874f100407d85cbe4482abe2bb5', 'a217b2c6fc97419daeabb16b6b33568f', '0',
+        NULL, '2023-09-06 22:10:33', NULL);
 INSERT INTO `permission_router`
 VALUES ('78ce74ab54b74509a9580251f5d32643', '24cbeb47067c4133b0b079a9dc8712c1', '6dd622f76d6b43da87d7ece1ac677f59', '0',
         NULL, '2023-08-09 09:51:55', NULL);
@@ -724,6 +808,12 @@ VALUES ('8b9d3db5b4854158a97b5e0e00170391', '31a54479774c4065938411f81d668c32', 
 INSERT INTO `permission_router`
 VALUES ('8d0038443d064711b23f2d9cb6bdd64c', '83d6633cfd90426b91898a457e831b9c', 'cfd0d97a9b2a4bd1945cc3bd42ac14fc', '0',
         NULL, '2023-08-02 11:09:10', NULL);
+INSERT INTO `permission_router`
+VALUES ('8f4d599ae9cc4394a66eff74c705e638', '0cfc6494d2284252a89fd97f443abc29', '56c224d3d14944279264143d92549fc9', '0',
+        NULL, '2023-09-06 22:10:33', NULL);
+INSERT INTO `permission_router`
+VALUES ('9306e916015e433f8b808bd1921646d6', '40f72874f100407d85cbe4482abe2bb5', '0e709563fe2b433fa63fad63207149ce', '0',
+        NULL, '2023-09-06 22:10:33', NULL);
 INSERT INTO `permission_router`
 VALUES ('93d41487c50547848107a3e2e0e91f06', '125235b9c2fa400983a2adf55fc0218f', '9e0790f2efc440cfaf73436c698e9a3d', '0',
         NULL, '2023-08-02 11:09:10', NULL);
@@ -752,11 +842,20 @@ INSERT INTO `permission_router`
 VALUES ('be5081d3a4d549f69383b6d9d2413d1e', 'e74cf92a484e42d4856cc541a232a588', '986c1b55ef72426d91ed5d0520b484f0', '0',
         NULL, '2023-08-02 11:09:10', NULL);
 INSERT INTO `permission_router`
+VALUES ('bf272852ef254452be7227cba19a2f66', '0b8aa4205d1b48999eda0a87c69213c0', 'a6c5e3991e2a46489142a3fa7ecd3ab3', '0',
+        NULL, '2023-09-06 22:10:33', NULL);
+INSERT INTO `permission_router`
 VALUES ('c473b6bfb17c467c8f206ceda0546b73', '4fc617c8d71a443da50b3603bc27414b', '3b258069f92f4319bc7bad9ab44fe9f8', '0',
         NULL, '2023-08-02 10:49:16', NULL);
 INSERT INTO `permission_router`
 VALUES ('c7c587edd35146f8af0088e5365321a5', '415d2c59d61449498505ac3b3270d940', '039fbed6e73c43a6bcab32ba327e0855', '0',
         NULL, '2023-08-02 08:20:33', NULL);
+INSERT INTO `permission_router`
+VALUES ('ca387dd2149c46658c3e01135ddda4f5', '548f84361dff4ed3b71fd2898a535de5', '421d47e35cae4fc69c598d42f0ef813d', '0',
+        NULL, '2023-09-06 22:10:33', NULL);
+INSERT INTO `permission_router`
+VALUES ('cbcac044838246e28abb6850101aeeac', 'c1be6dc2b1854fc488682e00bf5e3508', '4cd499bfd5e74452856eab5472feb985', '0',
+        NULL, '2023-09-06 22:10:33', NULL);
 INSERT INTO `permission_router`
 VALUES ('d2fb18c1d8544026999e14f56a24b02f', '1e1426fad12b4e09bc58d7fe2e5f4e19', '0659bef327b54372a3ce35d74376b68a', '0',
         NULL, '2023-08-02 08:20:33', NULL);
@@ -816,8 +915,17 @@ CREATE TABLE `problem`
 -- Records of problem
 -- ----------------------------
 INSERT INTO `problem`
+VALUES ('5bd5685320b04960b53813dab375993a', 0, '701ddb01101147219a94d1181b660d5a', 'ca72d06f3030497b835c196e957a46f9',
+        'D:/Test/problem_5bd5685320b04960b53813dab375993a.txt', '0', NULL, '2023-09-11 14:43:20', NULL);
+INSERT INTO `problem`
+VALUES ('85b41aadb73240749dbff862ee260db5', 0, '701ddb01101147219a94d1181b660d5a', 'ca72d06f3030497b835c196e957a46f9',
+        'D:/Test/problem_85b41aadb73240749dbff862ee260db5.txt', '0', NULL, '2023-09-11 14:43:20', NULL);
+INSERT INTO `problem`
 VALUES ('9fd770e027eb4b37afd2eaf7009e810b', 0, 'f2b159d70546415b8befdc9d2a5126ae', '0',
-        'D:/Test/problem_9fd770e027eb4b37afd2eaf7009e810b.txt', '0', '0', '2023-08-09 18:13:36', '2023-08-11 14:36:40');
+        'D:/Test/problem_9fd770e027eb4b37afd2eaf7009e810b.txt', '0', '0', '2023-08-09 18:13:36', '2023-09-10 10:54:58');
+INSERT INTO `problem`
+VALUES ('bbd4a93b5a504888801a446c7192bba6', 1, 'ca8732662ed5418abe256a188ce7fe8b', 'ca72d06f3030497b835c196e957a46f9',
+        'D:/Test/problem_bbd4a93b5a504888801a446c7192bba6.txt', '0', '0', '2023-09-11 14:43:20', '2023-09-12 20:02:08');
 INSERT INTO `problem`
 VALUES ('fec2d685ae9f495a9be9ac247c4f1db2', 0, 'ca8732662ed5418abe256a188ce7fe8b', 'ca72d06f3030497b835c196e957a46f9',
         'D:/Test/problem_fec2d685ae9f495a9be9ac247c4f1db2.txt', '0', '0', '2023-08-05 10:23:24', '2023-08-11 14:39:47');
@@ -845,11 +953,11 @@ CREATE TABLE `problem_exam`
 -- Records of problem_exam
 -- ----------------------------
 INSERT INTO `problem_exam`
-VALUES ('74fbd097527b4d0d864f89531702dfe6', '344b72bded14456ea2cc0ba34c87c0a9', 'fec2d685ae9f495a9be9ac247c4f1db2', '0',
-        NULL, '2023-08-11 14:39:47', NULL);
+VALUES ('03359491bdb1425dbd4698f374f5799a', '344b72bded14456ea2cc0ba34c87c0a9', 'fec2d685ae9f495a9be9ac247c4f1db2', '0',
+        NULL, '2023-10-09 19:19:53', NULL);
 INSERT INTO `problem_exam`
-VALUES ('edfbeba0fbdc4c8e959d2a039cd34159', '344b72bded14456ea2cc0ba34c87c0a9', '9fd770e027eb4b37afd2eaf7009e810b', '0',
-        NULL, '2023-08-11 14:39:47', NULL);
+VALUES ('1ce1f22bd2f94e99b430ae84700b08e0', '344b72bded14456ea2cc0ba34c87c0a9', '9fd770e027eb4b37afd2eaf7009e810b', '0',
+        NULL, '2023-10-09 19:19:53', NULL);
 
 -- ----------------------------
 -- Table structure for role
@@ -874,7 +982,7 @@ CREATE TABLE `role`
 -- Records of role
 -- ----------------------------
 INSERT INTO `role`
-VALUES ('0', '普通用户', 0, 'localUser', '0', '2023-07-21 17:55:48', '2023-08-03 09:41:28');
+VALUES ('0', '普通用户', 0, 'localUser', '0', '2023-07-21 17:55:48', '2023-09-09 19:52:08');
 INSERT INTO `role`
 VALUES ('1', '超级管理员', 0, '0', '0', '2023-08-07 19:05:51', '2023-08-09 08:46:49');
 INSERT INTO `role`
@@ -918,8 +1026,14 @@ INSERT INTO `router`
 VALUES ('0ae33c6a65174f4ea20c72e13003770b', '用户上传头像', '/user/upload', 'POST', 0, 0, '0', '0',
         '2023-07-30 16:11:59', '2023-08-02 08:20:33');
 INSERT INTO `router`
+VALUES ('0b8755a703e64dc183077a4cd9dde5d7', '根据试卷解绑历史试卷记录', '/ue/pro', 'DELETE', 0, 1, '0', '0',
+        '2023-09-06 21:48:58', '2023-09-06 22:10:33');
+INSERT INTO `router`
 VALUES ('0d2a241cf1504428a98a54423ea1b04d', '权限删除', '/per', 'DELETE', 0, 0, '0', '0', '2023-07-30 16:48:04',
         '2023-08-07 18:30:03');
+INSERT INTO `router`
+VALUES ('0e709563fe2b433fa63fad63207149ce', '查询所有历史做题记录', '/up', 'GET', 0, 1, '0', '0', '2023-09-06 22:10:33',
+        '2023-09-06 22:10:33');
 INSERT INTO `router`
 VALUES ('102bdad4b5be46129c88fd6f7bddff34', '年级修改', '/gradle', 'PUT', 0, 1, '0', '0', '2023-08-06 14:58:25',
         '2023-08-09 10:09:48');
@@ -927,17 +1041,41 @@ INSERT INTO `router`
 VALUES ('1092ceafbd7d40a8ab1c1a50bd2c9ae4', '年级删除', '/gradle', 'DELETE', 0, 1, '0', '0', '2023-08-06 14:58:25',
         '2023-08-09 10:09:48');
 INSERT INTO `router`
+VALUES ('3071172895bc40d38611830b8edd1d0a', '查询所有历史试卷记录', '/ue', 'GET', 0, 1, '0', '0', '2023-09-06 21:43:47',
+        '2023-09-06 22:10:33');
+INSERT INTO `router`
 VALUES ('33bc7f8bb8384dce82c3b4bc811da0a9', '路由修改', '/router', 'PUT', 0, 0, '0', '0', '2023-07-30 16:52:48',
         '2023-08-02 09:55:13');
 INSERT INTO `router`
 VALUES ('3b258069f92f4319bc7bad9ab44fe9f8', '分类查询试卷', '/exam/select', 'GET', 0, 0, '0', '0',
         '2023-07-30 16:52:48', '2023-08-02 10:49:16');
 INSERT INTO `router`
+VALUES ('41b36e7dc2bd408f8c92bfa5d4dac25b', '修改历史做题记录', '/up', 'PUT', 0, 1, '0', '0', '2023-09-06 22:10:33',
+        '2023-09-06 22:10:33');
+INSERT INTO `router`
+VALUES ('421d47e35cae4fc69c598d42f0ef813d', '修改历史试卷记录', '/ue', 'PUT', 0, 1, '0', '0', '2023-09-06 21:43:47',
+        '2023-09-06 22:10:33');
+INSERT INTO `router`
+VALUES ('48367bfd9555472fb375d8993bf9bdda', '解绑历史做题记录', '/up', 'DELETE', 0, 1, '0', '0', '2023-09-06 22:10:33',
+        '2023-09-06 22:10:33');
+INSERT INTO `router`
 VALUES ('48b839edba7f4abbbc384c9f658d24d1', '角色删除', '/role', 'DELETE', 0, 0, '0', '0', '2023-07-30 16:27:18',
         '2023-08-02 09:55:13');
 INSERT INTO `router`
+VALUES ('4cd499bfd5e74452856eab5472feb985', '分类查询历史做题记录', '/up/select', 'GET', 0, 1, '0', '0',
+        '2023-09-06 22:10:33', '2023-09-06 22:10:33');
+INSERT INTO `router`
+VALUES ('56c224d3d14944279264143d92549fc9', '分类查询历史试卷记录', '/ue/select', 'GET', 0, 1, '0', '0',
+        '2023-09-06 21:48:58', '2023-09-06 22:10:33');
+INSERT INTO `router`
+VALUES ('58894351787343eeaeebb7a3442d6671', '查询单个历史做题记录', '/up/one', 'GET', 0, 1, '0', '0',
+        '2023-09-06 22:10:33', '2023-09-06 22:10:33');
+INSERT INTO `router`
 VALUES ('59288881aead4d049b7b07618a666c31', '查询所有试卷', '/exam', 'GET', 0, 0, '0', '0', '2023-07-30 16:52:48',
         '2023-08-02 09:55:13');
+INSERT INTO `router`
+VALUES ('65fabcf2df2445fa9cce2743e7d87157', '批量解绑历史试卷记录', '/ue', 'DELETE', 0, 1, '0', '0',
+        '2023-09-06 21:43:47', '2023-09-06 22:10:33');
 INSERT INTO `router`
 VALUES ('6a00c1e03788469c9337533fa817038e', '试卷删除', '/exam', 'DELETE', 0, 0, '0', '0', '2023-07-30 16:52:48',
         '2023-08-02 11:09:10');
@@ -956,6 +1094,9 @@ VALUES ('7920bde0c63f43f3a550f10b2173452f', '查询一条角色', '/role/one', '
 INSERT INTO `router`
 VALUES ('79f82fa5e5e14586b2400440ce5832b5', '路由删除', '/router', 'DELETE', 0, 0, '0', '0', '2023-07-30 16:52:48',
         '2023-08-02 11:09:10');
+INSERT INTO `router`
+VALUES ('7dc7ea4946f64187b299e4b64678bfa1', '查询单个历史试卷记录', '/ue/one', 'GET', 0, 1, '0', '0',
+        '2023-09-06 21:48:58', '2023-09-06 22:10:33');
 INSERT INTO `router`
 VALUES ('7f5ce299838f4725a2b3af1b6d712559', '查询所有路由', '/router', 'GET', 0, 0, '0', '0', '2023-07-30 16:52:48',
         '2023-08-02 11:09:10');
@@ -990,8 +1131,14 @@ INSERT INTO `router`
 VALUES ('9ea26b0f3c7146948baa42f12686538b', '分类查询年级', '/gradle/select', 'GET', 0, 1, '0', '0',
         '2023-08-06 14:58:25', '2023-08-09 09:51:55');
 INSERT INTO `router`
+VALUES ('a217b2c6fc97419daeabb16b6b33568f', '绑定历史做题记录', '/up', 'POST', 0, 1, '0', '0', '2023-09-06 22:10:33',
+        '2023-09-06 22:10:33');
+INSERT INTO `router`
 VALUES ('a3373a376a7d492daa97ebe020bb4c7d', '反馈删除', '/feed', 'DELETE', 0, 0, '0', '0', '2023-07-30 16:52:48',
         '2023-08-02 11:09:10');
+INSERT INTO `router`
+VALUES ('a6c5e3991e2a46489142a3fa7ecd3ab3', '绑定历史试卷记录', '/ue', 'POST', 0, 1, '0', '0', '2023-09-06 21:43:47',
+        '2023-09-06 22:10:33');
 INSERT INTO `router`
 VALUES ('aed943b5595349e7b8f4dcba012c7b35', '试卷修改', '/exam', 'PUT', 0, 0, '0', '0', '2023-07-30 16:52:48',
         '2023-08-02 11:09:10');
@@ -1072,6 +1219,8 @@ CREATE TABLE `subject`
 -- Records of subject
 -- ----------------------------
 INSERT INTO `subject`
+VALUES ('0', '语文', '0', NULL, '2023-07-30 07:35:09', NULL);
+INSERT INTO `subject`
 VALUES ('4e0cc8b3617d45b185dd9275c5cb7bb2', '生物', '0', NULL, '2023-08-03 14:33:31', NULL);
 INSERT INTO `subject`
 VALUES ('701ddb01101147219a94d1181b660d5a', '英语', '0', '0', '2023-07-30 07:35:09', '2023-07-30 08:07:53');
@@ -1085,8 +1234,6 @@ INSERT INTO `subject`
 VALUES ('aa0f7a5b363445c589d620d098f0d406', '化学', '0', NULL, '2023-07-30 07:35:09', NULL);
 INSERT INTO `subject`
 VALUES ('ca8732662ed5418abe256a188ce7fe8b', '数学', '0', NULL, '2023-07-30 07:35:09', NULL);
-INSERT INTO `subject`
-VALUES ('e3763f0aa4de4d3d8772eb5e1a7ec47c', '语文', '0', NULL, '2023-07-30 07:35:09', NULL);
 INSERT INTO `subject`
 VALUES ('f2b159d70546415b8befdc9d2a5126ae', '物理', '0', NULL, '2023-07-30 07:35:09', NULL);
 
@@ -1125,14 +1272,64 @@ VALUES ('0', 'root', '$2a$10$HEi62MXckXC75lDbBx2T0uF6h5H6.gTUg9a9b4UcNfDFmHoEDqL
         '2516649281@qq.com', '17571038682', '1', 0, 'localhost', NULL, '2023-07-22 13:24:02', NULL);
 INSERT INTO `user`
 VALUES ('6611ac92527141f0a58487173fdf63bd', 'user1', '$2a$10$NJnNA.vYlZj9ZuYZJ496dOJu5w0SjFWZ7Zxqzl1t1CYv0W440/nU2',
-        '测试1', '6611ac92527141f0a58487173fdf63bd.png', 0, '2546378951@qq.com', '12547863594',
-        '5b319d59f1624b8cb16665a2798b7c44', 0, 'localUser', NULL, '2023-07-22 13:24:02', NULL);
+        '测试1', '6611ac92527141f0a58487173fdf63bd.png', 1, '2546378951@qq.com', '12547863594',
+        '5b319d59f1624b8cb16665a2798b7c44', 0, 'localUser', '0', '2023-07-22 13:24:02', '2023-10-09 19:19:53');
 INSERT INTO `user`
 VALUES ('7f76d86b777942649136f062e774d3f9', 'root1', '$2a$10$EWGButendp1R6sDd0Zwc4u/0aaoTFv7t.NxQhxdvMKxsOF.TsoraG',
-        '超级管理员2', '0', 0, '2548936475@qq.com', '15784639458', '1', 0, 'localUser', NULL, '2023-07-29 11:26:37',
-        NULL);
+        '超级管理员2', '0', 1, '2548936475@qq.com', '15784639458', '1', 0, 'localUser', '0', '2023-07-29 11:26:37',
+        '2023-10-09 19:19:53');
 INSERT INTO `user`
-VALUES ('d0651a7d27834111845b3865b4c932a5', 'user2', '$2a$10$HEi62MXckXC75lDbBx2T0uF6h5H6.gTUg9a9b4UcNfDFmHoEDqLfi',
-        '测试2', '0', 1, '2546378125@qq.com', '15479643587', '0', 0, 'localUser', NULL, '2023-07-27 16:42:13', NULL);
+VALUES ('d0651a7d27834111845b3865b4c932a5', 'user2', '$2a$10$j9mwQeKv3g3TgyMsErgV6OYFDrIh1MhlMMxTvta//DndekMfOML6G',
+        '测试2', 'd0651a7d27834111845b3865b4c932a5.jpg', 0, '2398756432@qq.com', '15479643587', '0', 0, 'localUser',
+        'd0651a7d27834111845b3865b4c932a5', '2023-07-27 16:42:13', '2023-10-09 19:19:53');
+
+-- ----------------------------
+-- Table structure for user_exam
+-- ----------------------------
+DROP TABLE IF EXISTS `user_exam`;
+CREATE TABLE `user_exam`
+(
+    `id`          varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '主键',
+    `user_id`     varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户ID',
+    `exam_id`     varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '试卷ID',
+    `score`       float                                                        NOT NULL COMMENT '得分',
+    `time`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '时间',
+    `create_user` varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建用户',
+    `update_user` varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改用户',
+    `create_time` datetime                                                     NOT NULL COMMENT '创建时间',
+    `update_time` datetime                                                     NULL DEFAULT NULL COMMENT '修改时间',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户-试卷关系表'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of user_exam
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for user_problem
+-- ----------------------------
+DROP TABLE IF EXISTS `user_problem`;
+CREATE TABLE `user_problem`
+(
+    `id`          varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '主键',
+    `user_id`     varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户ID',
+    `problem_id`  varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '题目ID',
+    `status`      int                                                          NOT NULL COMMENT '状态(0正确,1错误)',
+    `create_user` varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建用户',
+    `update_user` varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '修改用户',
+    `create_time` datetime                                                     NOT NULL COMMENT '创建时间',
+    `update_time` datetime                                                     NULL DEFAULT NULL COMMENT '修改时间',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户-题目关系表'
+  ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of user_problem
+-- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;

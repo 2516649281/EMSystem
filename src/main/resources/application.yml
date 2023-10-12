@@ -67,9 +67,8 @@ handle:
       - '/user/register/**'
       #用户退出
       - '/user/logout'
-      #错误路径
-      - '/error'
-      #静态资源
+    #静态资源
+    static-url:
       - '/favicon.ico'
       - '/swagger-ui/**'
       - '/doc.html'
@@ -77,6 +76,8 @@ handle:
       - '/v2/**'
       - '/swagger-resources/**'
       - '/static/**'
+      #错误路径
+      - '/error'
 #文件配置
 file:
   config:

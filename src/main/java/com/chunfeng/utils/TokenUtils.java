@@ -1,5 +1,6 @@
 package com.chunfeng.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.chunfeng.result.exception.ServiceException;
 import com.chunfeng.result.exenum.RequestException;
 import io.jsonwebtoken.Claims;
@@ -59,9 +60,11 @@ public class TokenUtils {
      * 校验token,布尔类型
      *
      * @param token token
+     * @param type  待转换的类型
+     * @param <T>   任意类型
      * @return object
      */
-    public static Claims checkToken(String token) {
+    public static <T> T checkToken(String token, Class<T> type) {
         if (token == null || token.isEmpty()) {
             log.error("token为空!");
             throw new ServiceException(RequestException.TOKEN_ERROR);
@@ -79,6 +82,8 @@ public class TokenUtils {
             log.error("token解析失败!已删除key-{}", token);
             throw new ServiceException(RequestException.TOKEN_ERROR);
         }
-        return claimsJws.getBody();
+        Object object = claimsJws.getBody().get("user");
+        String jsonString = JSON.toJSONString(object);
+        return JSON.parseObject(jsonString, type);
     }
 }

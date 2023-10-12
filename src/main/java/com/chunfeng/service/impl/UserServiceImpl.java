@@ -28,6 +28,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -321,8 +322,11 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         }
         User user = new User();
         user.setId(userId);
+        String fileOriginalFilename = file.getOriginalFilename();
         // 获取文件后缀
-        String type = file.getOriginalFilename().split("\\.")[1];
+        String type = StringUtils.hasText(fileOriginalFilename) ?
+                fileOriginalFilename.split("\\.")[1]
+                : "jpg";
         //组合为文件名
         String fileName = userId + "." + type;
         //设置头像
@@ -353,7 +357,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     @ExcludeMethods
     public JsonRequest<Boolean> logout(String token) {
         //获取token中的ID
-        String id = TokenUtils.checkToken(token).get("user").toString();
+        String id = TokenUtils.checkToken(token, Long.TYPE).toString();
         //删除Redis
         boolean b = redisClientsUtils.remove("login:" + id);
         if (!b) {

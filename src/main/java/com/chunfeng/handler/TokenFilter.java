@@ -2,9 +2,9 @@ package com.chunfeng.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.chunfeng.dao.security.UserDetail;
-import com.chunfeng.properties.ExcludeUrlProperties;
 import com.chunfeng.result.exception.ServiceException;
 import com.chunfeng.result.exenum.RequestException;
+import com.chunfeng.utils.ExcludeUrlUtils;
 import com.chunfeng.utils.RedisClientsUtils;
 import com.chunfeng.utils.SqlDateUtils;
 import com.chunfeng.utils.TokenUtils;
@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,7 +22,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.stream.Stream;
 
 /**
  * token拦截器
@@ -44,10 +43,10 @@ public class TokenFilter extends OncePerRequestFilter {
     private RedisClientsUtils redisClientsUtils;
 
     /**
-     * 拦截器排除路径
+     * 路径判断工具
      */
     @Autowired
-    private ExcludeUrlProperties excludeUrlProperties;
+    private ExcludeUrlUtils excludeUrlUtils;
 
 
     /**
@@ -64,14 +63,19 @@ public class TokenFilter extends OncePerRequestFilter {
         if (!StringUtils.hasText(token)) {
             log.warn("token为空!");
             filterChain.doFilter(request, response);
+            return;
         }
         //获取token中的ID
-        String id = TokenUtils.checkToken(token).get("user").toString();
+        String id = TokenUtils.checkToken(token, Long.TYPE).toString();
+        //获取Redis的ID
         String user = redisClientsUtils.get("login:" + id);
         //转换为对象
         UserDetail user1 = JSON.parseObject(user, UserDetail.class);
         //验证不通过或者redis数据库中不存在此数据
-        if (!(StringUtils.hasText(user) || id.equals(user1.getUser().getId()))) {
+        if (ObjectUtils.isEmpty(user1)//检测权限对象是否为空
+                || !(StringUtils.hasText(user)//检测redis内的用户ID是否为空
+                || id.equals(user1.getUser().getId())))//检测token是否合法
+        {
             log.error("token验证失败!{}-{}", id, user);
             throw new ServiceException(RequestException.FORBIDDEN);
         }
@@ -87,17 +91,21 @@ public class TokenFilter extends OncePerRequestFilter {
     }
 
     /**
-     * 配置排除路径
+     * 拦截器排除路径配置
      *
-     * @param request 请求
-     * @return 返回true以排除请求
+     * @param request 当前的HTTP请求对象
+     * @return 如果放行则返回true, 拦截返回false
+     * @throws ServletException 如果发生异常
      */
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String uri = request.getRequestURI();
-        AntPathMatcher pathMatcher = new AntPathMatcher();
-        //遍历并判断是否包含排除路径
-        return Stream.of(excludeUrlProperties.getExcludeUrl())
-                .anyMatch(x -> pathMatcher.match(x, uri));
+        //排除路径
+        Integer index = excludeUrlUtils.isExcludeUrl(uri);
+        if (index != 0) {
+            log.info("排除路径放行!");
+            return true;
+        }
+        return false;
     }
 }

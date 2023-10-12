@@ -1,6 +1,7 @@
 package com.chunfeng.result;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.chunfeng.result.exception.ServiceException;
 import com.chunfeng.result.exenum.RequestException;
 import lombok.extern.slf4j.Slf4j;
@@ -15,12 +16,14 @@ import java.util.Map;
  * 全局异常处理器
  * <p>
  * 此类用于处理大部分异常信息的响应,经过了这个类的处理,返回的格式将统一变为
- * <p>
- * {<p>
- * "success": false,<p>
- * "message": "信息!",<p>
- * "status": 状态<p>
- * }<p>
+ * <p>{</p>
+ * <p>"status": 200,</p>
+ * <p>"message": "请求已成功!",</p>
+ * <p>"success": true,</p>
+ * <p>"type": "SUCCESS",</p>
+ * <p>"data": "",</p>
+ * <p>"date": 1697117527763</p>
+ * <p>}</p>
  * 此响应类可参照{@link com.chunfeng.result.JsonRequest}的字段
  *
  * @author by 春风能解释
@@ -53,7 +56,8 @@ public class ExceptionHandler extends DefaultErrorAttributes {
         String jsonString = JSON.toJSONString(request);
         log.warn("全局异常处理类已捕获到异常:{}", request.getMessage());
         //再转换为Map对象
-        return JSON.parseObject(jsonString, Map.class);
+        return JSON.parseObject(jsonString, new TypeReference<Map<String, Object>>() {
+        });
     }
 
     /**
@@ -71,4 +75,5 @@ public class ExceptionHandler extends DefaultErrorAttributes {
         }
         return error;
     }
+
 }

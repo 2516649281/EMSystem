@@ -34,7 +34,7 @@ public class ServiceException extends RuntimeException {
     /**
      * 异常类型
      */
-    private Integer type = TypeEnum.UNKNOWN.getIndex();
+    private String type = TypeEnum.UNKNOWN.getDescription();
 
     /**
      * 使用原有枚举类异常

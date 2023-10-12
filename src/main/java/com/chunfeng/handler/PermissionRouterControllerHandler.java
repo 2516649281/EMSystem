@@ -38,6 +38,17 @@ public class PermissionRouterControllerHandler implements AccessDecisionManager 
      */
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws org.springframework.security.access.AccessDeniedException, InsufficientAuthenticationException {
+        //判断是否为排除路径
+        for (ConfigAttribute configAttribute : configAttributes) {
+            String attribute = configAttribute.getAttribute();
+            switch (attribute) {
+                case "STATIC"://静态资源
+                case "EXCLUDE"://排除路径
+                    return;
+                default:
+                    break;
+            }
+        }
         Object principal = authentication.getPrincipal();
         // 如果获取不到
         if (!(principal instanceof UserDetail)) {

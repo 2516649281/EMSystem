@@ -17,10 +17,12 @@ import java.io.Serializable;
  * <p>
  * 此类用于向前端返回统一的JSON格式，具体分以下几个部分:
  * <ul>
- *     <li>status:状态码，错误的唯一标识，可以是自定义的，也可以是WEB规定的，可参阅{@link org.springframework.http.HttpStatus}</li>
- *      <li>message:消息，向客户端或服务端描述错误的原因</li>
- *      <li>success:是否成功，描述一个请求是否成功，也用于客户端或服务端判断</li>
- *      <li>data:具体的数据，整个请求的核心，可存放任意类型的数据，需要配合泛型</li>
+ *      <li>status(Integer):状态码，错误的唯一标识，可以是自定义的，也可以是WEB规定的，可参阅{@link org.springframework.http.HttpStatus}</li>
+ *      <li>message(String):消息，向客户端或服务端描述错误的原因</li>
+ *      <li>success(Boolean):是否成功，描述一个请求是否成功，也用于客户端或服务端判断</li>
+ *      <li>data(T-泛型):具体的数据，整个请求的核心，可存放任意类型的数据，需要配合泛型</li>
+ *      <li>type(String/Integer):异常类型，可自定义，便于开发者寻错，只有在发生异常时才具有参考价值，可参阅{@link com.chunfeng.result.exenum.TypeEnum}</li>
+ *      <li>date(Long):当前的时间戳</li>
  * </ul>
  *
  * @author by 春风能解释
@@ -36,7 +38,7 @@ public class JsonRequest<T> implements Serializable {
      * 序列化字段
      */
     @ApiModelProperty(value = "序列化字段", hidden = true)
-    private static final long serialVersionUID = 2883584342373064312L;
+    private static final long serialVersionUID = -7878717752339104014L;
     /**
      * 错误代码
      */
@@ -56,12 +58,17 @@ public class JsonRequest<T> implements Serializable {
      * 错误类型
      */
     @ApiModelProperty(value = "错误类型")
-    private Integer type = TypeEnum.SUCCESS.getIndex();
+    private String type = TypeEnum.SUCCESS.getDescription();
     /**
      * 数据
      */
     @ApiModelProperty(value = "数据", allowEmptyValue = true)
     private T data = null;
+    /**
+     * 时间戳
+     */
+    @ApiModelProperty(value = "时间戳")
+    private Long date = System.currentTimeMillis();
 
     /**
      * 构造方法1
@@ -80,7 +87,7 @@ public class JsonRequest<T> implements Serializable {
      * @param success 是否成功
      * @param type    异常类型
      */
-    public JsonRequest(Integer status, String message, Boolean success, Integer type) {
+    public JsonRequest(Integer status, String message, Boolean success, String type) {
         this.status = status;
         this.message = message;
         this.success = success;

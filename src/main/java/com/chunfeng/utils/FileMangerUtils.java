@@ -1,5 +1,7 @@
 package com.chunfeng.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.chunfeng.properties.FileConfigProperties;
 import com.chunfeng.result.exception.ServiceException;
 import com.chunfeng.result.exenum.RequestException;
@@ -85,7 +87,10 @@ public class FileMangerUtils<T> {
         try {
             ois = new ObjectInputStream(Files.newInputStream(Paths.get(fileConfigProperties.getUrl() + fileName)));
             //转换为指定对象
-            obj = (T) ois.readObject();
+            Object object = ois.readObject();
+            String json = JSON.toJSONString(object);
+            obj = JSON.parseObject(json, new TypeReference<T>() {
+            });
         } catch (Exception exception) {
             log.error("文件{}读取失败!", fileName);
             throw new ServiceException(RequestException.FILE_ERROR);
@@ -106,6 +111,7 @@ public class FileMangerUtils<T> {
         if (file.exists()) {
             log.info("文件{}已被删除!", fileName);
             file.delete();
+            return;
         }
         log.warn("文件{}不存在!", fileName);
     }
